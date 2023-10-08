@@ -1,44 +1,56 @@
 <script setup lang="ts">
-const route = useRoute()
+const page = ref(1)
+const pageCount = 5
 const value = ref('')
-const products = ref([
+
+const { data } = await useFetch('/api/data')
+let body = ""
+if (data.value) {
+  body = data.value.body
+}
+const products = JSON.parse(body)
+
+const productPage = computed(() => {
+  return products.slice((page.value - 1) * pageCount, page.value * pageCount)
+})
+
+const columns = [
   {
-    id: 1, name: 'Product 1', price: 100, image: 'https://picsum.photos/500/500'
-  }, {
-    id: 2, name: 'Product 2', price: 200, image: 'https://picsum.photos/500/500'
-  }, {
-    id: 2, name: 'Product 2', price: 200, image: 'https://picsum.photos/500/500'
-  }, {
-    id: 2, name: 'Product 2', price: 200, image: 'https://picsum.photos/500/500'
-  }, {
-    id: 2, name: 'Product 2', price: 200, image: 'https://picsum.photos/500/500'
-  }, {
-    id: 2, name: 'Product 2', price: 200, image: 'https://picsum.photos/500/500'
-  }, {
-    id: 2, name: 'Product 2', price: 200, image: 'https://picsum.photos/500/500'
-  }, {
-    id: 2, name: 'Product 2', price: 200, image: 'https://picsum.photos/500/500'
+    key: "id",
+    label: "ID",
   },
-])
+  {
+    key: 'name',
+    label: 'Name',
+  },
+  {
+    key: "price",
+    label: "Price",
+  }
+]
+
 </script>
 
 <template>
   <div class="p-5">
     <h1 class="text-5xl font-semibold py-5">Search</h1>
-    <UInput v-model="value" size="xl" />
+    <div class="flex items-center gap-5">
+      <UInput v-model="value" size="xl" class="grow" />
+      <UButton icon="i-heroicons-magnifying-glass" color="primary" variant="solid" label="Search" :trailing="false" to="/"
+        size="lg" />
+    </div>
     <div class="py-5">
-      <div class="grid grid-cols-2 gap-5">
-        <div v-for="product in products" :key="product.id"
-          class="border border-gray-400 dark:border-gray-700 overflow-hidden flex rounded-lg">
-          <div class="flex justify-center">
-            <img :src="product.image" class="w-40 h-40" />
-          </div>
-          <div class="flex flex-col p-5 justify-between">
-            <h1 class="text-2xl font-semibold">{{ product.name }}</h1>
-            <h1 class="text-2xl font-semibold">{{ product.price }}</h1>
-            <UButton icon="i-heroicons-pencil-square" size="sm" color="primary" variant="solid" label="View"
-              :trailing="false" />
-          </div>
+      <div class="">
+        <div class="h-[30rem]">
+          <UTable :rows="productPage" :columns="columns" :ui="{ wrapper: 'border border-gray-700 rounded-lg', }">
+            <template #name-data="{ row }">
+              <div class="break-all">{{ row.name }}</div>
+              <a :href="row.url">{{ row.product_id }}</a>
+            </template>
+          </UTable>
+        </div>
+        <div class="flex justify-center">
+          <UPagination v-model="page" size="xl" :page-count="pageCount" :total="products.length" class="pt-5" />
         </div>
       </div>
     </div>
