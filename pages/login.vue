@@ -19,10 +19,13 @@ async function submit(event: FormSubmitEvent<any>) {
 </script>
 
 <template>
-  <div class="flex w-full h-full">
+  <div class="flex w-screen h-screen">
     <div class="grow p-10 border-r border-gray-700 flex flex-col justify-around">
-      <form class="w-[50ch] mx-auto">
-        <h2 class="text-4xl font-semibold text-center">Sign in</h2>
+      <form class="w-full sm:w-[40ch] mx-auto">
+        <a href="/">
+          <img src="/logo.svg" alt="" class="mx-auto h-8 w-8">
+        </a>
+        <h2 class="text-4xl py-2 font-semibold text-center">Sign in to PRS</h2>
         <UForm :validate="validate" :state="state" @submit="submit" class="flex flex-col gap-5">
           <UFormGroup label="Email" name="email">
             <UInput v-model="state.email" />
@@ -47,9 +50,6 @@ async function submit(event: FormSubmitEvent<any>) {
           </UButton>
         </div>
       </form>
-    </div>
-    <div class="grow">
-      <img src="https://picsum.photos/1500/1500" class="w-full h-full object-cover" />
     </div>
   </div>
 </template>

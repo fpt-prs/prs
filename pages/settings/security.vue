@@ -1,5 +1,7 @@
 <script setup>
-definePageMeta({ layout: "settings" });
+useHead({
+  title: 'Security',
+})
 </script>
 
 <template>

@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+useHead({
+  title: 'Profile',
+})
+</script>
 
 <template>
   <NuxtLayout name="settings">

@@ -20,6 +20,7 @@
   "dependencies": {
     "@nuxt/ui": "^2.9.0",
     "mysql": "^2.18.1",
-    "mysql2": "^3.6.1"
+    "mysql2": "^3.6.1",
+    "wrangler": "^3.11.0"
   }
 }
