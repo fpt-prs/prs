@@ -2,10 +2,10 @@ import mysql from "mysql2/promise";
 
 const connection = mysql.createPool({
   connectionLimit: 10,
-  host: "103.161.178.66",
-  user: "proresy",
-  password: "ProReSy@123",
-  database: "productrecomandation",
+  host: process.env.DATABASE_URL,
+  user: process.env.DATABASE_USERNAME,
+  password: process.env.DATABASE_PASSWORD,
+  database: process.env.DATABASE_NAME,
 });
 
 type product = {
