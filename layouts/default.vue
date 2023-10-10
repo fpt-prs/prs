@@ -1,4 +1,10 @@
-<script setup></script>
+<script setup>
+useHead({
+  titleTemplate: (titleChunk) => {
+    return `${titleChunk} · PRS`;
+  },
+});
+</script>
 
 <template>
   <div class="flex h-screen bg-gray-900">

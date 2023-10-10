@@ -19,6 +19,7 @@ const items = [
     {
       label: "Help & Feedback",
       icon: "i-heroicons-chat-bubble-left-right",
+      to: "/feedback",
     },
   ],
   [
@@ -35,7 +36,7 @@ const items = [
     class="w-56 xl:w-64 min-w-[14rem] max-w-xl border-r border-gray-200 dark:border-gray-800 flex flex-col"
   >
     <div class="flex items-center justify-between px-4 h-14">
-      <a href="/">
+      <a href="/search">
         <img src="/logo.svg" alt="" />
       </a>
       <UDropdown :items="items" :popper="{ placement: 'bottom-end' }">
@@ -51,7 +52,7 @@ const items = [
         color="gray"
         variant="ghost"
         label="Search"
-        to="/"
+        to="/search"
         :trailing="false"
       />
       <UButton
