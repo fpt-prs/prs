@@ -20,13 +20,11 @@ useHead({
           <UFormGroup label="Confirm new password" name="confirm_new_password">
             <UInput color="gray" type="password" />
           </UFormGroup>
-          <UButton
-            label="Change password"
-            color="primary"
-            variant="solid"
-            size="sm"
-            :trailing="false"
-          />
+          <div class="">
+            <UButton label="Change password" color="primary" variant="solid" size="sm" :trailing="false" />
+            <UButton label="I forgot my password" color="primary" variant="link" size="sm" to="/password_reset"
+              :trailing="false" />
+          </div>
         </div>
       </form>
     </div>
