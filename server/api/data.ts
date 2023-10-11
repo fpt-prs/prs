@@ -8,7 +8,7 @@ const connection = mysql.createPool({
   database: process.env.DATABASE_NAME,
 });
 
-type product = {
+type Product = {
   id: number;
   price: number;
   name: string;
@@ -17,13 +17,43 @@ type product = {
   page: number;
 };
 
+type ProductResponse = {
+  data: Product[];
+  total: number;
+};
+
 export default defineEventHandler(async (event) => {
+  const { field, order, page: pageParam, pageSize: pageSizeParam, term } = getQuery(event);
+
+  if (!field || !order || !pageParam || !pageSizeParam) {
+    return {
+      statusCode: 400,
+      body: "Missing required parameters",
+    };
+  }
+
+  const page = parseInt(pageParam as string);
+  const pageSize = parseInt(pageSizeParam as string);
+  const OFFSET = pageSize * (page - 1);
+
+  let countQuery = await connection.query(
+    `SELECT COUNT(*) FROM product WHERE NAME LIKE '%${term}%' ORDER BY ${field} ${order}`
+  );
+  const [countRows, _] = countQuery;
+  const count = (countRows as mysql.RowDataPacket[])[0]["COUNT(*)"];
+
   let query = await connection.query(
-    "SELECT * FROM product where page = 1 order by id asc limit 100"
+    `SELECT * FROM product WHERE NAME LIKE '%${term}%' ORDER BY ${field} ${order} LIMIT ${pageSize} OFFSET ${OFFSET}`
   );
   const [rows, fields] = query;
+
+  const response = {
+    data: rows as Product[],
+    total: count,
+  };
+
   return {
     statusCode: 200,
-    body: JSON.stringify(rows),
+    body: JSON.stringify(response),
   };
 });

@@ -1,4 +1,8 @@
-<script setup></script>
+<script setup>
+useHead({
+  title: "Home",
+});
+</script>
 
 <template>
   <img

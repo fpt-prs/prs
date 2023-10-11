@@ -1,4 +1,7 @@
 <script setup>
+useHead({
+  title: "Help & Feedback",
+});
 const feedbackTypes = [
   {
     label: "Bug",
