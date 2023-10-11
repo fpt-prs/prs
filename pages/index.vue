@@ -1,4 +1,5 @@
 <script setup>
+definePageMeta({ auth: false })
 useHead({
   title: "Home",
 });
@@ -22,6 +23,6 @@ useHead({
     </div>
   </header>
   <div class="flex flex-col items-center justify-center h-[calc(100vh-5rem)]">
-    <h1 class="text-7xl font-semibold">Supercharge your business</h1>
+    <h1 class="text-7xl text-center font-semibold">Supercharge your business</h1>
   </div>
 </template>

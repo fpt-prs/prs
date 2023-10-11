@@ -1,18 +1,23 @@
 <script setup lang="ts">
+import { DropdownItem } from "@nuxt/ui/dist/runtime/types";
+
+const { getSession, signOut } = useAuth();
+const session = await getSession();
 const settings = ref(false);
-const items = [
+const items: DropdownItem[][] = [
   [
     {
-      label: "Profile",
+      label: session?.user?.name || "Guest",
       avatar: {
-        src: "https://avatars.githubusercontent.com/u/75623745?v=4",
+        src: session?.user?.image || "/blank.webp",
       },
       to: "/settings/profile",
+      disabled: !session?.user,
     },
     {
       label: "Settings",
       icon: "i-heroicons-cog-6-tooth",
-      to: "/settings/security",
+      to: "/settings/profile",
     },
   ],
   [
@@ -26,6 +31,11 @@ const items = [
     {
       label: "Logout",
       icon: "i-heroicons-arrow-right-on-rectangle",
+      click: () => {
+        signOut({
+          callbackUrl: "/",
+        });
+      },
     },
   ],
 ];
@@ -40,10 +50,7 @@ const items = [
         <img src="/logo.svg" alt="" />
       </a>
       <UDropdown :items="items" :popper="{ placement: 'bottom-end' }">
-        <UAvatar
-          size="xs"
-          src="https://avatars.githubusercontent.com/u/75623745?v=4"
-        />
+        <UAvatar size="xs" :src="session?.user?.image || '/blank.webp'" />
       </UDropdown>
     </div>
     <div class="flex flex-col px-2">

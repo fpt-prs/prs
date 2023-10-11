@@ -1,7 +1,9 @@
 <script setup>
 useHead({
-  title: 'Profile',
-})
+  title: "Profile",
+});
+const { getSession } = useAuth();
+const session = await getSession();
 </script>
 
 <template>
@@ -12,8 +14,12 @@ useHead({
       <form action="">
         <div class="space-y-3 p-4 max-w-[50ch]">
           <div>
-            Email:
-            <span class="text-gray-600 pl-3">abcdeafgafa@gmail.com</span>
+            <span>Email:</span>
+            <span class="text-gray-500 pl-3">{{ session?.user.email }}</span>
+          </div>
+          <div>
+            <span>Name:</span>
+            <span class="text-gray-500 pl-3">{{ session?.user.name }}</span>
           </div>
         </div>
       </form>

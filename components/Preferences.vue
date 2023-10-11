@@ -1,4 +1,6 @@
 <script setup>
+const { getSession } = useAuth();
+const session = await getSession();
 const props = defineProps({
   isOpen: Boolean,
 });
