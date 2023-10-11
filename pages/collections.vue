@@ -47,10 +47,10 @@
       <div class="grow">
         <p class="text-xl px-4 py-3">Favourites</p>
         <div class="space-y-3 p-4 max-w-[50ch]">
-          <div>
-            Email:
-            <span class="text-gray-600 pl-3">abcdeafgafa@gmail.com</span>
-          </div>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Est maiores
+          iure velit sint explicabo ratione pariatur enim corporis, eum incidunt
+          adipisci cupiditate, obcaecati iste, quo eius modi suscipit?
+          Consequuntur, minus?
         </div>
       </div>
     </div>
