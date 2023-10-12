@@ -7,13 +7,12 @@ const settings = ref(false);
 const items: DropdownItem[][] = [
   [
     {
-      label: session?.user?.name || "Guest",
-      avatar: {
-        src: session?.user?.image || "/blank.webp",
-      },
-      to: "/settings/profile",
-      disabled: !session?.user,
+      label: session?.user?.email || "",
+      slot: "account",
+      disabled: true,
     },
+  ],
+  [
     {
       label: "Settings",
       icon: "i-heroicons-cog-6-tooth",
@@ -51,6 +50,14 @@ const items: DropdownItem[][] = [
       </a>
       <UDropdown :items="items" :popper="{ placement: 'bottom-end' }">
         <UAvatar size="xs" :src="session?.user?.image || '/blank.webp'" />
+        <template #account="{ item }">
+          <div class="text-left w-full">
+            <p>Signed in as</p>
+            <p class="w-full truncate font-medium text-gray-900 dark:text-white">
+              {{ item.label }}
+            </p>
+          </div>
+        </template>
       </UDropdown>
     </div>
     <div class="flex flex-col px-2">
