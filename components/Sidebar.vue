@@ -70,6 +70,14 @@ const items: DropdownItem[][] = [
         to="/collections"
         :trailing="false"
       />
+      <UButton
+        icon="i-heroicons-user-group"
+        color="gray"
+        variant="ghost"
+        label="Admin"
+        to="/admin/products"
+        :trailing="false"
+      />
     </div>
     <Preferences
       :isOpen="settings"

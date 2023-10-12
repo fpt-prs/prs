@@ -7,6 +7,12 @@ export default NuxtAuthHandler({
     GoogleProvider.default({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      options: {
+        userinfo: {
+          url: "https://example.com/oauth/userinfo",
+          params: { some: "param" },
+        },
+      },
     }),
   ],
 });
