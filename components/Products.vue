@@ -63,11 +63,12 @@ const fetchData = async () => {
   searchParams.append("pageSize", pageSize + "");
   searchParams.append("term", value.value);
   const { data } = await useFetch("/api/data?" + searchParams.toString());
-  let body = "";
+  let body = "{}";
   const response = data.value as any;
   if (response) {
     body = response.body;
   }
+  console.log(">>>>>>>>>>>>>>"+body);
   const detail = JSON.parse(body);
   products.value = detail.data;
   total.value = parseInt(detail.total);
