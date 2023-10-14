@@ -24,7 +24,7 @@ export const collection = mysqlTable("collection", {
     .references(() => user.id),
 });
 
-export const collection_product = mysqlTable("collection_product", {
+export const collection_product = mysqlTable("product_collection", {
   id: serial("id").primaryKey(),
   collection_id: int("collection_id")
     .notNull()
