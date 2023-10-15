@@ -68,7 +68,6 @@ const fetchData = async () => {
   if (response) {
     body = response.body;
   }
-  console.log(">>>>>>>>>>>>>>"+body);
   const detail = JSON.parse(body);
   products.value = detail.data;
   total.value = parseInt(detail.total);

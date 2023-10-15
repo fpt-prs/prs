@@ -30,7 +30,7 @@ type ProductCollection = {
 };
 
 type ProductResponse = {
-  data: ProductCollection[];
+  data: Product[];
   total: number;
 };
 
@@ -81,35 +81,35 @@ export default defineEventHandler(async (event) => {
   const products = await db
     .select()
     .from(product)
-    .innerJoin(
-      collection_product,
-      eq(product.id, collection_product.product_id)
-    )
-    .innerJoin(collection, eq(collection.id, collection_product.collection_id))
+    // .innerJoin(
+    //   collection_product,
+    //   eq(product.id, collection_product.product_id)
+    // )
+    // .innerJoin(collection, eq(collection.id, collection_product.collection_id))
     .where(like(product.name, `%${term}%`))
     .orderBy(orderCriteria)
     .limit(pageSize)
     .offset(OFFSET);
 
-  const aggregate = products.reduce<
-    Record<number, { product: Product; collections: Collection[] }>
-  >((acc, row) => {
-    const product = row.product;
-    const collection = row.collection;
+  // const aggregate = products.reduce<
+  //   Record<number, { product: Product; collections: Collection[] }>
+  // >((acc, row) => {
+  //   const product = row.product;
+  //   const collection = row.collection;
 
-    if (!acc[product.id]) {
-      acc[product.id] = { product, collections: [] };
-    }
+  //   if (!acc[product.id]) {
+  //     acc[product.id] = { product, collections: [] };
+  //   }
 
-    if (collection) {
-      acc[product.id].collections.push(collection);
-    }
+  //   if (collection) {
+  //     acc[product.id].collections.push(collection);
+  //   }
 
-    return acc;
-  }, {});
+  //   return acc;
+  // }, {});
 
   const response = {
-    data: aggregate as ProductCollection[],
+    data: products as Product[],
     total: countTotal,
   } as ProductResponse;
 
