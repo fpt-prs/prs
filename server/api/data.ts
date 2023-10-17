@@ -1,9 +1,9 @@
-import { desc, eq, like, sql } from "drizzle-orm";
+import { desc, like, sql } from "drizzle-orm";
 import { MySqlColumn } from "drizzle-orm/mysql-core";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
-import { collection, collection_product, product } from "~/schema";
-import { Collection } from "./collection";
+import { product } from "~/schema";
+import { Collection } from "./collection/all";
 
 const connection = mysql.createPool({
   connectionLimit: 10,
@@ -15,7 +15,7 @@ const connection = mysql.createPool({
 
 const db = drizzle(connection);
 
-type Product = {
+export type Product = {
   id: number;
   price: number;
   name: string;
@@ -81,32 +81,10 @@ export default defineEventHandler(async (event) => {
   const products = await db
     .select()
     .from(product)
-    // .innerJoin(
-    //   collection_product,
-    //   eq(product.id, collection_product.product_id)
-    // )
-    // .innerJoin(collection, eq(collection.id, collection_product.collection_id))
     .where(like(product.name, `%${term}%`))
     .orderBy(orderCriteria)
     .limit(pageSize)
     .offset(OFFSET);
-
-  // const aggregate = products.reduce<
-  //   Record<number, { product: Product; collections: Collection[] }>
-  // >((acc, row) => {
-  //   const product = row.product;
-  //   const collection = row.collection;
-
-  //   if (!acc[product.id]) {
-  //     acc[product.id] = { product, collections: [] };
-  //   }
-
-  //   if (collection) {
-  //     acc[product.id].collections.push(collection);
-  //   }
-
-  //   return acc;
-  // }, {});
 
   const response = {
     data: products as Product[],

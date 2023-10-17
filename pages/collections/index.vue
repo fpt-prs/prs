@@ -1,4 +1,21 @@
-<script setup></script>
+<script setup>
+useHead({
+  title: "Collections",
+  meta: [
+    { hid: "description", name: "description", content: "Collections page" },
+  ],
+});
+
+const collections = ref([]);
+
+onMounted(async () => {
+  const response = await fetch("/api/collection");
+  const data = await response.json();
+  const body = JSON.parse(data.body);
+  collections.value = body.data;
+  console.log(collections.value);
+});
+</script>
 
 <template>
   <NuxtLayout name="default">
@@ -12,34 +29,18 @@
             label="Favorites"
             exactActiveClass="bg-gray-700"
             :trailing="false"
-            to="/collections"
+            to="/collections/favourite"
             class="w-full"
           />
           <UButton
+            v-for="collection in collections"
+            :key="collection.id"
             icon="i-heroicons-inbox"
             color="gray"
             variant="ghost"
-            label="Collection A"
+            :label="collection.name"
             :trailing="false"
-            to="/collections"
-            class="w-full"
-          />
-          <UButton
-            icon="i-heroicons-inbox"
-            color="gray"
-            variant="ghost"
-            label="Collection B"
-            :trailing="false"
-            to="/collections"
-            class="w-full"
-          />
-          <UButton
-            icon="i-heroicons-inbox"
-            color="gray"
-            variant="ghost"
-            label="Collection C"
-            :trailing="false"
-            to="/collections"
+            :to="`collections/${collection.id}`"
             class="w-full"
           />
         </ul>
