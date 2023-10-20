@@ -7,6 +7,7 @@ export const product = mysqlTable("product", {
   name: varchar("name", { length: 255 }).notNull(),
   price: int("price").notNull(),
   page: int("page").notNull(),
+  image_url: varchar("image_url", { length: 200 }).notNull(),
 });
 
 export const user = mysqlTable("user", {

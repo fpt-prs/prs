@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Collection } from '~/server/api/collection/all';
-const route = useRoute()
+import { Collection } from "~/server/api/collection/all";
+import { Product } from "~/server/api/data";
+const route = useRoute();
 
 useHead({
   title: "Collections",
@@ -18,15 +19,16 @@ onMounted(async () => {
   collections.value = body.data;
 });
 
-const collection = ref([] as any);
+const collection = ref({} as any);
+const products = ref([] as Product[]);
 
 onMounted(async () => {
   const response = await fetch(`/api/collection?id=${route.params.id}`);
   const data = await response.json();
   const result = JSON.parse(data.body);
-  collection.value = result.data;
+  collection.value = result.collection;
+  products.value = result.products;
 });
-
 </script>
 
 <template>
@@ -52,15 +54,19 @@ onMounted(async () => {
             variant="ghost"
             :label="c.name"
             :trailing="false"
-            :to="`collections/${c.id}`"
+            :to="`./${c.id}`"
             class="w-full"
           />
         </ul>
       </div>
       <div class="grow">
-        <p class="text-xl px-4 py-3">Favourites</p>
+        <p class="text-xl px-4 py-3">{{ collection.name }}</p>
         <div class="space-y-3 p-4 max-w-[50ch]">
-          {{collection}}
+          <div v-for="product in products">
+            <p>
+              {{ product.name }}
+            </p>
+          </div>
         </div>
       </div>
     </div>

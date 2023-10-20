@@ -31,7 +31,7 @@ defineProps({
       }"
     >
       <template #detail-data="{ row }">
-        <a class="" :href="row.url" target="_blank">
+        <a class="" :href="`/product/${row.product_id}`">
           <div class="break-words text-sm">{{ row.name }}</div>
           <p class="text-gray-500">{{ "#" + row.product_id }}</p>
         </a>
