@@ -38,27 +38,45 @@ onMounted(async () => {
         label="Back"
       />
     </div>
-    <div class="text-3xl p-3">
-      <div class="flex max-w-[60ch] mx-auto">
-        <img :src="product.image_url" class="w-80 h-80 mr-3" />
-        <div class="">
-          <div class="text-2xl font-bold">{{ product.name }}</div>
-          <div class="my-4">
-            {{ "$" + product.price }}
-          </div>
+    <div class="flex mx-auto py-3 px-12">
+      <img
+        :src="product.image_url || '/no-image.png'"
+        class="w-80 h-80 mr-3"
+      />
+      <div class="">
+        <div class="text-2xl font-bold">{{ product.name }}</div>
+        <div class="my-4">
+          {{ "$" + product.price }}
+        </div>
+        <div class="lg:flex gap-5 pt-3 max-lg:space-y-2">
           <UButton
             icon="i-heroicons-arrow-right"
             trailing
             size="lg"
             :to="product.url"
             target="_blank"
-            class="mt-3"
             label="View in Amazon"
           />
+          <UPopover>
+            <UButton
+              color="white"
+              size="lg"
+              trailing-icon="i-heroicons-chevron-down-20-solid"
+              label="Add to Collections"
+            />
+            <template #panel>
+              <UCard>
+                <UCheckbox
+                  v-for="collection in collections"
+                  :name="collection.name"
+                  :label="collection.name"
+                  :key="collection.id"
+                  v-model="collection.isExist"
+                />
+              </UCard>
+            </template>
+          </UPopover>
         </div>
-      </div>
-      <div v-for="collection in collections" class="">
-        {{ JSON.stringify(collection) }}
       </div>
     </div>
   </NuxtLayout>

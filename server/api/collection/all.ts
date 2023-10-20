@@ -19,7 +19,7 @@ const connection = mysql.createPool({
 export type CollectionContains = {
   name: string;
   id: number;
-  isExist: number;
+  isExist: boolean;
 };
 
 const db = drizzle(connection);
@@ -49,12 +49,16 @@ export default defineEventHandler(async (event) => {
       collection_product,
       eq(collection_product.collection_id, collection.id)
     )
-    .where(eq(collection.user_id, 1));
-
+    .where(eq(collection.user_id, 1))
+    .then((rows) => rows.map(castType));
   return {
     statusCode: 200,
-    body: JSON.stringify({
-      data: data,
-    }),
+    body: JSON.stringify(data),
   };
+});
+
+const castType = (row: any): CollectionContains => ({
+  id: row.id,
+  name: row.name,
+  isExist: row.isExist === 1,
 });

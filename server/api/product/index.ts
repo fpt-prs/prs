@@ -20,6 +20,7 @@ export type Product = {
   product_id: string;
   url: string;
   page: number;
+  image_url: string;
 };
 
 export default defineEventHandler(async (event) => {
