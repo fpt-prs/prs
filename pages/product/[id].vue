@@ -25,6 +25,15 @@ onMounted(async () => {
   const collectionBody = JSON.parse(collectionData.body);
   collections.value = collectionBody;
 });
+
+watch(
+  collections,
+  (newVal) => {
+
+  },
+  { immediate: true }
+);
+
 </script>
 
 <template>
