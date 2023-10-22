@@ -26,19 +26,21 @@ onMounted(async () => {
   collections.value = collectionBody;
 });
 
-watch(
-  collections,
-  (newVal) => {
-
-  },
-  { immediate: true }
-);
-
+const update = async (c: CollectionContains) => {
+  const method = c.isExist ? "DELETE" : "PUT";
+  const response = await fetch("/api/collection/update", {
+    method: method,
+    body: JSON.stringify({
+      collectionId: c.id,
+      productId: product.value.id,
+    }),
+  });
+};
 </script>
 
 <template>
   <NuxtLayout name="default">
-    <div class="text-3xl p-3 border-b border-gray-200 dark:border-gray-800">
+    <div class="text-3xl p-3 dark:border-b dark:border-gray-800">
       <UButton
         icon="i-heroicons-arrow-left"
         to="/search"
@@ -48,14 +50,11 @@ watch(
       />
     </div>
     <div class="flex mx-auto py-3 px-12">
-      <img
-        :src="product.image_url || '/no-image.png'"
-        class="w-80 h-80 mr-3"
-      />
+      <img :src="product.image_url || '/no-image.png'" class="w-80 h-80 mr-3" />
       <div class="">
         <div class="text-2xl font-bold">{{ product.name }}</div>
         <div class="my-4">
-          {{ "$" + product.price }}
+          {{ "$" + product.price || "" }}
         </div>
         <div class="lg:flex gap-5 pt-3 max-lg:space-y-2">
           <UButton
@@ -81,6 +80,7 @@ watch(
                   :label="collection.name"
                   :key="collection.id"
                   v-model="collection.isExist"
+                  @click="update(collection)"
                 />
               </UCard>
             </template>

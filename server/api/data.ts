@@ -22,6 +22,7 @@ export type Product = {
   product_id: string;
   url: string;
   page: number;
+  image_url: string;
 };
 
 type ProductCollection = {
@@ -38,9 +39,6 @@ export default defineEventHandler(async (event) => {
   const {
     field,
     order,
-    page: pageParam,
-    pageSize: pageSizeParam,
-    term,
   } = getQuery(event);
 
   const mapField: Map<string, MySqlColumn> = new Map();
@@ -49,23 +47,19 @@ export default defineEventHandler(async (event) => {
   mapField.set("name", product.name);
   mapField.set("product_id", product.product_id);
   mapField.set("url", product.url);
-  mapField.set("page", product.page);
 
-  if (!field || !order || !pageParam || !pageSizeParam) {
+  if (!field || !order) {
     return {
       statusCode: 400,
       body: "Missing required parameters",
     };
   }
 
-  const page = parseInt(pageParam as string);
-  const pageSize = parseInt(pageSizeParam as string);
-  const OFFSET = pageSize * (page - 1);
+  const pageSize = 8;
 
   let countQuery = await db
     .select({ count: sql<number>`COUNT(*)` })
     .from(product)
-    .where(like(product.name, `%${term}%`))
     .execute();
   const countTotal = countQuery[0].count;
 
@@ -81,10 +75,8 @@ export default defineEventHandler(async (event) => {
   const products = await db
     .select()
     .from(product)
-    .where(like(product.name, `%${term}%`))
     .orderBy(orderCriteria)
-    .limit(pageSize)
-    .offset(OFFSET);
+    .limit(pageSize);
 
   const response = {
     data: products as Product[],

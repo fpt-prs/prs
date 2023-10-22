@@ -1,7 +1,7 @@
 import mysql from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
 import { collection, collection_product } from "~/schema";
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, isNull, or, sql } from "drizzle-orm";
 
 export type Collection = {
   name: string;
@@ -47,9 +47,20 @@ export default defineEventHandler(async (event) => {
     .from(collection)
     .leftJoin(
       collection_product,
-      eq(collection_product.collection_id, collection.id)
+      and(
+        eq(collection_product.collection_id, collection.id),
+        eq(collection_product.product_id, product_order)
+      )
     )
-    .where(eq(collection.user_id, 1))
+    .where(
+      and(
+        eq(collection.user_id, 1),
+        or(
+          eq(collection_product.product_id, product_order),
+          isNull(collection_product.product_id)
+        )
+      )
+    )
     .then((rows) => rows.map(castType));
   return {
     statusCode: 200,

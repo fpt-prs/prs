@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { view } from "drizzle-orm/sqlite-core";
+import { Product } from "~/server/api/data";
+
 useHead({
   title: "Search",
 });
@@ -6,9 +9,6 @@ useHead({
 const router = useRouter();
 const route = useRoute();
 const { field, order, page: pageStr } = route.query;
-const page = ref(parseInt((pageStr as string) || "1"));
-const pageSize = 15;
-const searchTerm = ref("");
 
 const sortCriterias = [
   { name: "Price: Low to High", field: "price", order: "asc" },
@@ -19,44 +19,16 @@ const sortCriteria = ref(
     sortCriterias[0]
 );
 
-const products = ref([]);
+const products = ref([] as Product[]);
 const total = ref(0);
-
-watch(page, async (newPage: any) => {
-  router.push({
-    query: {
-      page: newPage,
-      field: sortCriteria.value.field,
-      order: sortCriteria.value.order,
-      term: searchTerm.value,
-    },
-  });
-  await fetchData();
-});
 
 watch(sortCriteria, async (newCriteria: any) => {
   router.push({
     query: {
-      page: 1,
       field: newCriteria.field,
       order: newCriteria.order,
-      term: searchTerm.value,
     },
   });
-  page.value = 1;
-  await fetchData();
-});
-
-watch(searchTerm, async (newTerm: any) => {
-  router.push({
-    query: {
-      page: 1,
-      field: sortCriteria.value.field,
-      order: sortCriteria.value.order,
-      term: newTerm,
-    },
-  });
-  page.value = 1;
   await fetchData();
 });
 
@@ -64,9 +36,6 @@ const fetchData = async () => {
   const searchParams = new URLSearchParams();
   searchParams.append("field", sortCriteria.value.field);
   searchParams.append("order", sortCriteria.value.order);
-  searchParams.append("page", page.value + "");
-  searchParams.append("pageSize", pageSize + "");
-  searchParams.append("term", searchTerm.value);
   const { data } = await useFetch(`/api/data?${searchParams.toString()}`);
   let body = "{}";
   const response = data.value as any;
@@ -80,21 +49,6 @@ const fetchData = async () => {
 
 fetchData();
 
-const columns = [
-  {
-    label: "Detail",
-    key: "detail",
-  },
-  {
-    label: "Price",
-    key: "price",
-  },
-  {
-    label: "Actions",
-    key: "actions",
-  },
-];
-
 const collections = ref([] as any);
 
 onMounted(async () => {
@@ -103,19 +57,17 @@ onMounted(async () => {
   const result = JSON.parse(data.body);
   collections.value = result.data;
 });
+
+const viewMode = ref("list");
 </script>
 
 <template>
   <NuxtLayout name="default">
     <div class="">
-      <div class="flex items-center gap-5 p-5 border-b border-gray-800">
-        <UInput
-          v-model="searchTerm"
-          size="sm"
-          placeholder="Search..."
-          class="grow"
-          color="gray"
-        />
+      <div
+        class="flex justify-between items-center gap-5 p-5 dark:border-b border-gray-800"
+      >
+        <p class="font-semibold text-lg">Trending products</p>
         <USelectMenu
           v-model="sortCriteria"
           :options="sortCriterias"
@@ -123,58 +75,103 @@ onMounted(async () => {
           color="gray"
         >
           <template #option="{ option: criteria }">
-            <span class="truncate">{{ criteria.name }}</span>
+            <span class="">{{ criteria.name }}</span>
           </template>
         </USelectMenu>
+      </div>
+
+      <div class="flex mx-5 mt-5">
         <UButton
-          icon="i-heroicons-magnifying-glass"
-          color="primary"
-          variant="solid"
-          label="Search"
+          color="gray"
+          :variant="viewMode === 'grid' ? 'solid' : 'ghost'"
           :trailing="false"
-          to="/"
-          size="sm"
+          icon="i-heroicons-squares-2x2"
+          @click="viewMode = 'grid'"
+        />
+        <UButton
+          color="gray"
+          :variant="viewMode === 'dense' ? 'solid' : 'ghost'"
+          :trailing="false"
+          icon="i-heroicons-view-columns"
+          @click="viewMode = 'dense'"
+        />
+        <UButton
+          color="gray"
+          :variant="viewMode === 'list' ? 'solid' : 'ghost'"
+          :trailing="false"
+          icon="i-heroicons-list-bullet"
+          @click="viewMode = 'list'"
         />
       </div>
-      <div class="">
-        <div class="flex justify-center">
-          <UPagination
-            v-model="page"
-            :page-count="pageSize"
-            :total="total"
-            class="py-5"
-          />
-        </div>
-        <Products :products="products" :columns="columns">
-          <template #actions="{ row }">
-            <UPopover>
-              <UButton
-                color="white"
-                variant="ghost"
-                label=""
-                trailing-icon="i-heroicons-ellipsis-horizontal"
-              />
-              <template #panel>
-                <UCard>
-                  <p class="pb-2">Add to Collections</p>
-                  <UCheckbox
-                    v-for="collection in collections"
-                    :name="collection.name"
-                    :label="collection.name"
-                  />
-                </UCard>
-              </template>
-            </UPopover>
-          </template>
-        </Products>
-        <div class="flex justify-center">
-          <UPagination
-            v-model="page"
-            :page-count="pageSize"
-            :total="total"
-            class="py-5"
-          />
-        </div>
+
+      <div
+        class="grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-5 p-5"
+        v-if="viewMode === 'grid'"
+      >
+        <a
+          class=""
+          :href="`/product/${row.product_id}`"
+          v-for="row in products"
+        >
+          <div class="">
+            <img
+              class="w-full h-60 mr-4"
+              :src="row.image_url || 'https://via.placeholder.com/150'"
+              alt="Product image"
+            />
+            <div class="break-words p-2 truncate">
+              <p class="truncate">{{ row.name }}</p>
+              <div class="text-gray-500 mt-2">
+                {{ "$" + row.price }}
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div
+        class="grid grid-cols-[repeat(auto-fill,minmax(9rem,1fr))] gap-5 p-5"
+        v-if="viewMode === 'dense'"
+      >
+        <a
+          class=""
+          :href="`/product/${row.product_id}`"
+          v-for="row in products"
+        >
+          <div class="">
+            <img
+              class="w-full h-36 mr-4"
+              :src="row.image_url || 'https://via.placeholder.com/150'"
+              alt="Product image"
+            />
+            <div class="break-words p-2 truncate">
+              <p class="truncate">{{ row.name }}</p>
+              <div class="text-gray-500 mt-2">
+                {{ "$" + row.price }}
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div class="gap-5 p-5 space-y-5" v-if="viewMode === 'list'">
+        <a
+          class="block"
+          :href="`/product/${row.product_id}`"
+          v-for="row in products"
+        >
+          <div class="flex">
+            <img
+              class="w-36 h-36 mr-4"
+              :src="row.image_url || 'https://via.placeholder.com/150'"
+              alt="Product image"
+            />
+            <div class="break-words p-2 truncate">
+              <p class="truncate">{{ row.name }}</p>
+              <div class="text-gray-500 mt-2">
+                {{ "$" + row.price }}
+              </div>
+            </div>
+          </div>
+        </a>
       </div>
     </div>
   </NuxtLayout>

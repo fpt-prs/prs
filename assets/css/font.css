@@ -1,0 +1,19 @@
+@font-face {
+  font-family: "GitLab Sans";
+  font-style: normal;
+  /* ttf format */
+  src: url("./GitLabSans.ttf") format("truetype");
+}
+
+/* italic */
+@font-face {
+  font-family: "GitLab Sans";
+  font-style: italic;
+  /* ttf format */
+  src: url("./GitLabSans-Italic.ttf") format("truetype");
+}
+
+/* use this font */
+body {
+  font-family: "GitLab Sans", sans-serif;
+}

@@ -42,30 +42,19 @@ const items: DropdownItem[][] = [
 
 <template>
   <div
-    class="w-56 xl:w-64 min-w-[14rem] max-w-xl border-r border-gray-200 dark:border-gray-800 flex flex-col"
+    class="fixed top-0 h-14 dark:bg-gray-900 bg-white w-full dark:border-b dark:border-gray-800 flex items-center justify-between z-50"
   >
     <div class="flex items-center justify-between px-4 h-14">
       <a href="/search">
         <img src="/logo.svg" alt="" />
       </a>
-      <UDropdown :items="items" :popper="{ placement: 'bottom-end' }">
-        <UAvatar size="xs" :src="session?.user?.image || '/blank.webp'" />
-        <template #account="{ item }">
-          <div class="text-left w-full">
-            <p>Signed in as</p>
-            <p class="w-full truncate font-medium text-gray-900 dark:text-white">
-              {{ item.label }}
-            </p>
-          </div>
-        </template>
-      </UDropdown>
     </div>
-    <div class="flex flex-col px-2">
+    <div class="flex items-center px-2">
       <UButton
         icon="i-heroicons-magnifying-glass"
         color="gray"
         variant="ghost"
-        label="Search"
+        label="HOT products"
         to="/search"
         :trailing="false"
       />
@@ -85,6 +74,23 @@ const items: DropdownItem[][] = [
         to="/admin/products"
         :trailing="false"
       />
+      <UDropdown
+        :items="items"
+        :popper="{ placement: 'bottom-end' }"
+        class="ml-5"
+      >
+        <UAvatar :src="session?.user?.image || '/blank.webp'" />
+        <template #account="{ item }">
+          <div class="text-left w-full z-[99]">
+            <p>Signed in as</p>
+            <p
+              class="w-full truncate font-medium text-gray-900 dark:text-white"
+            >
+              {{ item.label }}
+            </p>
+          </div>
+        </template>
+      </UDropdown>
     </div>
     <Preferences
       :isOpen="settings"

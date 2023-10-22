@@ -14,13 +14,15 @@ const connection = mysql.createPool({
 const db = drizzle(connection);
 
 export default defineEventHandler(async (event) => {
-  const { collectionId, productId } = await readBody(event);
+  const body = await readBody(event);
+  const { collectionId, productId } = JSON.parse(body);
+  console.log(`collectionId: ${collectionId}, productId: ${productId}`);
   await db
     .delete(collection_product)
     .where(
       and(
-        eq(collection_product.collection_id, Number(collectionId)),
-        eq(collection_product.product_id, Number(productId))
+        eq(collection_product.collection_id, parseInt(collectionId)),
+        eq(collection_product.product_id, parseInt(productId))
       )
     );
 });

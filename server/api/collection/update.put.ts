@@ -1,9 +1,6 @@
-import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
-import { Product } from "../data";
-import { product, collection_product, collection } from "~/schema";
-import { Collection } from "./all";
+import { collection_product } from "~/schema";
 
 const connection = mysql.createPool({
   connectionLimit: 10,
@@ -16,10 +13,14 @@ const connection = mysql.createPool({
 const db = drizzle(connection);
 
 export default defineEventHandler(async (event) => {
-  const { collectionId, productId } = await readBody(event);
+  const { collectionId, productId } = JSON.parse(await readBody(event));
+  const parsedCollectionId = parseInt(collectionId);
+  const parsedProductId = parseInt(productId);
+  console.log(`collectionId: ${parsedCollectionId}, productId: ${parsedProductId}`);
+
   await db.insert(collection_product).values({
-    collection_id: Number(collectionId),
-    product_id: Number(productId),
+    collection_id: Number(parsedCollectionId),
+    product_id: Number(parsedProductId),
     created: new Date(),
   });
 });

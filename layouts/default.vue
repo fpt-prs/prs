@@ -7,9 +7,9 @@ useHead({
 </script>
 
 <template>
-  <div class="flex h-screen bg-gray-900">
+  <div class="h-screen flex flex-col dark:bg-gray-900 bg-white">
     <Sidebar />
-    <div class="w-screen overflow-y-auto">
+    <div class="grow overflow-x-auto mt-14">
       <slot />
     </div>
   </div>

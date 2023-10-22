@@ -19,28 +19,20 @@ defineProps({
 </script>
 
 <template>
-  <div class="">
-    <UTable
-      :rows="products"
-      :columns="columns"
-      :ui="{
-        wrapper: 'border-y border-gray-800',
-        td: {
-          base: 'whitespace-normal break-word',
-        },
-      }"
+  <div class="grid grid-cols-4 gap-5 px-5">
+    <a
+      class=""
+      :href="`/product/${row.product_id}`"
+      v-for="row in products"
     >
-      <template #detail-data="{ row }">
-        <a class="" :href="`/product/${row.product_id}`">
-          <div class="break-words text-sm">{{ row.name }}</div>
-          <p class="text-gray-500">{{ "#" + row.product_id }}</p>
-        </a>
-      </template>
-      <template #actions-data="{ row }">
-        <slot name="actions" :row="row">
-          <div class=""></div>
-        </slot>
-      </template>
-    </UTable>
+      <div class="">
+        <img
+          class="w-full mr-4"
+          :src="row.image_url || 'https://via.placeholder.com/150'"
+          alt="Product image"
+        />
+        <div class="break-words p-2 truncate">{{ row.name }}</div>
+      </div>
+    </a>
   </div>
 </template>
