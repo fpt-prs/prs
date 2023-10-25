@@ -8,7 +8,7 @@ useHead({
 
 <template>
   <div class="h-screen flex flex-col dark:bg-gray-900 bg-white">
-    <Sidebar />
+    <Navbar />
     <div class="grow overflow-x-auto mt-14">
       <slot />
     </div>

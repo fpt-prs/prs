@@ -17,3 +17,7 @@
 body {
   font-family: "GitLab Sans", sans-serif;
 }
+
+.border-color {
+  @apply border-gray-300 dark:border-gray-700;
+}

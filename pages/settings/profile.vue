@@ -10,7 +10,7 @@ const session = await getSession();
   <NuxtLayout name="settings">
     <div class="grow">
       <p class="text-xl px-4 py-3">Profile</p>
-      <p class="border-y border-gray-800 px-4 py-3">Profile detail</p>
+      <p class="border-y border-color px-4 py-3">Profile detail</p>
       <div class="space-y-3 p-4 max-w-[50ch]">
         <div>
           <span>Email:</span>

@@ -3,7 +3,8 @@ import { DropdownItem } from "@nuxt/ui/dist/runtime/types";
 
 const { getSession, signOut } = useAuth();
 const session = await getSession();
-const settings = ref(false);
+let theme = useColorMode();
+const isDark = computed(() => theme.value === "dark");
 const items: DropdownItem[][] = [
   [
     {
@@ -42,7 +43,7 @@ const items: DropdownItem[][] = [
 
 <template>
   <div
-    class="fixed top-0 h-14 dark:bg-gray-900 bg-white w-full dark:border-b dark:border-gray-800 flex items-center justify-between z-50"
+    class="fixed top-0 h-14 dark:bg-gray-900 bg-white w-full border-b border-color flex items-center justify-between z-50"
   >
     <div class="flex items-center justify-between px-4 h-14">
       <a href="/search">
@@ -74,10 +75,17 @@ const items: DropdownItem[][] = [
         to="/admin/products"
         :trailing="false"
       />
+      <UButton
+        :icon="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'"
+        color="gray"
+        variant="ghost"
+        @click="theme.preference = isDark ? 'light' : 'dark'"
+        :trailing="false"
+      />
       <UDropdown
         :items="items"
         :popper="{ placement: 'bottom-end' }"
-        class="ml-5"
+        class="ml-2"
       >
         <UAvatar :src="session?.user?.image || '/blank.webp'" />
         <template #account="{ item }">
@@ -92,9 +100,5 @@ const items: DropdownItem[][] = [
         </template>
       </UDropdown>
     </div>
-    <Preferences
-      :isOpen="settings"
-      @update:isOpen="(value) => (settings = value)"
-    />
   </div>
 </template>

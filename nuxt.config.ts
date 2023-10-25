@@ -10,5 +10,5 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/logo.svg" }],
     },
   },
-  css: ["~/assets/css/font.css"],
+  css: ["~/assets/css/global.css"],
 });

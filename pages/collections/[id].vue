@@ -34,7 +34,7 @@ onMounted(async () => {
 <template>
   <NuxtLayout name="default">
     <div class="flex h-full">
-      <div class="p-5 border-r border-gray-200 dark:border-gray-800">
+      <div class="p-5 border-r border-color">
         <ul class="flex flex-col">
           <UButton
             icon="i-heroicons-user-circle"

@@ -1,7 +1,8 @@
-import { desc, like, sql } from "drizzle-orm";
+import { desc, isNotNull, sql } from "drizzle-orm";
 import { MySqlColumn } from "drizzle-orm/mysql-core";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
+import * as schema from "~/schema";
 import { product } from "~/schema";
 import { Collection } from "./collection/all";
 
@@ -13,7 +14,7 @@ const connection = mysql.createPool({
   database: process.env.DATABASE_NAME,
 });
 
-const db = drizzle(connection);
+const db = drizzle(connection, { schema, mode: "default" });
 
 export type Product = {
   id: number;
@@ -21,8 +22,10 @@ export type Product = {
   name: string;
   product_id: string;
   url: string;
-  page: number;
-  image_url: string;
+  description: string;
+  image_urls: {
+    image_url: string;
+  }[];
 };
 
 type ProductCollection = {
@@ -36,10 +39,7 @@ type ProductResponse = {
 };
 
 export default defineEventHandler(async (event) => {
-  const {
-    field,
-    order,
-  } = getQuery(event);
+  const { field, order } = getQuery(event);
 
   const mapField: Map<string, MySqlColumn> = new Map();
   mapField.set("id", product.id);
@@ -72,11 +72,18 @@ export default defineEventHandler(async (event) => {
   }
   const orderCriteria = order === "asc" ? orderField : desc(orderField);
 
-  const products = await db
-    .select()
-    .from(product)
-    .orderBy(orderCriteria)
-    .limit(pageSize);
+  const products = await db.query.product.findMany({
+    orderBy: [orderCriteria],
+    with: {
+      image_urls: {
+        columns: {
+          image_url: true,
+        },
+      },
+    },
+    limit: pageSize,
+    where: isNotNull(product.description),
+  });
 
   const response = {
     data: products as Product[],
