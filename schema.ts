@@ -5,6 +5,7 @@ import {
   serial,
   text,
   timestamp,
+  tinyint,
   varchar,
 } from "drizzle-orm/mysql-core";
 
@@ -22,6 +23,7 @@ export const user = mysqlTable("user", {
   user_id: varchar("user_id", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull(),
   name: varchar("name", { length: 255 }).notNull(),
+  is_active: tinyint("is_active").notNull(),
 });
 
 export const collection = mysqlTable("collection", {

@@ -20,6 +20,10 @@ const session = await getSession();
           <span>Name:</span>
           <span class="text-gray-500 pl-3">{{ session?.user.name }}</span>
         </div>
+        <div class="">
+          <span>ID</span>
+          <span class="text-gray-500 pl-3">{{ session?.user.id }}</span>
+        </div>
       </div>
     </div>
   </NuxtLayout>
