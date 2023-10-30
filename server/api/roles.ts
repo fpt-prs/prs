@@ -13,10 +13,29 @@ const connection = mysql.createPool({
 const db = drizzle(connection, { schema, mode: "default" });
 
 export default defineEventHandler(async (event) => {
-  const roles = await db.query.role.findMany();
+  const roles = await db.query.role.findMany({
+    with: {
+      rolePermissions: {
+        columns: {},
+        with: {
+          permission: true,
+        },
+      },
+    },
+  });
+
+  const parsed = roles.map((role) => {
+    return {
+      id: role.id,
+      name: role.name,
+      permissions: role.rolePermissions.map((rolePermission) => {
+        return rolePermission.permission;
+      }),
+    };
+  });
 
   return {
     statusCode: 200,
-    body: JSON.stringify(roles),
+    body: JSON.stringify(parsed),
   };
 });

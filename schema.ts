@@ -95,3 +95,31 @@ export const permission = mysqlTable("permission", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 100 }).notNull(),
 });
+
+export const rolesRelation = relations(role, ({ many }) => ({
+  rolePermissions: many(rolePermission),
+}));
+
+export const permissionsRelation = relations(permission, ({ many }) => ({
+  rolePermissions: many(rolePermission),
+}));
+
+export const rolePermission = mysqlTable("role_permission", {
+  role_id: int("role_id")
+    .notNull()
+    .references(() => role.id),
+  permission_id: int("permission_id")
+    .notNull()
+    .references(() => permission.id),
+});
+
+export const rolePermissionRelation = relations(rolePermission, ({ one }) => ({
+  role: one(role, {
+    fields: [rolePermission.role_id],
+    references: [role.id],
+  }),
+  permission: one(permission, {
+    fields: [rolePermission.permission_id],
+    references: [permission.id],
+  }),
+}))

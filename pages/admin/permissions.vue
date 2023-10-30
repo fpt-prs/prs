@@ -1,37 +1,17 @@
-<template>
-  <NuxtLayout name="admin">
-    <div class="grow">
-      <p class="text-xl px-4 py-3 border-b border-color">Permissions</p>
-      <table class="w-full">
-        <thead class="p-3 border-b border-color">
-          <tr>
-            <td class="p-3 font-semibold">ID</td>
-            <td class="p-3 font-semibold">Name</td>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="permission of permissions"
-            :key="permission.id"
-            class="border-b border-color"
-          >
-            <td class="p-3">{{ permission.id }}</td>
-            <td class="p-3">{{ permission.name }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </NuxtLayout>
-</template>
-
 <script setup>
-// meta
 useHead({
   title: "Permission Management",
-})
+});
 
-// permissions
-const permissions = ref([]);
+const newPermissionName = ref("");
+const isEditing = ref(false);
+const editingPermission = ref({});
+
+const permissions = ref([
+  { id: 1, name: "Admin" },
+  { id: 2, name: "Dropshipper" },
+  { id: 3, name: "Collaborator" },
+]);
 
 onMounted(async () => {
   const response = await fetch("/api/permissions");
@@ -40,9 +20,132 @@ onMounted(async () => {
   permissions.value = body;
 });
 
+const columns = [
+  { key: "id", label: "ID" },
+  { key: "name", label: "Name" },
+  { key: "actions", label: "Actions" },
+];
+
+const actions = (permission) => [
+  [
+    {
+      label: "Edit",
+      icon: "i-heroicons-pencil-20-solid",
+      click: () => {
+        isEditing.value = true;
+        editingPermission.value = permission;
+      },
+    },
+    {
+      label: "Delete",
+      icon: "i-heroicons-trash-20-solid",
+      click: () => {
+        removePermission(permission);
+      },
+    },
+  ],
+];
+
+const addPermission = () => {
+  const maxId = Math.max(
+    ...permissions.value.map((permission) => permission.id),
+    0
+  );
+  const newPermission = {
+    id: maxId + 1,
+    name: newPermissionName.value,
+  };
+  permissions.value.push(newPermission);
+  newPermissionName.value = "";
+};
+
+const removePermission = (permission) => {
+  permissions.value = permissions.value.filter((r) => r.id !== permission.id);
+};
 </script>
 
-<style>
-
-</style>
-
+<template>
+  <NuxtLayout name="admin">
+    <p class="text-2xl px-4 py-3">Permissions</p>
+    <div class="border border-color rounded-lg mx-4">
+      <table class="w-full">
+        <thead class="border-b border-color">
+          <tr>
+            <th
+              v-for="column in columns"
+              :key="column.key"
+              class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider"
+            >
+              {{ column.label }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="permission of permissions" :key="permission.id">
+            <td class="px-4 py-3">{{ permission.id }}</td>
+            <td class="px-4 py-3">{{ permission.name }}</td>
+            <td class="px-4 py-3">
+              <UDropdown
+                :items="actions(permission)"
+                :popper="{ placement: 'bottom-end' }"
+              >
+                <UButton
+                  color="white"
+                  variant="ghost"
+                  label=""
+                  trailing-icon="i-heroicons-ellipsis-horizontal"
+                />
+              </UDropdown>
+            </td>
+          </tr>
+          <tr>
+            <td></td>
+            <td class="px-4 py-3">
+              <UInput
+                placeholder="Name"
+                size="lg"
+                class="w-full"
+                v-model="newPermissionName"
+                @keydown.enter="addPermission"
+              />
+            </td>
+            <td class="px-4 py-3">
+              <UButton
+                label=""
+                variant="ghost"
+                size="lg"
+                trailing-icon="i-heroicons-plus-20-solid"
+                :disabled="!newPermissionName"
+                @click="addPermission"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <UModal v-model="isEditing">
+        <UCard>
+          <template #header>
+            <div class="flex justify-between items-center">
+              <h3 class="text-lg font-medium">Edit Permission</h3>
+              <UButton
+                label=""
+                variant="ghost"
+                size="lg"
+                trailing-icon="i-heroicons-x-mark"
+                @click="isEditing = false"
+              />
+            </div>
+          </template>
+          <UFormGroup label="Name">
+            <UInput
+              placeholder="Name"
+              size="lg"
+              class="w-full"
+              v-model="editingPermission.name"
+            />
+          </UFormGroup>
+        </UCard>
+      </UModal>
+    </div>
+  </NuxtLayout>
+</template>
