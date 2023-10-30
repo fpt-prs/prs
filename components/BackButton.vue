@@ -1,0 +1,9 @@
+<template>
+  <UButton
+    icon="i-heroicons-arrow-left"
+    variant="link"
+    color="white"
+    label="Back"
+    @click="$router.go(-1)"
+  />
+</template>

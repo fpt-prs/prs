@@ -15,8 +15,7 @@ const connection = mysql.createPool({
 const db = drizzle(connection, { schema, mode: "default" });
 
 export default defineEventHandler(async (event) => {
-  const { id } = getQuery(event);
-  const idString = id as string;
+  const id = getRouterParam(event, "id");
 
   const productDetail = await db.query.product.findFirst({
     with: {
@@ -26,7 +25,7 @@ export default defineEventHandler(async (event) => {
         },
       },
     },
-    where: eq(product.product_id, idString),
+    where: eq(product.product_id, id),
   });
 
   return {

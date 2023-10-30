@@ -16,7 +16,7 @@ const collections = ref([] as CollectionContains[]);
 const currentImage = ref(0);
 
 const response = await fetch(
-  "http://localhost:3000/api/product?id=" + route.params.id
+  `http://localhost:3000/api/products/${route.params.id}`
 );
 const data = await response.json();
 const body = JSON.parse(data.body);
@@ -42,14 +42,8 @@ const update = async (c: CollectionContains) => {
 
 <template>
   <NuxtLayout name="default">
-    <div class="text-3xl p-3 dark:border-b dark:border-gray-800">
-      <UButton
-        icon="i-heroicons-arrow-left"
-        to="/search"
-        variant="link"
-        color="white"
-        label="Back"
-      />
+    <div class="text-3xl p-3 dark:border-b border-color">
+      <BackButton />
     </div>
     <div class="max-w-[80rem] mx-auto px-3">
       <div class="flex py-12">

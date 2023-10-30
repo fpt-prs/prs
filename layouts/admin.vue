@@ -5,7 +5,7 @@ import DefaultLayout from "~/layouts/default.vue";
 <template>
   <DefaultLayout>
     <div class="flex h-full">
-      <div class="p-5 border-r border-gray-800 lg:min-w-[20ch]">
+      <div class="p-5 border-r border-color lg:min-w-[20ch]">
         <ul class="flex flex-col">
           <UButton
             icon="i-heroicons-building-storefront"
@@ -23,6 +23,15 @@ import DefaultLayout from "~/layouts/default.vue";
             label="Users"
             :trailing="false"
             to="/admin/users"
+            class="w-full"
+          />
+          <UButton
+            icon="i-heroicons-user-group"
+            color="gray"
+            variant="ghost"
+            label="Roles"
+            :trailing="false"
+            to="/admin/role"
             class="w-full"
           />
         </ul>

@@ -43,18 +43,18 @@ const selectedType = ref("bug");
   <NuxtLayout name="default">
     <div class="">
       <div
-        class="flex items-center gap-5 p-5 border-b border-gray-800 bg-gray-900 z-10 sticky top-0"
+        class="flex items-center gap-5 p-5 border-b border-color bg-color z-10 sticky top-0"
       >
         <h1 class="text-xl">FAQ</h1>
       </div>
-      <div class="p-5 border-b border-gray-800">
+      <div class="p-5 border-b border-color">
         <div class="max-w-[60ch] mx-auto">
           <UAccordion :items="items" size="xl" />
         </div>
       </div>
     </div>
     <div class="">
-      <div class="flex items-center gap-5 p-5 border-b border-gray-800 bg-gray-900 z-10 sticky top-0">
+      <div class="flex items-center gap-5 p-5 border-b border-color bg-color z-10 sticky top-0">
         <h1 class="text-xl">Feedback</h1>
       </div>
       <div class="p-5 max-w-[60ch] mx-auto">

@@ -36,7 +36,7 @@ const fetchData = async () => {
   const searchParams = new URLSearchParams();
   searchParams.append("field", sortCriteria.value.field);
   searchParams.append("order", sortCriteria.value.order);
-  const { data } = await useFetch(`/api/data?${searchParams.toString()}`);
+  const { data } = await useFetch(`/api/products?${searchParams.toString()}`);
   let body = "{}";
   const response = data.value as any;
   if (response) {
@@ -64,7 +64,7 @@ const viewMode = ref("list");
   <NuxtLayout name="default">
     <div class="">
       <div
-        class="flex justify-between items-center gap-5 p-5 dark:border-b border-gray-800"
+        class="flex justify-between items-center gap-5 p-5 dark:border-b border-color"
       >
         <p class="font-semibold text-lg">Trending products</p>
         <USelectMenu
@@ -104,7 +104,7 @@ const viewMode = ref("list");
       </div>
 
       <div
-        class="w-full h-12 text-center flex justify-center items-center"
+        class="w-full h-20   text-center flex justify-center items-center"
         v-if="products.length === 0"
       >
         <UIcon name="i-heroicons-arrow-path" class="animate-spin" size="lg" />

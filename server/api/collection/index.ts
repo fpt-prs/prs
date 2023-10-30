@@ -1,10 +1,9 @@
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
-import { Product } from "../data";
-import { product, collection_product, collection } from "~/schema";
-import { Collection } from "./all";
 import * as schema from "~/schema";
+import { collection, collection_product } from "~/schema";
+import { Collection } from "./all";
 
 const connection = mysql.createPool({
   connectionLimit: 10,
@@ -25,26 +24,18 @@ export default defineEventHandler(async (event) => {
           image_url: true,
         },
       },
-      // collection_products: true,
+      collection_products: {
+        columns: {
+          collection_id: true,
+        },
+        where: eq(collection_product.collection_id, Number(id)),
+      },
     },
-    // where: eq(collection_product.collection_id, Number(id)),
+
+    limit: 10,
   });
 
-  // .select({
-  //   id: product.id,
-  //   product_id: product.product_id,
-  //   price: product.price,
-  //   name: product.name,
-  //   url: product.url,
-  //   page: product.page,
-  //   image_urls: {
-  //     image_url: product.
-  //   },
-  // })
-
-  // .from(collection_product)
-  // .innerJoin(product, eq(product.id, collection_product.product_id))
-  // .where(eq(collection_product.collection_id, Number(id)));
+  console.log(products);
 
   let collections: Collection[] = await db
     .select()
@@ -63,6 +54,8 @@ export default defineEventHandler(async (event) => {
     products: products,
     collection: collections[0],
   };
+
+  console.log(data);
 
   return {
     statusCode: 200,
