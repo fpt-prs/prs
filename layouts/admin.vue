@@ -31,7 +31,16 @@ import DefaultLayout from "~/layouts/default.vue";
             variant="ghost"
             label="Roles"
             :trailing="false"
-            to="/admin/role"
+            to="/admin/roles"
+            class="w-full"
+          />
+          <UButton
+            icon="i-heroicons-shield-check"
+            color="gray"
+            variant="ghost"
+            label="Permissions"
+            :trailing="false"
+            to="/admin/permissions"
             class="w-full"
           />
         </ul>

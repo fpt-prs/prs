@@ -5,6 +5,7 @@ import {
   serial,
   text,
   timestamp,
+  tinyint,
   varchar,
 } from "drizzle-orm/mysql-core";
 
@@ -22,6 +23,7 @@ export const user = mysqlTable("user", {
   user_id: varchar("user_id", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull(),
   name: varchar("name", { length: 255 }).notNull(),
+  is_active: tinyint("is_active").notNull(),
 });
 
 export const collection = mysqlTable("collection", {
@@ -83,3 +85,13 @@ export const imageRelation = relations(product_image, ({ one }) => ({
     references: [product.id],
   }),
 }));
+
+export const role = mysqlTable("role", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+});
+
+export const permission = mysqlTable("permission", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+});
