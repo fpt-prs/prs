@@ -85,3 +85,13 @@ export const imageRelation = relations(product_image, ({ one }) => ({
     references: [product.id],
   }),
 }));
+
+export const role = mysqlTable("role", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+});
+
+export const permission = mysqlTable("permission", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 100 }).notNull(),
+});

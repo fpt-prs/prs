@@ -25,6 +25,24 @@ import DefaultLayout from "~/layouts/default.vue";
             to="/admin/users"
             class="w-full"
           />
+          <UButton
+            icon="i-heroicons-user-group"
+            color="gray"
+            variant="ghost"
+            label="Roles"
+            :trailing="false"
+            to="/admin/roles"
+            class="w-full"
+          />
+          <UButton
+            icon="i-heroicons-shield-check"
+            color="gray"
+            variant="ghost"
+            label="Permissions"
+            :trailing="false"
+            to="/admin/permissions"
+            class="w-full"
+          />
         </ul>
       </div>
       <div class="w-screen overflow-y-auto">

@@ -13,11 +13,10 @@ const connection = mysql.createPool({
 const db = drizzle(connection, { schema, mode: "default" });
 
 export default defineEventHandler(async (event) => {
-  // get all users
-  const users = await db.query.user.findMany();
+  const roles = await db.query.role.findMany();
 
   return {
     statusCode: 200,
-    body: JSON.stringify(users),
+    body: JSON.stringify(roles),
   };
 });
