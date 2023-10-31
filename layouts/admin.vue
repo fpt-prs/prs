@@ -43,6 +43,15 @@ import DefaultLayout from "~/layouts/default.vue";
             to="/admin/permissions"
             class="w-full"
           />
+          <UButton
+            icon="i-heroicons-globe-alt"
+            color="gray"
+            variant="ghost"
+            label="Crawl"
+            :trailing="false"
+            to="/admin/crawl"
+            class="w-full"
+          />
         </ul>
       </div>
       <div class="w-screen overflow-y-auto">

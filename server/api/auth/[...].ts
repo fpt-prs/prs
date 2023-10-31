@@ -2,6 +2,9 @@ import { NuxtAuthHandler } from "#auth";
 import GoogleProvider from "next-auth/providers/google";
 export default NuxtAuthHandler({
   secret: process.env.AUTH_SECRET,
+  session:{
+    maxAge: 60 * 60 * 24, // 1 day
+  },
   callbacks: {
     // Callback when the JWT is created / updated, see https://next-auth.js.org/configuration/callbacks#jwt-callback
     jwt: async ({ token, user }) => {

@@ -5,12 +5,12 @@ useHead({
 
 // roles data
 const roles = ref([]);
-onMounted(async () => {
+const loadRoles = async () => {
   const response = await fetch("/api/roles");
   const data = await response.json();
   const body = JSON.parse(data.body);
   roles.value = body;
-});
+};
 
 // table display
 const columns = [
@@ -25,8 +25,9 @@ const actions = (role) => [
       label: "Edit",
       icon: "i-heroicons-pencil-20-solid",
       click: () => {
-        isEditing.value = true;
+        console.log(typeof role);
         editingRole.value = role;
+        isEditing.value = true;
       },
     },
     {
@@ -62,17 +63,31 @@ const removeRole = (role) => {
 
 // permissions data
 const permissions = ref([]);
-onMounted(async () => {
+const loadPermissions = async () => {
   const response = await fetch("/api/permissions");
   const data = await response.json();
   const body = JSON.parse(data.body);
   permissions.value = body;
-});
+};
 
 // permission logic
 const isPermitted = (role, permission) => {
-  return role.permissions.includes(permission);
+  return role.permissions.map((p) => p.id).includes(permission.id);
 };
+
+const togglePermission = (role, permission) => {
+  if (isPermitted(role, permission)) {
+    role.permissions = role.permissions.filter((p) => p.id !== permission.id);
+  } else {
+    role.permissions.push(permission);
+  }
+};
+
+// onMount
+onMounted(() => {
+  loadRoles();
+  loadPermissions();
+});
 </script>
 
 <template>
@@ -108,17 +123,6 @@ const isPermitted = (role, permission) => {
                     trailing-icon="i-heroicons-ellipsis-horizontal"
                   />
                 </UDropdown>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3" class="p-3 border-b border-color">
-                <UCheckbox
-                  v-for="permission of permissions"
-                  :checked="role.permissions.map((p) => p.id).includes(permission.id)"
-                  :key="permission.id"
-                  :name="permission.name"
-                  :label="permission.name"
-                />
               </td>
             </tr>
           </template>
@@ -159,13 +163,28 @@ const isPermitted = (role, permission) => {
               />
             </div>
           </template>
-          <UFormGroup label="Name">
+          <UFormGroup label="Name" class="mb-3">
             <UInput
               placeholder="Name"
               size="lg"
               class="w-full"
               v-model="editingRole.name"
             />
+          </UFormGroup>
+          <UFormGroup label="Permissions">
+            <div v-for="permission of permissions" :key="permission">
+              <input
+                type="checkbox"
+                class="mr-2 cursor-pointer"
+                :id="editingRole.id + '-' + permission.id"
+                :checked="isPermitted(editingRole, permission)"
+                @change="togglePermission(editingRole, permission)"
+              />
+              <label :for="editingRole.id + '-' + permission.id" class="mr-2 cursor-pointer">
+                {{ permission.name }}
+              </label>
+              <br />
+            </div>
           </UFormGroup>
         </UCard>
       </UModal>
