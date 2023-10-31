@@ -108,7 +108,7 @@ onMounted(() => {
         </thead>
         <tbody>
           <template v-for="role of roles" :key="role.id">
-            <tr class="border-b border-color">
+            <tr class="">
               <td class="px-4 py-3">{{ role.id }}</td>
               <td class="px-4 py-3">{{ role.name }}</td>
               <td class="px-4 py-3">
