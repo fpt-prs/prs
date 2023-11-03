@@ -52,6 +52,15 @@ import DefaultLayout from "~/layouts/default.vue";
             to="/admin/crawl"
             class="w-full"
           />
+          <UButton
+            icon="i-heroicons-bell"
+            color="gray"
+            variant="ghost"
+            label="Notifications"
+            :trailing="false"
+            to="/admin/notifications"
+            class="w-full"
+          />
         </ul>
       </div>
       <div class="w-screen overflow-y-auto">

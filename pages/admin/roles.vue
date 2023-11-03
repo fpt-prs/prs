@@ -25,7 +25,6 @@ const actions = (role) => [
       label: "Edit",
       icon: "i-heroicons-pencil-20-solid",
       click: () => {
-        console.log(typeof role);
         editingRole.value = role;
         isEditing.value = true;
       },

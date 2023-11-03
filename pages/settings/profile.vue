@@ -5,14 +5,6 @@ useHead({
 const { getSession } = useAuth();
 const session = await getSession();
 
-// token
-const token = ref(null);
-onMounted(async () => {
-  const response2 = await fetch(`/api/token`);
-  const data = await response2.json();
-  console.log(data);
-  token.value = data;
-});
 </script>
 
 <template>
@@ -28,13 +20,6 @@ onMounted(async () => {
         <div>
           <span>Name:</span>
           <span class="text-gray-500 pl-3">{{ session?.user.name }}</span>
-        </div>
-        <div class="">
-          <span>ID</span>
-          <span class="text-gray-500 pl-3">{{ session?.user.id }}</span>
-        </div>
-        <div class="">
-          {{ token }}
         </div>
       </div>
     </div>
