@@ -35,8 +35,6 @@ export default defineEventHandler(async (event) => {
     limit: 10,
   });
 
-  console.log(products);
-
   let collections: Collection[] = await db
     .select()
     .from(collection)
@@ -54,8 +52,6 @@ export default defineEventHandler(async (event) => {
     products: products,
     collection: collections[0],
   };
-
-  console.log(data);
 
   return {
     statusCode: 200,
