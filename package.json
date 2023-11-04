@@ -15,7 +15,7 @@
     "@types/mysql": "^2.15.22",
     "@types/node": "^20.8.3",
     "drizzle-kit": "^0.19.13",
-    "nuxt": "^3.7.4",
+    "nuxt": "^3.8.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.5"
   },

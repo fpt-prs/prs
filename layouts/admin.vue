@@ -61,6 +61,15 @@ import DefaultLayout from "~/layouts/default.vue";
             to="/admin/notifications"
             class="w-full"
           />
+          <UButton
+            icon="i-heroicons-currency-dollar"
+            color="gray"
+            variant="ghost"
+            label="Payment"
+            :trailing="false"
+            to="/admin/payment"
+            class="w-full"
+          />
         </ul>
       </div>
       <div class="w-screen overflow-y-auto">

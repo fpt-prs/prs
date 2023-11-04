@@ -1,4 +1,4 @@
-import { desc, isNotNull, sql } from "drizzle-orm";
+import { and, desc, isNotNull, like, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import * as schema from "~/schema";
@@ -15,7 +15,7 @@ const connection = mysql.createPool({
 const db = drizzle(connection, { schema, mode: "default" });
 
 export default defineEventHandler(async (event) => {
-  const { field, order, page } = getQuery(event);
+  const { field, order, page, search } = getQuery(event);
 
   const mapField = new Map();
   mapField.set("id", product.id);
@@ -33,10 +33,12 @@ export default defineEventHandler(async (event) => {
 
   const pageSize = 8;
   const offset = (parseInt(page as string) - 1) * pageSize;
+  const searchQuery = `%${search}%`;
 
   let countQuery = await db
     .select({ count: sql`COUNT(*)` })
     .from(product)
+    .where(and(isNotNull(product.description), like(product.name, searchQuery)))
     .execute();
   const countTotal = countQuery[0].count;
 
@@ -60,7 +62,7 @@ export default defineEventHandler(async (event) => {
     },
     limit: pageSize,
     offset: offset,
-    where: isNotNull(product.description),
+    where: and(isNotNull(product.description), like(product.name, searchQuery)),
   });
 
   const response = {

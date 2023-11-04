@@ -4,6 +4,18 @@
     variant="link"
     color="white"
     label="Back"
-    @click="$router.go(-1)"
+    @click="goBack"
   />
 </template>
+
+<script setup lang="ts">
+const router = useRouter();
+
+const goBack = () => {
+  let currentRoute = router.currentRoute;
+  router.go(-1);
+  if (router.currentRoute == currentRoute) {
+    router.push({ path: "/search" });
+  }
+};
+</script>
