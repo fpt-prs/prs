@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import { Collection } from "~/server/api/collection/all";
-import { Product } from "~/server/api/data";
+<script setup>
 const route = useRoute();
 
 useHead({
@@ -10,7 +8,7 @@ useHead({
   ],
 });
 
-const collections = ref([] as Collection[]);
+const collections = ref([]);
 
 onMounted(async () => {
   const response = await fetch("/api/collection/list");
@@ -24,9 +22,8 @@ onMounted(async () => {
   products.value = result.products;
 });
 
-const collection = ref({} as any);
-const products = ref([] as Product[]);
-
+const collection = ref({});
+const products = ref([]);
 </script>
 
 <template>
@@ -58,7 +55,10 @@ const products = ref([] as Product[]);
             <div class="flex">
               <img
                 class="w-36 h-36 mr-4"
-                :src="row.image_urls[0].image_url || 'https://via.placeholder.com/150'"
+                :src="
+                  row.image_urls[0].image_url ||
+                  'https://via.placeholder.com/150'
+                "
                 alt="Product image"
               />
               <div class="break-words p-2 truncate">

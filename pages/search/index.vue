@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import { Product } from "~/server/api/data";
-
+<script setup>
 useHead({
   title: "Search",
 });
@@ -18,10 +16,10 @@ const sortCriteria = ref(
     sortCriterias[0]
 );
 
-const products = ref([] as Product[]);
+const products = ref([]);
 const total = ref(0);
 
-watch(sortCriteria, async (newCriteria: any) => {
+watch(sortCriteria, async (newCriteria) => {
   router.push({
     query: {
       field: newCriteria.field,
@@ -35,12 +33,9 @@ const fetchData = async () => {
   const searchParams = new URLSearchParams();
   searchParams.append("field", sortCriteria.value.field);
   searchParams.append("order", sortCriteria.value.order);
-  searchParams.append("page", "1");
-  searchParams.append("search", "");
-
-  const { data } = await useFetch(`/api/products?${searchParams.toString()}`);
+  const { data } = await useFetch(`/api/suggest?${searchParams.toString()}`);
   let body = "{}";
-  const response = data.value as any;
+  const response = data.value;
   if (response) {
     body = response.body;
   }
@@ -50,6 +45,15 @@ const fetchData = async () => {
 };
 
 fetchData();
+const collections = ref([]);
+
+onMounted(async () => {
+  const response = await fetch(`/api/collection/all`);
+  const data = await response.json();
+  const result = JSON.parse(data.body);
+  collections.value = result.data;
+});
+
 const viewMode = ref("list");
 </script>
 
@@ -97,7 +101,7 @@ const viewMode = ref("list");
       </div>
 
       <div
-        class="w-full h-20   text-center flex justify-center items-center"
+        class="w-full h-20 text-center flex justify-center items-center"
         v-if="products.length === 0"
       >
         <UIcon name="i-heroicons-arrow-path" class="animate-spin" size="lg" />

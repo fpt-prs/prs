@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
       },
       collection_products: {
         columns: {
-          collection_id: true, 
+          collection_id: true,
         },
         where: eq(collection_product.collection_id, Number(id)),
       },
