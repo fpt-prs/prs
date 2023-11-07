@@ -13,18 +13,19 @@ const product = ref({});
 const collections = ref([]);
 const currentImage = ref(0);
 
-const response = await fetch(
-  `/api/products/${route.params.id}`
-);
-const data = await response.json();
-const body = JSON.parse(data.body);
-product.value = body;
-const collectionResponse = await fetch(
-  "/api/collection/all?product_order=" + body.id
-);
-const collectionData = await collectionResponse.json();
-const collectionBody = JSON.parse(collectionData.body);
-collections.value = collectionBody;
+onMounted(async () => {
+  const response = await fetch(`/api/products/${route.params.id}`);
+  const data = await response.json();
+  console.log(data);
+  const body = JSON.parse(data.body);
+  product.value = body;
+  const collectionResponse = await fetch(
+    "/api/collection/all?product_order=" + body.id
+  );
+  const collectionData = await collectionResponse.json();
+  const collectionBody = JSON.parse(collectionData.body);
+  collections.value = collectionBody;
+});
 
 const update = async (c) => {
   const method = c.isExist ? "DELETE" : "PUT";
@@ -42,7 +43,7 @@ const update = async (c) => {
   <NuxtLayout name="default">
     <div class="max-w-[80rem] mx-auto px-3">
       <div class="flex py-12">
-        <div class="mr-3">
+        <div class="mr-3" v-if="product.image_urls">
           <img
             v-for="(image, index) in product.image_urls"
             :src="image.image_url.replace('75', '320')"
@@ -56,6 +57,7 @@ const update = async (c) => {
           />
         </div>
         <img
+          v-if="product.image_urls"
           :src="
             product.image_urls[currentImage]?.image_url.replace('75', '320') ||
             '/no-image.png'

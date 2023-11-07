@@ -15,7 +15,6 @@ const db = drizzle(connection, { schema, mode: "default" });
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
   const backendUrl = process.env.BACKEND_URL || "http://localhost:8080";
-
   const response = await fetch(`${backendUrl}/api/products?code=${id}`, {
     method: "GET",
     headers: {
@@ -25,6 +24,7 @@ export default defineEventHandler(async (event) => {
   });
 
   const productDetail = await response.json();
+  console.log(productDetail);
 
   return {
     statusCode: 200,

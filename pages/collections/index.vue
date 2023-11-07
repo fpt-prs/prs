@@ -43,7 +43,7 @@ const fetchDetail = async () => {
   <NuxtLayout name="default">
     <div class="flex max-w-screen h-full">
       <div class="p-5 border-r border-color">
-        <ul class="flex flex-col">
+        <ul class="flex flex-col w-48">
           <UButton
             v-for="c in collections"
             :key="c.id"
@@ -57,7 +57,7 @@ const fetchDetail = async () => {
           />
         </ul>
       </div>
-      <div class="grow">
+      <div class="grow min-w-0">
         <p class="text-xl px-4 py-3">{{ collection.name }}</p>
         <div class="space-y-3 p-4">
           <a
@@ -69,7 +69,7 @@ const fetchDetail = async () => {
               <img
                 class="w-36 h-36 mr-4"
                 :src="
-                  row.image_urls[0].image_url ||
+                  row.image_urls[0]?.image_url ||
                   'https://via.placeholder.com/150'
                 "
                 alt="Product image"
