@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { view } from "drizzle-orm/sqlite-core";
 import { Product } from "~/server/api/data";
 
 useHead({
@@ -36,6 +35,9 @@ const fetchData = async () => {
   const searchParams = new URLSearchParams();
   searchParams.append("field", sortCriteria.value.field);
   searchParams.append("order", sortCriteria.value.order);
+  searchParams.append("page", "1");
+  searchParams.append("search", "");
+
   const { data } = await useFetch(`/api/products?${searchParams.toString()}`);
   let body = "{}";
   const response = data.value as any;
@@ -48,15 +50,6 @@ const fetchData = async () => {
 };
 
 fetchData();
-const collections = ref([] as any);
-
-onMounted(async () => {
-  const response = await fetch(`/api/collection/all`);
-  const data = await response.json();
-  const result = JSON.parse(data.body);
-  collections.value = result.data;
-});
-
 const viewMode = ref("list");
 </script>
 
@@ -127,6 +120,7 @@ const viewMode = ref("list");
                 row.image_urls[0]?.image_url.replace('75', '320') ||
                 'https://via.placeholder.com/150'
               "
+              loading="lazy"
               alt="Product image"
             />
             <div class="break-words p-2 truncate">

@@ -111,7 +111,7 @@
 
 <script setup>
 useHead({
-  title: "Search",
+  title: "Product Management",
 });
 
 const router = useRouter();
@@ -198,7 +198,7 @@ const fetchData = async () => {
   total.value = parseInt(detail.total);
 };
 
-fetchData();
+await fetchData();
 const collections = ref([]);
 
 onMounted(async () => {

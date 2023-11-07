@@ -1,6 +1,8 @@
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import mysql from "mysql2/promise";
 import * as schema from "~/schema";
+import { user } from "~/schema";
 
 const connection = mysql.createPool({
   connectionLimit: 10,
@@ -13,21 +15,23 @@ const connection = mysql.createPool({
 const db = drizzle(connection, { schema, mode: "default" });
 
 export default defineEventHandler(async (event) => {
-  const id = getRouterParam(event, "id");
-  const backendUrl = process.env.BACKEND_URL || "http://localhost:8080";
+  const idStr = getRouterParam(event, "id");
 
-  const response = await fetch(`${backendUrl}/api/products?code=${id}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Basic ${process.env.BASIC_AUTH}`,
-    },
+  const id = parseInt(idStr || "");
+
+  if (isNaN(id)) {
+    return {
+      statusCode: 400,
+      body: "Invalid id",
+    };
+  }
+
+  const detail = await db.query.user.findFirst({
+    where: eq(user.id, id),
   });
-
-  const productDetail = await response.json();
 
   return {
     statusCode: 200,
-    body: JSON.stringify(productDetail),
+    body: JSON.stringify(detail),
   };
 });

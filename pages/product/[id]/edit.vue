@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 useHead({
   title: "Product",
   meta: [
@@ -6,7 +6,6 @@ useHead({
   ],
 });
 
-import { Product } from "~/server/api/data";
 const route = useRoute();
 const newImage = ref("");
 
@@ -14,27 +13,37 @@ const addImage = () => {
   if (!newImage) {
     return;
   }
-  product.value.image_urls.push({
-    image_url: newImage.value,
+  product.value.images.push({
+    images: {
+      id: 0,
+      imageUrl: newImage.value,
+    },
   });
 };
 
-const product = ref({} as Product);
+const product = ref({});
 
-const response = await fetch(
-  `http://localhost:3000/api/products/${route.params.id}`
-);
-const data = await response.json();
-const body = JSON.parse(data.body);
-product.value = body;
+onMounted(async () => {
+  const response = await fetch(`/api/products/${route.params.id}`);
+  const data = await response.json();
+  const body = JSON.parse(data.body);
+  product.value = body;
+});
 
-const removeImage = (image_url: string) => {
+const removeImage = (image_url) => {
   if (!product.value.image_urls) {
     return;
   }
   product.value.image_urls = product.value.image_urls.filter(
     (image) => image.image_url !== image_url
   );
+};
+
+const update = async (c) => {
+  const response = await fetch("/api/products/update", {
+    method: "POST",
+    body: JSON.stringify(product.value),
+  });
 };
 </script>
 
@@ -44,11 +53,9 @@ const removeImage = (image_url: string) => {
       <BackButton />
     </div>
     <div class="text-3xl p-3 dark:border-b border-color">
-      <p class="text-xl px-4 py-3">
-        Edit Product
-      </p>
+      <p class="text-xl px-4 py-3">Edit Product</p>
     </div>
-    <div class="max-w-[80rem] mx-auto px-4 py-3 space-y-4">
+    <div class="max-w-[80rem] mx-auto px-4 py-3 space-y-4 pb-32">
       <UFormGroup label="Name">
         <UTextarea
           autoresize
@@ -79,10 +86,10 @@ const removeImage = (image_url: string) => {
       <UFormGroup label="Images">
         <div
           class="flex items-center gap-5 pb-5"
-          v-for="image in product.image_urls"
+          v-for="image in product.images"
         >
           <UInput
-            v-model="image.image_url"
+            v-model="image.imageUrl"
             placeholder="Images"
             type="text"
             size="lg"
@@ -92,10 +99,10 @@ const removeImage = (image_url: string) => {
           <UButton
             label="Remove"
             color="red"
-            @click="removeImage(image.image_url)"
+            @click="removeImage(image.imageUrl)"
           />
           <img
-            :src="image.image_url"
+            :src="image.imageUrl"
             onerror="this.src='https://via.placeholder.com/150'"
             class="w-36 aspect-square"
             alt=""
@@ -126,7 +133,7 @@ const removeImage = (image_url: string) => {
           />
         </div>
       </UFormGroup>
-      <UButton size="lg" type="submit"> Update </UButton>
+      <UButton size="lg" @click="update"> Update </UButton>
     </div>
   </NuxtLayout>
 </template>

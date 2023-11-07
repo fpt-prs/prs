@@ -4,20 +4,23 @@
       <p class="text-xl px-4 py-3 border-b border-color">Users</p>
       <UTable :rows="users" :columns="colums">
         <template #active-data="{ row }">
-          <ConfirmButton
-            v-if="row.is_active === 1"
-            color="red"
-            default-label="Deactive"
-            @confirm="disableUser(row.id)"
-            class="w-20"
-          />
-          <ConfirmButton
-            v-else
-            color="green"
-            default-label="Active"
-            @confirm="enableUser(row.id)"
-            class="w-20"
-          />
+          <div class="flex gap-4">
+            <UButton :to="`/admin/user/${row.user_id}`" label="Detail" />
+            <ConfirmButton
+              v-if="row.is_active === 1"
+              color="red"
+              default-label="Deactive"
+              @confirm="disableUser(row.id)"
+              class="w-20"
+            />
+            <ConfirmButton
+              v-else
+              color="green"
+              default-label="Active"
+              @confirm="enableUser(row.id)"
+              class="w-20"
+            />
+          </div>
         </template>
       </UTable>
     </div>

@@ -1,7 +1,5 @@
-import mysql from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
-import { collection, collection_product } from "~/schema";
-import { and, eq, isNull, or, sql } from "drizzle-orm";
+import mysql from "mysql2/promise";
 
 export type Collection = {
   name: string;
@@ -17,19 +15,18 @@ const connection = mysql.createPool({
 });
 
 export type CollectionContains = {
-  name: string;
   id: number;
+  name: string;
   isExist: boolean;
 };
 
 const db = drizzle(connection);
 
 export default defineEventHandler(async (event) => {
-  const { product_order: productOrderRaw } = getQuery(event);
-  const product_order_string = productOrderRaw as string;
-  const product_order = parseInt(product_order_string);
+  const { userId, productOrderRaw: productId } = getQuery(event);
+  const productOrderStr = productId as string;
 
-  if (!product_order || isNaN(product_order)) {
+  if (!productOrderStr || isNaN(parseInt(productOrderStr as string))) {
     return {
       statusCode: 400,
       body: JSON.stringify({
@@ -38,30 +35,15 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  let data: CollectionContains[] = await db
-    .select({
-      id: collection.id,
-      name: collection.name,
-      isExist: sql<number>`CASE WHEN ${collection_product.product_id} = ${product_order} THEN 1 ELSE 0 END`,
-    })
-    .from(collection)
-    .leftJoin(
-      collection_product,
-      and(
-        eq(collection_product.collection_id, collection.id),
-        eq(collection_product.product_id, product_order)
-      )
-    )
-    .where(
-      and(
-        eq(collection.user_id, 1),
-        or(
-          eq(collection_product.product_id, product_order),
-          isNull(collection_product.product_id)
-        )
-      )
-    )
-    .then((rows) => rows.map(castType));
+  let params = new URLSearchParams();
+  params.append("productId", productOrderStr);
+  params.append("userId", userId as string);
+  let res = await fetch(
+    `http://localhost:8080/api/collection/contains?${params.toString()}`
+  );
+
+  let data: any[] = await res.json();
+
   return {
     statusCode: 200,
     body: JSON.stringify(data),

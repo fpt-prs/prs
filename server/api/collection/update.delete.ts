@@ -16,7 +16,6 @@ const db = drizzle(connection);
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
   const { collectionId, productId } = JSON.parse(body);
-  console.log(`collectionId: ${collectionId}, productId: ${productId}`);
   await db
     .delete(collection_product)
     .where(

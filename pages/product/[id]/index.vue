@@ -1,6 +1,4 @@
-<script setup lang="ts">
-import { CollectionContains } from "~/server/api/collection/all";
-import { Product } from "~/server/api/data";
+<script setup>
 const route = useRoute();
 const baseURL = route.fullPath.replace(route.path, "");
 
@@ -11,24 +9,24 @@ useHead({
   ],
 });
 
-const product = ref({} as Product);
-const collections = ref([] as CollectionContains[]);
+const product = ref({});
+const collections = ref([]);
 const currentImage = ref(0);
 
 const response = await fetch(
-  `http://localhost:3000/api/products/${route.params.id}`
+  `/api/products/${route.params.id}`
 );
 const data = await response.json();
 const body = JSON.parse(data.body);
 product.value = body;
 const collectionResponse = await fetch(
-  "http://localhost:3000/api/collection/all?product_order=" + body.id
+  "/api/collection/all?product_order=" + body.id
 );
 const collectionData = await collectionResponse.json();
 const collectionBody = JSON.parse(collectionData.body);
 collections.value = collectionBody;
 
-const update = async (c: CollectionContains) => {
+const update = async (c) => {
   const method = c.isExist ? "DELETE" : "PUT";
   const response = await fetch("/api/collection/update", {
     method: method,
@@ -42,9 +40,6 @@ const update = async (c: CollectionContains) => {
 
 <template>
   <NuxtLayout name="default">
-    <div class="text-3xl p-3 dark:border-b border-color">
-      <BackButton />
-    </div>
     <div class="max-w-[80rem] mx-auto px-3">
       <div class="flex py-12">
         <div class="mr-3">
