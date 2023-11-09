@@ -1,23 +1,14 @@
-import { drizzle } from "drizzle-orm/mysql2";
-import mysql from "mysql2/promise";
-import * as schema from "~/schema";
-
-const connection = mysql.createPool({
-  connectionLimit: 10,
-  host: process.env.DATABASE_URL,
-  user: process.env.DATABASE_USERNAME,
-  password: process.env.DATABASE_PASSWORD,
-  database: process.env.DATABASE_NAME,
-});
-
-const db = drizzle(connection, { schema, mode: "default" });
+import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
-  const permissions = await db.query.permission.findMany();
+  const fetchRes = await fetchBackend(`/api/permissions/all`, {
+    method: "GET",
+  });
+
+  const permissions = await fetchRes.json();
 
   return {
     statusCode: 200,
     body: JSON.stringify(permissions),
   };
 });
-

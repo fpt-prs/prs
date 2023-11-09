@@ -21,7 +21,7 @@
                 fetchData();
               }
             "
-            placeholder="Search"
+            placeholder="Enter to Search..."
             color="gray"
             icon="i-heroicons-magnifying-glass"
           />
@@ -42,25 +42,32 @@
       >
         <UPagination
           v-model="page"
-          :total="total"
+          :total="totalElements"
           :per-page="10"
           color="gray"
         />
       </div>
       <div
         class="grow w-full h-full text-center flex justify-center items-center"
-        v-if="products.length === 0"
+        v-if="isLoading"
       >
         <UIcon name="i-heroicons-arrow-path" class="animate-spin" size="lg" />
         <p class="text-xl ml-1">Loading...</p>
       </div>
+      <div
+        class="grow w-full h-full text-center flex flex-col justify-center items-center"
+        v-if="!isLoading && products.length === 0"
+      >
+        <UIcon name="i-heroicons-circle-stack-solid" size="xl" />
+        <p class="text-xl ml-1 text-color">No Item</p>
+      </div>
       <div class="gap-5 p-5 space-y-5">
         <div class="flex items-center" v-for="row in products">
-          <a class="flex min-w-0 grow" :href="`/product/${row.product_id}`">
+          <a class="flex min-w-0 grow" :href="`/product/${row.productId}`">
             <img
               class="w-36 h-36 mr-4"
               :src="
-                row.image_urls[0]?.image_url.replace('75', '320') ||
+                row.images[0]?.imageUrl.replace('75', '320') ||
                 'https://via.placeholder.com/150'
               "
               alt="Product image"
@@ -77,7 +84,7 @@
               label="Edit"
               icon="i-heroicons-pencil-square"
               color="blue"
-              :to="`/product/${row.product_id}/edit`"
+              :to="`/product/${row.productId}/edit`"
             />
             <ConfirmButton
               defaultLabel="Delete"
@@ -86,9 +93,7 @@
               class="w-28"
               @confirm="
                 () => {
-                  products = products.filter(
-                    (p) => p.id !== row.id
-                  );
+                  products = products.filter((p) => p.id !== row.id);
                 }
               "
             />
@@ -100,7 +105,7 @@
       >
         <UPagination
           v-model="page"
-          :total="total"
+          :total="totalElements"
           :per-page="10"
           color="gray"
         />
@@ -135,7 +140,7 @@ const actions = (row) => [
       label: "Edit",
       icon: "i-heroicons-pencil",
       action: "edit",
-      to: `/product/${row.product_id}/edit`,
+      to: `/product/${row.productId}/edit`,
     },
     {
       label: "Delete",
@@ -149,9 +154,10 @@ const actions = (row) => [
 ];
 
 const products = ref([]);
-const total = ref(0);
+const totalElements = ref(0);
 const page = ref(parseInt(pageStr || "1"));
 const search = ref(searchStr || "");
+const isLoading = ref(false);
 
 watch(sortCriteria, async (newCriteria) => {
   router.push({
@@ -176,6 +182,7 @@ watch(page, async (newPage) => {
 });
 
 const fetchData = async () => {
+  isLoading.value = true;
   products.value = [];
 
   const params = new URLSearchParams();
@@ -194,17 +201,10 @@ const fetchData = async () => {
 
   const detail = JSON.parse(body);
 
-  products.value = detail.data;
-  total.value = parseInt(detail.total);
+  products.value = detail.content;
+  totalElements.value = parseInt(detail.totalElements);
+  isLoading.value = false;
 };
 
 await fetchData();
-const collections = ref([]);
-
-onMounted(async () => {
-  const response = await fetch(`/api/collection/all`);
-  const data = await response.json();
-  const result = JSON.parse(data.body);
-  collections.value = result.data;
-});
 </script>

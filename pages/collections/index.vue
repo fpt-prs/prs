@@ -19,6 +19,8 @@ const products = ref([]);
 
 onMounted(async () => {
   await fetchCollection();
+  currentId.value = collections.value[0].id;
+  await fetchDetail();
 });
 
 const fetchCollection = async () => {
@@ -31,11 +33,9 @@ const fetchCollection = async () => {
 const fetchDetail = async () => {
   const responseProducts = await fetch(`/api/collection?id=${currentId.value}`);
   const dataProducts = await responseProducts.json();
-  console.log(dataProducts);
   const result = JSON.parse(dataProducts.body);
-  collection.value = result.collection;
+  collection.value = result;
   products.value = result.products;
-  console.log(products.value);
 };
 </script>
 
@@ -69,8 +69,7 @@ const fetchDetail = async () => {
               <img
                 class="w-36 h-36 mr-4"
                 :src="
-                  row.image_urls[0]?.image_url ||
-                  'https://via.placeholder.com/150'
+                  row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
                 "
                 alt="Product image"
               />

@@ -24,7 +24,6 @@ export default defineEventHandler(async (event) => {
   });
 
   const productDetail = await response.json();
-  console.log(productDetail);
 
   return {
     statusCode: 200,

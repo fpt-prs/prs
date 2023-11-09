@@ -86,26 +86,7 @@ useHead({
   title: "Notifications",
 });
 
-const notifications = ref([
-  {
-    id: 1,
-    header: "New order",
-    content: "Your order has been placed",
-    created: new Date(),
-  },
-  {
-    id: 2,
-    header: "New order",
-    content: "Your order has been placed",
-    created: new Date(),
-  },
-  {
-    id: 3,
-    header: "New order",
-    content: "Your order has been placed",
-    created: new Date(),
-  },
-]);
+const notifications = ref([]);
 
 // table display
 const columns = [
@@ -145,6 +126,10 @@ const removeNotification = (notification) => {
 };
 
 const formatDate = (date) => {
+  if (!date) {
+    return "Undefined";
+  }
+
   return new Date(date).toLocaleString("en-US", {
     day: "numeric",
     month: "short",
@@ -154,6 +139,15 @@ const formatDate = (date) => {
     second: "numeric",
   });
 };
+
+onMounted(async () => {
+  const res = await fetch("/api/notifications");
+  const json = await res.json();
+  const body = JSON.parse(json.body);
+  if (body) {
+    notifications.value = body;
+  }
+});
 </script>
 
 <style></style>
