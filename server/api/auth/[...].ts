@@ -1,5 +1,7 @@
 import { NuxtAuthHandler } from "#auth";
 import GoogleProvider from "next-auth/providers/google";
+import fetchBackend from "~/utils/fetchBackend";
+
 export default NuxtAuthHandler({
   secret: process.env.AUTH_SECRET,
   session: {
@@ -22,18 +24,21 @@ export default NuxtAuthHandler({
     },
     // Callback whenever session is checked, see https://next-auth.js.org/configuration/callbacks#session-callback
     session: async ({ session, token }) => {
-      const backendUrl = process.env.BACKEND_URL || "http://localhost:8080";
-      const params = new URLSearchParams();
-      params.append("sub", token.sub || "");
-      const res = await fetch(
-        `${backendUrl}/api/users/detail?${params.toString()}`,
-        {
-          headers: {
-            Authorization: `Basic ${process.env.BASIC_AUTH}`,
-          },
-        }
-      );
-      const profile = await res.json();
+      let [profile, status] = await getAccount(token.sub);
+      console.log({
+        userId: token.sub,
+        email: token.email,
+        name: token.family_name + " " + token.given_name,
+      });
+
+      if (!profile) {
+        profile = await registerAccount({
+          userId: token.sub,
+          email: token.email,
+          name: session.user?.name,
+        });
+      }
+
       (session as any).user.sub = token.sub;
       (session as any).user.family_name = token.family_name;
       (session as any).user.given_name = token.given_name;
@@ -56,3 +61,27 @@ export default NuxtAuthHandler({
     }),
   ],
 });
+
+const getAccount = async (sub: string | undefined) => {
+  const params = new URLSearchParams();
+  params.append("sub", sub || "");
+  const res = await fetchBackend(`/api/users/detail?${params.toString()}`);
+
+  const status = res.status;
+  const data = await res.json();
+  if (status !== 200) {
+    return [null, status];
+  }
+  return [data, status];
+};
+
+const registerAccount = async (profile: any) => {
+  const res = await fetchBackend(`/api/users/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(profile),
+  });
+  return await res.json();
+};
