@@ -26,13 +26,13 @@
         <div class="user-user-id">
           UUID:
           <span class="text-color">
-            {{ user.user_id }}
+            {{ user.userId }}
           </span>
         </div>
         <div class="user-active">
           Active status:
           <span class="text-color">
-            {{ user.is_active ? "Active" : "Inactive" }}
+            {{ user.isActive ? "Active" : "Inactive" }}
           </span>
         </div>
       </div>
@@ -59,14 +59,6 @@ onMounted(async () => {
   const body = JSON.parse(data.body);
   user.value = body;
 });
-
-// table
-const colums = [
-  { key: "id", label: "ID" },
-  { key: "user_id", label: "User ID" },
-  { key: "name", label: "Name" },
-  { key: "active", label: "Active" },
-];
 
 // actions
 const disableUser = async (id) => {

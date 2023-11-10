@@ -22,10 +22,29 @@ export default NuxtAuthHandler({
     },
     // Callback whenever session is checked, see https://next-auth.js.org/configuration/callbacks#session-callback
     session: async ({ session, token }) => {
-      (session as any).user.id = token.sub;
+      const backendUrl = process.env.BACKEND_URL || "http://localhost:8080";
+      const params = new URLSearchParams();
+      params.append("sub", token.sub || "");
+      const res = await fetch(
+        `${backendUrl}/api/users/detail?${params.toString()}`,
+        {
+          headers: {
+            Authorization: `Basic ${process.env.BASIC_AUTH}`,
+          },
+        }
+      );
+      const profile = await res.json();
+      (session as any).user.sub = token.sub;
       (session as any).user.family_name = token.family_name;
       (session as any).user.given_name = token.given_name;
       (session as any).user.jwt = token.jwt;
+      (session as any).user.id = profile.id;
+      (session as any).user.country = profile.country;
+      (session as any).user.roles = profile.roles;
+      (session as any).user.isActive = profile.isActive;
+      (session as any).user.gender = profile.gender;
+      (session as any).user.phoneNumber = profile.phoneNumber;
+      (session as any).user.dob = profile.dob;
       return Promise.resolve(session);
     },
   },

@@ -5,9 +5,9 @@
       <UTable :rows="users" :columns="colums">
         <template #active-data="{ row }">
           <div class="flex gap-4">
-            <UButton :to="`/admin/user/${row.user_id}`" label="Detail" />
+            <UButton :to="`/admin/user/${row.userId}`" label="Detail" />
             <ConfirmButton
-              v-if="row.is_active === 1"
+              v-if="row.isActive === 1"
               color="red"
               default-label="Deactive"
               @confirm="disableUser(row.id)"
@@ -44,7 +44,7 @@ onMounted(async () => {
 // table
 const colums = [
   { key: "id", label: "ID" },
-  { key: "user_id", label: "User ID" },
+  { key: "userId", label: "User ID" },
   { key: "name", label: "Name" },
   { key: "active", label: "Active" },
 ];
@@ -53,7 +53,7 @@ const colums = [
 const disableUser = async (id) => {
   users.value = users.value.map((user) => {
     if (user.id === id) {
-      user.is_active = 0;
+      user.isActive = 0;
     }
     return user;
   });
@@ -62,7 +62,7 @@ const disableUser = async (id) => {
 const enableUser = async (id) => {
   users.value = users.value.map((user) => {
     if (user.id === id) {
-      user.is_active = 1;
+      user.isActive = 1;
     }
     return user;
   });

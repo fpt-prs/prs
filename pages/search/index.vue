@@ -3,55 +3,17 @@ useHead({
   title: "Search",
 });
 
-const router = useRouter();
-const route = useRoute();
-const { field, order, page: pageStr } = route.query;
-
-const sortCriterias = [
-  { name: "Price: Low to High", field: "price", order: "asc" },
-  { name: "Price: High to Low", field: "price", order: "desc" },
-];
-const sortCriteria = ref(
-  sortCriterias.find((c) => c.field === field && c.order === order) ||
-    sortCriterias[0]
-);
-
 const products = ref([]);
-const total = ref(0);
-
-watch(sortCriteria, async (newCriteria) => {
-  router.push({
-    query: {
-      field: newCriteria.field,
-      order: newCriteria.order,
-    },
-  });
-  await fetchData();
-});
 
 const fetchData = async () => {
-  const searchParams = new URLSearchParams();
-  searchParams.append("field", sortCriteria.value.field);
-  searchParams.append("order", sortCriteria.value.order);
-  const { data } = await useFetch(`/api/suggest?${searchParams.toString()}`);
-  let body = "{}";
-  const response = data.value;
-  if (response) {
-    body = response.body;
-  }
-  const detail = JSON.parse(body);
-  products.value = detail.data;
-  total.value = parseInt(detail.total);
+  const response = await fetch(`/api/suggest`);
+  const data = await response.json();
+  products.value = JSON.parse(data.body);
+  console.log(products.value);
 };
 
-fetchData();
-const collections = ref([]);
-
 onMounted(async () => {
-  const response = await fetch(`/api/collection/all`);
-  const data = await response.json();
-  const result = JSON.parse(data.body);
-  collections.value = result.data;
+  await fetchData();
 });
 
 const viewMode = ref("list");
@@ -64,18 +26,7 @@ const viewMode = ref("list");
         class="flex justify-between items-center gap-5 p-5 dark:border-b border-color"
       >
         <p class="font-semibold text-lg">Trending products</p>
-        <USelectMenu
-          v-model="sortCriteria"
-          :options="sortCriterias"
-          option-attribute="name"
-          color="gray"
-        >
-          <template #option="{ option: criteria }">
-            <span class="">{{ criteria.name }}</span>
-          </template>
-        </USelectMenu>
       </div>
-
       <div class="flex mx-5 mt-5">
         <UButton
           color="gray"
@@ -114,15 +65,14 @@ const viewMode = ref("list");
       >
         <a
           class=""
-          :href="`/product/${row.product_id}`"
+          :href="`/product/${row.productId}`"
           v-for="row in products"
         >
           <div class="">
             <img
               class="w-full h-80 mr-4"
               :src="
-                row.image_urls[0]?.image_url.replace('75', '320') ||
-                'https://via.placeholder.com/150'
+                row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
               "
               loading="lazy"
               alt="Product image"
@@ -142,15 +92,14 @@ const viewMode = ref("list");
       >
         <a
           class=""
-          :href="`/product/${row.product_id}`"
+          :href="`/product/${row.productId}`"
           v-for="row in products"
         >
           <div class="">
             <img
               class="w-full h-60 mr-4"
               :src="
-                row.image_urls[0]?.image_url.replace('75', '320') ||
-                'https://via.placeholder.com/550'
+                row.images[0]?.imageUrl || 'https://via.placeholder.com/550'
               "
               alt="Product image"
             />
@@ -166,15 +115,14 @@ const viewMode = ref("list");
       <div class="gap-5 p-5 space-y-5" v-if="viewMode === 'list'">
         <a
           class="block"
-          :href="`/product/${row.product_id}`"
+          :href="`/product/${row.productId}`"
           v-for="row in products"
         >
           <div class="flex">
             <img
               class="w-36 h-36 mr-4"
               :src="
-                row.image_urls[0]?.image_url.replace('75', '320') ||
-                'https://via.placeholder.com/150'
+                row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
               "
               alt="Product image"
             />

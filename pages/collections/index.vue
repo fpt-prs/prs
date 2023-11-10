@@ -62,7 +62,7 @@ const fetchDetail = async () => {
         <div class="space-y-3 p-4">
           <a
             class="block"
-            :href="`/product/${row.product_id}`"
+            :href="`/product/${row.productId}`"
             v-for="row in products"
           >
             <div class="flex">

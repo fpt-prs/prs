@@ -1,6 +1,6 @@
 <script setup>
 const route = useRoute();
-const baseURL = route.fullPath.replace(route.path, "");
+const currentImage = ref(0);
 
 useHead({
   title: "Product",
@@ -10,32 +10,32 @@ useHead({
 });
 
 const product = ref({});
-const collections = ref([]);
-const currentImage = ref(0);
-
 onMounted(async () => {
   const response = await fetch(`/api/products/${route.params.id}`);
   const data = await response.json();
-  console.log(data);
   const body = JSON.parse(data.body);
   product.value = body;
   const collectionResponse = await fetch(
-    "/api/collection/all?product_order=" + body.id
+    "/api/collection/all?productId=" + body.id
   );
   const collectionData = await collectionResponse.json();
   const collectionBody = JSON.parse(collectionData.body);
   collections.value = collectionBody;
 });
 
-const update = async (c) => {
-  const method = c.isExist ? "DELETE" : "PUT";
-  const response = await fetch("/api/collection/update", {
+const collections = ref([]);
+
+const update = async (collection) => {
+  const method = collection.isProductInCollection ? "DELETE" : "PUT";
+  const response = await fetch("/api/collection", {
     method: method,
     body: JSON.stringify({
-      collectionId: c.id,
+      collectionId: collection.id,
       productId: product.value.id,
     }),
   });
+
+  const data = await response.json();
 };
 </script>
 
@@ -43,10 +43,10 @@ const update = async (c) => {
   <NuxtLayout name="default">
     <div class="max-w-[80rem] mx-auto px-3">
       <div class="flex py-12">
-        <div class="mr-3" v-if="product.image_urls">
+        <div class="mr-3" v-if="product.images">
           <img
-            v-for="(image, index) in product.image_urls"
-            :src="image.image_url.replace('75', '320')"
+            v-for="(image, index) in product.images"
+            :src="image.imageUrl.replace('75', '320')"
             class="w-36 aspect-square cursor-pointer my-1"
             :class="
               index === currentImage
@@ -57,9 +57,9 @@ const update = async (c) => {
           />
         </div>
         <img
-          v-if="product.image_urls"
+          v-if="product.images"
           :src="
-            product.image_urls[currentImage]?.image_url.replace('75', '320') ||
+            product.images[currentImage]?.imageUrl.replace('75', '320') ||
             '/no-image.png'
           "
           class="w-80 h-80 mr-3"
@@ -92,7 +92,7 @@ const update = async (c) => {
                     :name="collection.name"
                     :label="collection.name"
                     :key="collection.id"
-                    v-model="collection.isExist"
+                    v-model="collection.isProductInCollection"
                     @click="update(collection)"
                   />
                 </UCard>
