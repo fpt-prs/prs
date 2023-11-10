@@ -1,12 +1,12 @@
 import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
-  // get all users
-  const fetchRes = await fetchBackend(`/api/users/all`);
+  const fetchRes = await fetchBackend(`/api/payment/bills`);
+
   const page = await fetchRes.json();
 
   return {
-    statusCode: 200,
+    statusCode: fetchRes.status,
     body: JSON.stringify(page),
   };
 });

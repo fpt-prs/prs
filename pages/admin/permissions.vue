@@ -46,21 +46,36 @@ const actions = (permission) => [
   ],
 ];
 
-const addPermission = () => {
+const addPermission = async () => {
+  const addRes = await fetch(
+    `/api/permissions?name=${newPermissionName.value}`,
+    {
+      method: "PUT",
+    }
+  );
+
+  const data = await addRes.json();
+  const saved = JSON.parse(data.body);
+
   const maxId = Math.max(
     ...permissions.value.map((permission) => permission.id),
     0
   );
   const newPermission = {
-    id: maxId + 1,
+    id: saved.id || maxId + 1,
     name: newPermissionName.value,
   };
   permissions.value.push(newPermission);
   newPermissionName.value = "";
 };
 
-const removePermission = (permission) => {
+const removePermission = async (permission) => {
   permissions.value = permissions.value.filter((r) => r.id !== permission.id);
+
+  // push to server
+  const updateRes = await fetch(`/api/permissions?id=${permission.id}`, {
+    method: "DELETE",
+  });
 };
 </script>
 

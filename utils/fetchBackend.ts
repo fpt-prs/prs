@@ -3,9 +3,10 @@ export default async (url: string, config?: any) => {
   url = `${backendUrl}${url}`;
   return await fetch(url, {
     method: "GET",
-    ...config,
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Basic ${process.env.BASIC_AUTH}`,
     },
+    ...config,
   });
 };

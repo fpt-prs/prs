@@ -27,5 +27,5 @@ body {
 }
 
 .text-color {
-  @apply text-gray-700 dark:text-gray-400;
+  @apply text-gray-400 dark:text-gray-500;
 }

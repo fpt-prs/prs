@@ -24,12 +24,7 @@ export default NuxtAuthHandler({
     },
     // Callback whenever session is checked, see https://next-auth.js.org/configuration/callbacks#session-callback
     session: async ({ session, token }) => {
-      let [profile, status] = await getAccount(token.sub);
-      console.log({
-        userId: token.sub,
-        email: token.email,
-        name: token.family_name + " " + token.given_name,
-      });
+      let [profile, _] = await getAccount(token.sub);
 
       if (!profile) {
         profile = await registerAccount({
@@ -68,19 +63,16 @@ const getAccount = async (sub: string | undefined) => {
   const res = await fetchBackend(`/api/users/detail?${params.toString()}`);
 
   const status = res.status;
-  const data = await res.json();
   if (status !== 200) {
     return [null, status];
   }
+  const data = await res.json();
   return [data, status];
 };
 
 const registerAccount = async (profile: any) => {
-  const res = await fetchBackend(`/api/users/register`, {
+  const res = await fetchBackend(`/api/auth/merge`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
     body: JSON.stringify(profile),
   });
   return await res.json();

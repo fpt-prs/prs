@@ -4,7 +4,7 @@ useHead({
 });
 const { getSession } = useAuth();
 const session = await getSession();
-
+const user = session?.user;
 </script>
 
 <template>
@@ -15,11 +15,23 @@ const session = await getSession();
       <div class="space-y-3 p-4 max-w-[50ch]">
         <div>
           <span>Email:</span>
-          <span class="text-gray-500 pl-3">{{ session?.user.email }}</span>
+          <span class="text-color pl-3">{{ user.email }}</span>
         </div>
         <div>
           <span>Name:</span>
-          <span class="text-gray-500 pl-3">{{ session?.user.name }}</span>
+          <span class="text-color pl-3">{{ user.name }}</span>
+        </div>
+        <div class="">
+          <span>UUID:</span>
+          <span class="text-color pl-3">
+            {{ user.sub }}
+          </span>
+        </div>
+        <div class="">
+          <span>Active status:</span>
+          <span class="text-color pl-3">
+            {{ user.isActive ? "Active" : "Inactive" }}
+          </span>
         </div>
       </div>
     </div>

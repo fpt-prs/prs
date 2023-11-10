@@ -41,7 +41,7 @@ const actions = (role) => [
 
 // add role
 const newRoleName = ref("");
-const addRole = () => {
+const addRole = async () => {
   const maxId = Math.max(...roles.value.map((role) => role.id), 0);
   const newRole = {
     id: maxId + 1,
@@ -49,6 +49,15 @@ const addRole = () => {
   };
   roles.value.push(newRole);
   newRoleName.value = "";
+
+  // push to server
+  const addRes = await fetch("/api/roles", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newRole),
+  });
 };
 
 // edit role
@@ -56,8 +65,13 @@ const isEditing = ref(false);
 const editingRole = ref({});
 
 // remove role
-const removeRole = (role) => {
+const removeRole = async (role) => {
   roles.value = roles.value.filter((r) => r.id !== role.id);
+
+  // push to server
+  const updateRes = await fetch(`/api/roles?id=${role.id}`, {
+    method: "DELETE",
+  });
 };
 
 // permissions data
@@ -179,7 +193,10 @@ onMounted(() => {
                 :checked="isPermitted(editingRole, permission)"
                 @change="togglePermission(editingRole, permission)"
               />
-              <label :for="editingRole.id + '-' + permission.id" class="mr-2 cursor-pointer">
+              <label
+                :for="editingRole.id + '-' + permission.id"
+                class="mr-2 cursor-pointer"
+              >
                 {{ permission.name }}
               </label>
               <br />

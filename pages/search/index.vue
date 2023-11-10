@@ -17,6 +17,8 @@ onMounted(async () => {
 });
 
 const viewMode = ref("list");
+
+await fetchData();
 </script>
 
 <template>
@@ -53,7 +55,7 @@ const viewMode = ref("list");
 
       <div
         class="w-full h-20 text-center flex justify-center items-center"
-        v-if="products.length === 0"
+        v-if="products?.length === 0"
       >
         <UIcon name="i-heroicons-arrow-path" class="animate-spin" size="lg" />
         <p class="text-xl ml-1">Loading...</p>
@@ -101,6 +103,7 @@ const viewMode = ref("list");
               :src="
                 row.images[0]?.imageUrl || 'https://via.placeholder.com/550'
               "
+              loading="lazy"
               alt="Product image"
             />
             <div class="break-words p-2 truncate">
@@ -124,6 +127,7 @@ const viewMode = ref("list");
               :src="
                 row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
               "
+              loading="lazy"
               alt="Product image"
             />
             <div class="break-words p-2 truncate">

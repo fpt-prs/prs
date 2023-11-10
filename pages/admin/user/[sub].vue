@@ -1,8 +1,16 @@
 <template>
   <NuxtLayout name="admin">
     <div class="">
-      <div class="px-4 py-3 text-xl font-medium border-b border-color">
-        User Detail
+      <div class="px-4 py-3 text-xl font-medium border-b border-color flex justify-between">
+        <div class="">User Detail</div>
+        <div class="">
+          <ConfirmButton
+            :color="user.isActive === 1 ? 'red' : 'green'"
+            :default-label="user.isActive === 1 ? 'Deactive' : 'Active'"
+            @confirm="disableUser"
+            class="w-24 text-center"
+          />
+        </div>
       </div>
       <div class="p-4 border-b border-color">
         <div class="user-id">

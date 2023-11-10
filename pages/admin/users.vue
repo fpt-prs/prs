@@ -3,7 +3,7 @@
     <div class="grow">
       <p class="text-xl px-4 py-3 border-b border-color">Users</p>
       <UTable :rows="users" :columns="colums">
-        <template #active-data="{ row }">
+        <template #actions-data="{ row }">
           <div class="flex gap-4">
             <UButton :to="`/admin/user/${row.userId}`" label="Detail" />
             <ConfirmButton
@@ -38,7 +38,7 @@ onMounted(async () => {
   const response = await fetch("/api/users");
   const data = await response.json();
   const body = JSON.parse(data.body);
-  users.value = body;
+  users.value = body.content;
 });
 
 // table
@@ -46,7 +46,7 @@ const colums = [
   { key: "id", label: "ID" },
   { key: "userId", label: "User ID" },
   { key: "name", label: "Name" },
-  { key: "active", label: "Active" },
+  { key: "actions", label: "Actions" },
 ];
 
 // actions
