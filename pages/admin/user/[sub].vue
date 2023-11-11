@@ -1,13 +1,15 @@
 <template>
   <NuxtLayout name="admin">
     <div class="">
-      <div class="px-4 py-3 text-xl font-medium border-b border-color flex justify-between">
+      <div
+        class="px-4 py-3 text-xl font-medium border-b border-color flex justify-between"
+      >
         <div class="">User Detail</div>
         <div class="">
           <ConfirmButton
             :color="user.isActive === 1 ? 'red' : 'green'"
             :default-label="user.isActive === 1 ? 'Deactive' : 'Active'"
-            @confirm="disableUser"
+            @confirm="toggleActive"
             class="w-24 text-center"
           />
         </div>
@@ -48,6 +50,32 @@
     <div class="px-4 py-3 text-xl font-medium border-b border-color">
       Billing history
     </div>
+    <div class="px-4 py-3 space-y-4">
+      <div
+        class="px-4 py-3 bg-color rounded-xl border border-color flex justify-between"
+        v-for="bill in bills"
+      >
+        <div class="space-y-9">
+          <p class="text-3xl">
+            {{ `${numberWithSep(bill.pricingOption?.price)} VND` }}
+          </p>
+          <div class="">
+            <p class="">
+              Client: <span class="text-color">{{ bill.client?.name }}</span>
+            </p>
+          </div>
+        </div>
+        <div class="flex flex-col justify-between">
+          <p>{{ bill.created?.toLocaleString() }}</p>
+          <div class="">
+            <p class="">
+              Verified by:
+              <span class="text-color">{{ bill.verifier?.name }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   </NuxtLayout>
 </template>
 
@@ -59,6 +87,7 @@ useHead({
 
 const router = useRoute();
 const sub = router.params.sub;
+const toast = useToast();
 
 const user = ref({});
 onMounted(async () => {
@@ -68,24 +97,33 @@ onMounted(async () => {
   user.value = body;
 });
 
-// actions
-const disableUser = async (id) => {
-  user.value = user.value.map((user) => {
-    if (user.id === id) {
-      user.is_active = 0;
-    }
-    return user;
+const toggleActive = async () => {
+  const id = user.value.id;
+
+  const status = await fetch(`/api/users/status`, {
+    method: "POST",
+    body: JSON.stringify({
+      id: id,
+      isActive: user.value.isActive === 1 ? 0 : 1,
+    }),
   });
+
+  if (status.status === 200) {
+    toast.add({ title: "Updated status" });
+    user.value.isActive = user.value.isActive === 1 ? 0 : 1;
+  } else {
+    toast.add({ title: "Failed to update status" });
+  }
 };
 
-const enableUser = async (id) => {
-  user.value = user.value.map((user) => {
-    if (user.id === id) {
-      user.is_active = 1;
-    }
-    return user;
-  });
-};
+// bills
+const bills = ref([]);
+onMounted(async () => {
+  const response = await fetch(`/api/bills/user`);
+  const data = await response.json();
+  const body = JSON.parse(data.body);
+  bills.value = body.content;
+});
 </script>
 
 <style></style>

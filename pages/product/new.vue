@@ -1,11 +1,10 @@
-<script setup lang="ts">
+<script setup>
 useHead({
   title: "New product",
 });
 
-import { Product } from "~/server/api/data";
 const newImage = ref("");
-const product = ref({} as Product);
+const product = ref({});
 
 const addImage = () => {
   if (!newImage) {
@@ -16,7 +15,7 @@ const addImage = () => {
   });
 };
 
-const removeImage = (image_url: string) => {
+const removeImage = (image_url) => {
   if (!product.value.image_urls) {
     return;
   }

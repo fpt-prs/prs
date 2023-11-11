@@ -17,35 +17,42 @@ export default NuxtAuthHandler({
       if (isSignIn) {
         token.jwt = account?.id_token || "";
         token.id = user ? user.id || "" : "";
-        token.family_name = user ? (user as any).family_name || "" : "";
-        token.given_name = user ? (user as any).given_name || "" : "";
       }
-      return Promise.resolve(token);
-    },
-    // Callback whenever session is checked, see https://next-auth.js.org/configuration/callbacks#session-callback
-    session: async ({ session, token }) => {
       let [profile, _] = await getAccount(token.sub);
+
+      const name = user?.name;
 
       if (!profile) {
         profile = await registerAccount({
           userId: token.sub,
           email: token.email,
-          name: session.user?.name,
+          name: name,
         });
       }
 
+      token.id = profile.id;
+      token.country = profile.country;
+      token.roles = profile.roles;
+      token.isActive = profile.isActive;
+      token.gender = profile.gender;
+      token.phoneNumber = profile.phoneNumber;
+      token.dob = profile.dob;
+      token.hash = profile.hash;
+
+      return Promise.resolve(token);
+    },
+    // Callback whenever session is checked, see https://next-auth.js.org/configuration/callbacks#session-callback
+    session: async ({ session, token }) => {
       (session as any).user.sub = token.sub;
-      (session as any).user.family_name = token.family_name;
-      (session as any).user.given_name = token.given_name;
       (session as any).user.jwt = token.jwt;
-      (session as any).user.id = profile.id;
-      (session as any).user.country = profile.country;
-      (session as any).user.roles = profile.roles;
-      (session as any).user.isActive = profile.isActive;
-      (session as any).user.gender = profile.gender;
-      (session as any).user.phoneNumber = profile.phoneNumber;
-      (session as any).user.dob = profile.dob;
-      (session as any).user.hash = profile.hash;
+      (session as any).user.id = token.id;
+      (session as any).user.country = token.country;
+      (session as any).user.roles = token.roles;
+      (session as any).user.isActive = token.isActive;
+      (session as any).user.gender = token.gender;
+      (session as any).user.phoneNumber = token.phoneNumber;
+      (session as any).user.dob = token.dob;
+      (session as any).user.hash = token.hash;
       return Promise.resolve(session);
     },
   },

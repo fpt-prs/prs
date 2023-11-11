@@ -15,7 +15,6 @@ export default defineEventHandler(async (event) => {
 
   console.log(await response.text());
   const status = response.status;
-  console.log(status);
 
   if (status !== 200) {
     return {

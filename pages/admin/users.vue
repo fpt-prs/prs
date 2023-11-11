@@ -57,6 +57,14 @@ const disableUser = async (id) => {
     }
     return user;
   });
+
+  const status = await fetch(`/api/users/status`, {
+    method: "POST",
+    body: JSON.stringify({
+      id: id,
+      isActive: 0,
+    }),
+  });
 };
 
 const enableUser = async (id) => {
@@ -65,6 +73,14 @@ const enableUser = async (id) => {
       user.isActive = 1;
     }
     return user;
+  });
+
+  const status = await fetch(`/api/users/status`, {
+    method: "POST",
+    body: JSON.stringify({
+      id: id,
+      isActive: 1,
+    }),
   });
 };
 </script>

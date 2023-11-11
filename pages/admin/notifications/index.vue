@@ -1,7 +1,14 @@
 <template>
   <NuxtLayout name="admin">
     <div class="grow">
-      <p class="text-2xl px-4 py-3">Notifications</p>
+      <div class="px-4 py-3 flex justify-between items-center">
+        <p class="text-2xl px-4 py-3">Notifications</p>
+        <UButton
+          icon="i-heroicons-plus"
+          label="New notification"
+          to="/admin/notifications/new"
+        />
+      </div>
       <div class="border border-color rounded-lg mx-4">
         <table class="w-full">
           <thead class="border-b border-color">
@@ -101,10 +108,7 @@ const actions = (notification) => [
     {
       label: "Edit",
       icon: "i-heroicons-pencil-20-solid",
-      click: () => {
-        editingNotification.value = notification;
-        isEditing.value = true;
-      },
+      to: `/admin/notifications/${notification.id}/edit`,
     },
     {
       label: "Delete",
