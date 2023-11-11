@@ -15,16 +15,29 @@
       class="w-52 h-52"
     />
 
-    <p class="text-xl">Amount: {{ amount }} VND</p>
+    <p class="text-xl">Amount: {{ option.price }} VND</p>
 
-    <p class="text-2xl">Content: AJVADSAIF</p>
+    <p class="text-2xl">Content: {{ user.hash }}</p>
   </div>
 </template>
 
 <script setup>
 // get query
 const { query } = useRoute();
-const amount = query.amount;
+const optionId = query.optionId;
+const option = ref({});
+
+onMounted(async () => {
+  const response = await fetch(`/api/pricing-options/${optionId}`);
+  const data = await response.json();
+  const body = JSON.parse(data.body);
+  option.value = body;
+});
+
+
+const { getSession } = useAuth();
+const session = await getSession();
+const user = session?.user;
 </script>
 
 <style></style>

@@ -45,6 +45,7 @@ export default NuxtAuthHandler({
       (session as any).user.gender = profile.gender;
       (session as any).user.phoneNumber = profile.phoneNumber;
       (session as any).user.dob = profile.dob;
+      (session as any).user.hash = profile.hash;
       return Promise.resolve(session);
     },
   },

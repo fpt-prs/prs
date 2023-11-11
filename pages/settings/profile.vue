@@ -22,12 +22,6 @@ const user = session?.user;
           <span class="text-color pl-3">{{ user.name }}</span>
         </div>
         <div class="">
-          <span>UUID:</span>
-          <span class="text-color pl-3">
-            {{ user.sub }}
-          </span>
-        </div>
-        <div class="">
           <span>Active status:</span>
           <span class="text-color pl-3">
             {{ user.isActive ? "Active" : "Inactive" }}

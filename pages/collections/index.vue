@@ -55,6 +55,7 @@ const fetchDetail = async () => {
             @click="currentId = c.id"
             class="w-full"
           />
+          <NewCollection />
         </ul>
       </div>
       <div class="grow min-w-0">

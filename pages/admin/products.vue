@@ -4,7 +4,7 @@
       <div
         class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color bg-color z-[100]"
       >
-        <p class="font-semibold text-lg">Manage products</p>
+        <p class="font-semibold text-lg">Manage {{ products?.length }} products</p>
         <div class="flex gap-4">
           <UInput
             v-model="search"
@@ -56,7 +56,7 @@
       </div>
       <div
         class="grow w-full h-full text-center flex flex-col justify-center items-center"
-        v-if="!isLoading && products.length === 0"
+        v-if="!isLoading && products?.length === 0"
       >
         <UIcon name="i-heroicons-circle-stack-solid" size="xl" />
         <p class="text-xl ml-1 text-color">No Item</p>
@@ -191,9 +191,8 @@ const fetchData = async () => {
   params.append("page", page.value.toString());
   params.append("search", search.value);
 
-  const { data } = await useFetch(`/api/products?${params.toString()}`);
-
-  const response = data.value;
+  const res = await fetch(`/api/products?${params.toString()}`);
+  const response = await res.json();
   let body = "{}";
   if (response) {
     body = response.body;
@@ -206,5 +205,7 @@ const fetchData = async () => {
   isLoading.value = false;
 };
 
-await fetchData();
+onMounted(async () => {
+  await fetchData();
+});
 </script>

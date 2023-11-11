@@ -7,11 +7,7 @@ const newPermissionName = ref("");
 const isEditing = ref(false);
 const editingPermission = ref({});
 
-const permissions = ref([
-  { id: 1, name: "Admin" },
-  { id: 2, name: "Dropshipper" },
-  { id: 3, name: "Collaborator" },
-]);
+const permissions = ref([]);
 
 onMounted(async () => {
   const response = await fetch("/api/permissions");

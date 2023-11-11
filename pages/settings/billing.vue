@@ -33,28 +33,13 @@
       <div class="px-4 py-3">
         <div class="grid grid-cols-3 gap-4">
           <UCard
+            v-for="option of options"
             class="cursor-pointer hover:bg-gray-600"
             as="a"
-            href="/purchase?amount=50000"
+            :href="`/purchase?optionId=${option.id}`"
           >
-            <p>50.000 VND</p>
-            <p class="text-gray-500">20 views</p>
-          </UCard>
-          <UCard
-            class="cursor-pointer bg-gray-600"
-            as="a"
-            href="/purchase?amount=100000"
-          >
-            <p>100.000 VND</p>
-            <p class="text-gray-500">50 views</p>
-          </UCard>
-          <UCard
-            class="cursor-pointer bg-gray-600"
-            as="a"
-            href="/purchase?amount=200000"
-          >
-            <p>200.000 VND</p>
-            <p class="text-gray-500">120 views</p>
+            <p>{{ `${numberWithSep(option.price)} VND` }}</p>
+            <p class="text-gray-500">{{ option.numsOfView }} views</p>
           </UCard>
         </div>
       </div>
@@ -75,6 +60,13 @@ onMounted(async () => {
   bills.value = body.content;
 });
 
+const options = ref([]);
+onMounted(async () => {
+  const response = await fetch(`/api/pricing-options`);
+  const data = await response.json();
+  const body = JSON.parse(data.body);
+  options.value = body;
+});
 </script>
 
 <style></style>
