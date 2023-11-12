@@ -1,5 +1,4 @@
 <script setup>
-import DefaultLayout from "~/layouts/default.vue";
 </script>
 
 <template>
@@ -81,3 +80,9 @@ import DefaultLayout from "~/layouts/default.vue";
     </div>
   </div>
 </template>
+
+<style>
+.nuxt-link-active {
+  font-weight: bold;
+}
+</style>
