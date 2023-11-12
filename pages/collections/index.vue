@@ -1,5 +1,4 @@
 <script setup>
-import NewCollection from "~/components/collections/NewCollection.vue";
 const currentId = ref(0);
 
 useHead({
@@ -10,14 +9,6 @@ useHead({
 });
 
 const collections = ref([]);
-
-watch(currentId, async () => {
-  await fetchDetail();
-});
-
-const collection = ref({});
-const products = ref([]);
-
 onMounted(async () => {
   await fetchCollection();
   currentId.value = collections.value[0].id;
@@ -31,6 +22,11 @@ const fetchCollection = async () => {
   collections.value = body;
 };
 
+const collection = ref({});
+const products = ref([]);
+watch(currentId, async () => {
+  await fetchDetail();
+});
 const fetchDetail = async () => {
   const responseProducts = await fetch(`/api/collection?id=${currentId.value}`);
   const dataProducts = await responseProducts.json();
@@ -73,6 +69,8 @@ const removeCollection = async () => {
       title: "Collection deleted",
     });
     await fetchCollection();
+    currentId.value = collections.value[0].id;
+    await fetchDetail();
   } else {
     toast.add({
       title: "Failed to delete collection",
@@ -102,7 +100,9 @@ const removeCollection = async () => {
       </div>
       <div class="grow min-w-0">
         <div class="w-full flex justify-between px-4 py-3">
-          <p class="text-xl">{{ collection.name }}</p>
+          <div class="">
+            <p class="text-xl">{{ collection.name }}</p>
+          </div>
           <ModalConfirmButton
             icon="i-heroicons-trash"
             color="red"
