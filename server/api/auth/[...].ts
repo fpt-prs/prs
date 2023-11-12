@@ -17,27 +17,27 @@ export default NuxtAuthHandler({
       if (isSignIn) {
         token.jwt = account?.id_token || "";
         token.id = user ? user.id || "" : "";
+        let [profile, _] = await getAccount(token.sub);
+
+        const name = user?.name;
+
+        if (!profile) {
+          profile = await registerAccount({
+            userId: token.sub,
+            email: token.email,
+            name: name,
+          });
+        }
+
+        token.id = profile.id;
+        token.country = profile.country;
+        token.roles = profile.roles;
+        token.isActive = profile.isActive;
+        token.gender = profile.gender;
+        token.phoneNumber = profile.phoneNumber;
+        token.dob = profile.dob;
+        token.hash = profile.hash;
       }
-      let [profile, _] = await getAccount(token.sub);
-
-      const name = user?.name;
-
-      if (!profile) {
-        profile = await registerAccount({
-          userId: token.sub,
-          email: token.email,
-          name: name,
-        });
-      }
-
-      token.id = profile.id;
-      token.country = profile.country;
-      token.roles = profile.roles;
-      token.isActive = profile.isActive;
-      token.gender = profile.gender;
-      token.phoneNumber = profile.phoneNumber;
-      token.dob = profile.dob;
-      token.hash = profile.hash;
 
       return Promise.resolve(token);
     },
