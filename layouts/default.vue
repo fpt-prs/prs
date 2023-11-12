@@ -7,10 +7,11 @@ useHead({
 </script>
 
 <template>
-  <div class="h-screen flex flex-col dark:bg-gray-900 bg-white">
+  <div class="min-h-screen flex flex-col dark:bg-gray-900 bg-white">
     <Navbar />
     <div class="grow overflow-x-auto mt-14">
       <slot />
     </div>
   </div>
+  <Footer />
 </template>

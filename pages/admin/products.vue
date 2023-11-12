@@ -4,7 +4,7 @@
       <div
         class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color bg-color z-[100]"
       >
-        <p class="font-semibold text-lg">Manage {{ products?.length }} products</p>
+        <p class="font-semibold text-lg">Manage products</p>
         <div class="flex gap-4">
           <UInput
             v-model="search"
@@ -67,7 +67,7 @@
             <img
               class="w-36 h-36 mr-4"
               :src="
-                row.images[0]?.imageUrl.replace('75', '320') ||
+                row.images[0]?.imageUrl ||
                 'https://via.placeholder.com/150'
               "
               alt="Product image"

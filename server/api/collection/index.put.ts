@@ -1,27 +1,29 @@
-import fetchBackend from "~/utils/fetchBackend"
+import fetchBackend from "~/utils/fetchBackend";
+import { getServerSession } from "#auth";
 
 export default defineEventHandler(async (event) => {
-  const { collectionId, productId } = JSON.parse(await readBody(event));
-  const parsedCollectionId = parseInt(collectionId);
-  const parsedProductId = parseInt(productId);
+  const { name } = JSON.parse(await readBody(event));
+  const session = await getServerSession(event);
+  const userId = (session?.user as any).id;
 
   let params = new URLSearchParams();
-  params.append("collectionId", parsedCollectionId.toString());
-  params.append("productId", parsedProductId.toString());
+  params.append("name", name);
+  params.append("userId", userId.toString());
 
-  const fetchRes = await fetchBackend(`/api/collections/add?${params.toString()}`, {
-    method: "POST",
-  })
+  const fetchRes = await fetchBackend(`/api/collections?${params.toString()}`, {
+    method: "PUT",
+  });
+  const data = await fetchRes.json();
 
   if (fetchRes.status !== 200) {
     return {
       statusCode: fetchRes.status,
-      body: "Something went wrong"
-    }
+      body: data.error,
+    };
   }
 
   return {
     statusCode: 200,
-    body: "Added successfully"
-  }
+    body: data.value,
+  };
 });

@@ -14,36 +14,54 @@ const addImage = () => {
     return;
   }
   product.value.images.push({
-    images: {
-      id: 0,
-      imageUrl: newImage.value,
-    },
+    imageUrl: newImage.value,
   });
 };
 
 const product = ref({});
-
 onMounted(async () => {
   const response = await fetch(`/api/products/${route.params.id}`);
   const data = await response.json();
   const body = JSON.parse(data.body);
-  product.value = body;
+  product.value = {
+    ...body,
+    images: body.images.map((image) => ({
+      imageUrl: image.imageUrl,
+    })),
+  };
 });
 
-const removeImage = (image_url) => {
-  if (!product.value.image_urls) {
+const removeImage = (imageUrl) => {
+  if (!product.value.imageUrls) {
     return;
   }
-  product.value.image_urls = product.value.image_urls.filter(
-    (image) => image.image_url !== image_url
+  product.value.imageUrls = product.value.imageUrls.filter(
+    (image) => image.imageUrl !== imageUrl
   );
 };
 
 const update = async (c) => {
+  const productUpdateRequest = {
+    id: product.value.id,
+    name: product.value.name,
+    description: product.value.description,
+    price: product.value.price,
+    url: product.value.url,
+    category: product.value.category,
+    images: product.value.images.map((image) => image.imageUrl),
+  };
   const response = await fetch("/api/products/update", {
     method: "POST",
-    body: JSON.stringify(product.value),
+    body: JSON.stringify(productUpdateRequest),
   });
+
+  const status = response.status;
+  const toast = useToast();
+  if (status === 200) {
+    toast.add({ title: "Product updated successfully" });
+  } else {
+    toast.add({ title: "Error updating product" });
+  }
 };
 </script>
 

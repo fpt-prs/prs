@@ -1,4 +1,5 @@
 <script setup>
+import NewCollection from "~/components/collections/NewCollection.vue";
 const currentId = ref(0);
 
 useHead({
@@ -37,13 +38,54 @@ const fetchDetail = async () => {
   collection.value = result;
   products.value = result.products;
 };
+
+const createCollection = async (name) => {
+  const postRes = await fetch("/api/collection", {
+    method: "PUT",
+    body: JSON.stringify({
+      name: name,
+    }),
+  });
+
+  const status = postRes.status;
+  const toast = useToast();
+  if (status === 200) {
+    toast.add({
+      title: "Collection created",
+    });
+    await fetchCollection();
+  } else {
+    toast.add({
+      title: "Failed to create collection",
+    });
+  }
+};
+
+const removeCollection = async () => {
+  const deleteRes = await fetch(`/api/collection?id=${currentId.value}`, {
+    method: "DELETE",
+  });
+
+  const status = deleteRes.status;
+  const toast = useToast();
+  if (status === 200) {
+    toast.add({
+      title: "Collection deleted",
+    });
+    await fetchCollection();
+  } else {
+    toast.add({
+      title: "Failed to delete collection",
+    });
+  }
+};
 </script>
 
 <template>
   <NuxtLayout name="default">
-    <div class="flex max-w-screen h-full">
+    <div class="flex max-w-screen min-h-screen">
       <div class="p-5 border-r border-color">
-        <ul class="flex flex-col w-48">
+        <ul class="flex flex-col w-48 sticky">
           <UButton
             v-for="c in collections"
             :key="c.id"
@@ -55,11 +97,20 @@ const fetchDetail = async () => {
             @click="currentId = c.id"
             class="w-full"
           />
-          <NewCollection />
+          <NewCollection @create="createCollection" />
         </ul>
       </div>
       <div class="grow min-w-0">
-        <p class="text-xl px-4 py-3">{{ collection.name }}</p>
+        <div class="w-full flex justify-between px-4 py-3">
+          <p class="text-xl">{{ collection.name }}</p>
+          <ModalConfirmButton
+            icon="i-heroicons-trash"
+            color="red"
+            variant="ghost"
+            label="Delete"
+            @confirm="removeCollection"
+          />
+        </div>
         <div class="space-y-3 p-4">
           <a
             class="block"

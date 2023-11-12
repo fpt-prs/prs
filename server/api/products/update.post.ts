@@ -1,20 +1,17 @@
+import fetchBackend from "~/utils/fetchBackend";
+
 export default defineEventHandler(async (event) => {
   // get body
   const body = await readBody(event);
 
-  const backendUrl = process.env.BACKEND_URL || "http://localhost:8080";
   // send req to backend
-  const response = await fetch(`${backendUrl}/api/products/update`, {
+  const response = await fetchBackend(`/api/products/update`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Basic ${process.env.BASIC_AUTH}`,
-    },
     body: body,
   });
 
-  console.log(await response.text());
   const status = response.status;
+  const json = await response.json();
 
   if (status !== 200) {
     return {
@@ -27,6 +24,6 @@ export default defineEventHandler(async (event) => {
 
   return {
     statusCode: 200,
-    body: {},
+    body: json.value,
   };
 });

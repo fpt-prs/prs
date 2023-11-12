@@ -30,7 +30,7 @@
           label="Create"
           @click="
             () => {
-              $emit('create', newCollection);
+              emit('create', newCollection);
               isCreate = false;
             }
           "
@@ -43,6 +43,7 @@
 <script setup>
 const isCreate = ref(false);
 const newCollection = ref("");
+const emit = defineEmits(["create"]);
 </script>
 
 <style></style>

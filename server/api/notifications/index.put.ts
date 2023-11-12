@@ -1,10 +1,11 @@
 import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
-  const { id } = getQuery(event);
+  const body = await readBody(event);
 
-  const fetchRes = await fetchBackend(`/api/collections/${id as string}`, {
-    method: "DELETE",
+  const fetchRes = await fetchBackend(`/api/notifications`, {
+    method: "PUT",
+    body: JSON.stringify(body),
   });
 
   if (fetchRes.status !== 200) {
@@ -14,8 +15,10 @@ export default defineEventHandler(async (event) => {
     };
   }
 
+  const data = await fetchRes.json();
+
   return {
     statusCode: 200,
-    body: "Collection deleted successfully",
+    body: JSON.stringify(data),
   };
 });

@@ -26,12 +26,12 @@ onMounted(async () => {
 const collections = ref([]);
 
 const update = async (collection) => {
-  const method = collection.isProductInCollection ? "DELETE" : "PUT";
   const response = await fetch("/api/collection", {
-    method: method,
+    method: "POST",
     body: JSON.stringify({
       collectionId: collection.id,
       productId: product.value.id,
+      mode: collection.isProductInCollection ? "remove" : "add",
     }),
   });
 
@@ -46,7 +46,7 @@ const update = async (collection) => {
         <div class="mr-3" v-if="product.images">
           <img
             v-for="(image, index) in product.images"
-            :src="image.imageUrl.replace('75', '320')"
+            :src="image.imageUrl"
             class="w-36 aspect-square cursor-pointer my-1"
             :class="
               index === currentImage
@@ -59,7 +59,7 @@ const update = async (collection) => {
         <img
           v-if="product.images"
           :src="
-            product.images[currentImage]?.imageUrl.replace('75', '320') ||
+            product.images[currentImage]?.imageUrl ||
             '/no-image.png'
           "
           class="w-80 h-80 mr-3"

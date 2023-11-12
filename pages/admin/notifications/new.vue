@@ -15,24 +15,24 @@
     <UForm
       :validate="validate"
       :state="notification"
-      @submit="submit"
       class="w-full flex gap-4 px-4 py-3"
     >
       <div class="grow space-y-5">
-        <UFormGroup label="Title" name="title" :error="notification.title">
-          <UInput v-model="notification.title" />
+        <UFormGroup label="Header" name="header">
+          <UInput v-model="notification.header" />
         </UFormGroup>
-        <UFormGroup
-          label="Message"
-          name="message"
-          :error="notification.message"
-        >
-          <UTextarea v-model="notification.message" />
+        <UFormGroup label="Content" name="content">
+          <UTextarea v-model="notification.content" />
         </UFormGroup>
-        <UButton type="submit" label="Send" />
+        <UButton @click="submit" label="Send" />
       </div>
       <div class="grow py-3">
-        <UCheckbox v-for="role of roles" :key="role.id" :label="role.name" />
+        <UCheckbox
+          v-for="role of roles"
+          :key="role.id"
+          :label="role.name"
+          @change="toggleRole(role)"
+        />
       </div>
     </UForm>
   </NuxtLayout>
@@ -53,7 +53,45 @@ onMounted(async () => {
   roles.value = body;
 });
 
-const submit = async (event) => {};
+const selectedRoles = ref([]);
+
+const toggleRole = (role) => {
+  if (selectedRoles.value.includes(role.id)) {
+    selectedRoles.value = selectedRoles.value.filter(
+      (selectedRole) => selectedRole !== role.id
+    );
+  } else {
+    selectedRoles.value.push(role.id);
+  }
+};
+
+const submit = async () => {
+  console.log(selectedRoles.value);
+
+  const createNotiRequest = {
+    header: notification.value.header,
+    content: notification.value.content,
+    roleIds: selectedRoles.value,
+  };
+
+  const response = await fetch("/api/notifications", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(createNotiRequest),
+  });
+
+  const status = response.status;
+  const toast = useToast();
+  const router = useRouter();
+  if (status === 200) {
+    toast.add({ title: "Notification created" });
+    router.push("/admin/notifications");
+  } else {
+    toast.add({ title: "Failed to create notification" });
+  }
+};
 
 const validate = () => {
   return true;
