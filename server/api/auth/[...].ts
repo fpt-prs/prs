@@ -17,6 +17,7 @@ export default NuxtAuthHandler({
       if (isSignIn) {
         token.jwt = account?.id_token || "";
         token.id = user ? user.id || "" : "";
+      } else {
         let [profile, _] = await getAccount(token.sub);
 
         const name = user?.name;
