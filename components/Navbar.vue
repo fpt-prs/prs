@@ -1,11 +1,9 @@
-<script setup lang="ts">
-import { DropdownItem } from "@nuxt/ui/dist/runtime/types";
-
+<script setup>
 const { getSession, signOut } = useAuth();
 const session = await getSession();
 let theme = useColorMode();
 const isDark = computed(() => theme.value === "dark");
-const items: DropdownItem[][] = [
+const items = [
   [
     {
       label: session?.user?.email || "",
@@ -39,6 +37,14 @@ const items: DropdownItem[][] = [
     },
   ],
 ];
+
+const notifications = ref([]);
+onMounted(async () => {
+  const response = await fetch("/api/notifications/user");
+  const data = await response.json();
+  const body = JSON.parse(data.body);
+  notifications.value = body;
+});
 </script>
 
 <template>
@@ -75,6 +81,22 @@ const items: DropdownItem[][] = [
         to="/admin/products"
         :trailing="false"
       />
+      <UPopover>
+        <UButton
+          color="gray"
+          variant="ghost"
+          trailing-icon="i-heroicons-bell"
+        />
+
+        <template #panel>
+          <div class="p-4 space-y-4">
+            <div class="border border-color rounded-lg p-4" v-for="notification in notifications">
+              <p class="text-sm">{{ notification.header }}</p>
+              <p class="text-color text-sm">{{ notification.content }}</p>
+            </div>
+          </div>
+        </template>
+      </UPopover>
       <UButton
         :icon="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'"
         color="gray"
