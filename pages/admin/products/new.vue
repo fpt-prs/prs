@@ -8,8 +8,12 @@ useHead({
 
 const route = useRoute();
 const newImage = ref("");
+const product = ref({
+  images: [],
+});
 
 const addImage = () => {
+  console.log(product.value);
   if (!newImage) {
     return;
   }
@@ -17,19 +21,6 @@ const addImage = () => {
     imageUrl: newImage.value,
   });
 };
-
-const product = ref({});
-onMounted(async () => {
-  const response = await fetch(`/api/products/${route.params.id}`);
-  const data = await response.json();
-  const body = JSON.parse(data.body);
-  product.value = {
-    ...body,
-    images: body.images.map((image) => ({
-      imageUrl: image.imageUrl,
-    })),
-  };
-});
 
 const removeImage = (imageUrl) => {
   if (!product.value.imageUrls) {
@@ -40,9 +31,9 @@ const removeImage = (imageUrl) => {
   );
 };
 
-const update = async (c) => {
-  const productUpdateRequest = {
-    id: product.value.id,
+const create = async (c) => {
+  const productCreateRequest = {
+    productId: product.value.productId,
     name: product.value.name,
     description: product.value.description,
     price: product.value.price,
@@ -51,18 +42,20 @@ const update = async (c) => {
     isActive: product.value.isActive,
     images: product.value.images.map((image) => image.imageUrl),
   };
-  const response = await fetch("/api/products/update", {
-    method: "POST",
-    body: JSON.stringify(productUpdateRequest),
+  const response = await fetch("/api/products", {
+    method: "PUT",
+    body: JSON.stringify(productCreateRequest),
   });
 
   const status = response.status;
   const toast = useToast();
   if (status === 200) {
-    toast.add({ title: "Product updated successfully" });
+    toast.add({ title: "Product created successfully" });
   } else {
-    toast.add({ title: "Error updating product" });
+    toast.add({ title: "Error creating product" });
   }
+  const router = useRouter();
+  router.push("/admin/products/" + product.value.productId);
 };
 </script>
 
@@ -72,7 +65,7 @@ const update = async (c) => {
       <BackButton />
     </div>
     <div class="text-3xl p-3 dark:border-b border-color">
-      <p class="text-xl px-4 py-3">Edit Product</p>
+      <p class="text-xl px-4 py-3">Create Product</p>
     </div>
     <div class="max-w-[80rem] mx-auto px-4 py-3 space-y-4 pb-32">
       <UCheckbox
@@ -82,6 +75,24 @@ const update = async (c) => {
         type="checkbox"
         name="active"
       />
+      <UFormGroup label="Product ID">
+        <UInput
+          autoresize
+          v-model="product.productId"
+          placeholder="Product Code"
+          type="text"
+          name="productId"
+        />
+      </UFormGroup>
+      <UFormGroup label="URL">
+        <UTextarea
+          autoresize
+          v-model="product.url"
+          placeholder="Product URL"
+          type="text"
+          name="url"
+        />
+      </UFormGroup>
       <UFormGroup label="Name">
         <UTextarea
           autoresize
@@ -100,6 +111,16 @@ const update = async (c) => {
           name="description"
         />
       </UFormGroup>
+      <UFormGroup label="Category">
+        <UTextarea
+          autoresize
+          v-model="product.category"
+          placeholder="Category"
+          type="text"
+          name="category"
+        />
+      </UFormGroup>
+
       <!-- price -->
       <UFormGroup label="Price">
         <UInput
@@ -159,7 +180,7 @@ const update = async (c) => {
           />
         </div>
       </UFormGroup>
-      <UButton size="lg" @click="update"> Update </UButton>
+      <UButton size="lg" @click="create"> Update </UButton>
     </div>
   </NuxtLayout>
 </template>

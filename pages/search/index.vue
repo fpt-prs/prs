@@ -9,7 +9,6 @@ const fetchData = async () => {
   const response = await fetch(`/api/suggest`);
   const data = await response.json();
   products.value = JSON.parse(data.body);
-  console.log(products.value);
 };
 
 onMounted(async () => {
@@ -28,6 +27,12 @@ await fetchData();
         class="flex justify-between items-center gap-5 p-5 dark:border-b border-color"
       >
         <p class="font-semibold text-lg">Trending products</p>
+        <UButton
+          color="gray"
+          label="Export"
+          :trailing="false"
+          icon="i-heroicons-arrow-down-tray"
+        />
       </div>
       <div class="flex mx-5 mt-5">
         <UButton
@@ -65,11 +70,7 @@ await fetchData();
         class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-5 p-5"
         v-if="viewMode === 'grid'"
       >
-        <a
-          class=""
-          :href="`/product/${row.productId}`"
-          v-for="row in products"
-        >
+        <a class="" :href="`/product/${row.productId}`" v-for="row in products">
           <div class="">
             <img
               class="w-full h-80 mr-4"
@@ -92,11 +93,7 @@ await fetchData();
         class="grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-5 p-5"
         v-if="viewMode === 'dense'"
       >
-        <a
-          class=""
-          :href="`/product/${row.productId}`"
-          v-for="row in products"
-        >
+        <a class="" :href="`/product/${row.productId}`" v-for="row in products">
           <div class="">
             <img
               class="w-full h-60 mr-4"

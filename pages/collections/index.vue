@@ -77,6 +77,34 @@ const removeCollection = async () => {
     });
   }
 };
+
+const removeProduct = async (id) => {
+  const productRemoveRequest = {
+    collectionId: currentId.value,
+    productId: id,
+    mode: "remove",
+  };
+
+  const deleteRes = await fetch(`/api/collection`, {
+    method: "POST",
+    body: JSON.stringify(productRemoveRequest),
+  });
+
+  const status = deleteRes.status;
+  const toast = useToast();
+  if (status === 200) {
+    toast.add({
+      title: "Product removed",
+    });
+    await fetchDetail();
+  } else {
+    toast.add({
+      title: "Failed to remove product",
+    });
+  }
+
+  await fetchDetail();
+};
 </script>
 
 <template>
@@ -112,27 +140,32 @@ const removeCollection = async () => {
           />
         </div>
         <div class="space-y-3 p-4">
-          <a
-            class="block"
-            :href="`/product/${row.productId}`"
-            v-for="row in products"
-          >
-            <div class="flex">
-              <img
-                class="w-36 h-36 mr-4"
-                :src="
-                  row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
-                "
-                alt="Product image"
-              />
-              <div class="break-words p-2 truncate">
-                <p class="truncate">{{ row.name }}</p>
-                <div class="text-gray-500 mt-2">
-                  {{ "$" + row.price }}
+          <div class="flex items-center" v-for="row in products">
+            <a class="min-w-0 grow block" :href="`/product/${row.productId}`">
+              <div class="flex">
+                <img
+                  class="w-36 h-36 mr-4"
+                  :src="
+                    row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
+                  "
+                  alt="Product image"
+                />
+                <div class="break-words p-2 truncate">
+                  <p class="truncate">{{ row.name }}</p>
+                  <div class="text-gray-500 mt-2">
+                    {{ "$" + row.price }}
+                  </div>
                 </div>
               </div>
-            </div>
-          </a>
+            </a>
+            <ModalConfirmButton
+              icon="i-heroicons-trash"
+              color="red"
+              variant="ghost"
+              label="Remove"
+              @confirm="removeProduct(row.id)"
+            />
+          </div>
         </div>
       </div>
     </div>

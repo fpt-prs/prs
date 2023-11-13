@@ -6,6 +6,12 @@
       >
         <p class="font-semibold text-lg">Manage products</p>
         <div class="flex gap-4">
+          <UButton
+            color="gray"
+            icon="i-heroicons-plus"
+            label="New"
+            to="/admin/products/new"
+          />
           <UInput
             v-model="search"
             @keyup.enter="
@@ -67,8 +73,7 @@
             <img
               class="w-36 h-36 mr-4"
               :src="
-                row.images[0]?.imageUrl ||
-                'https://via.placeholder.com/150'
+                row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
               "
               alt="Product image"
             />
@@ -86,16 +91,21 @@
               color="blue"
               :to="`/product/${row.productId}/edit`"
             />
-            <ConfirmButton
-              defaultLabel="Delete"
+            <ModalConfirmButton
+              label="Delete"
               icon="i-heroicons-trash"
               color="red"
               class="w-28"
-              @confirm="
-                () => {
-                  products = products.filter((p) => p.id !== row.id);
-                }
-              "
+              v-if="row.isActive"
+              @confirm="toggleActiveData(row)"
+            />
+            <ModalConfirmButton
+              label="Active"
+              icon="i-heroicons-check"
+              color="green"
+              class="w-28"
+              v-else
+              @confirm="toggleActiveData(row)"
             />
           </div>
         </div>
@@ -133,25 +143,6 @@ const sortCriteria = ref(
   sortCriterias.find((c) => c.field === field && c.order === order) ||
     sortCriterias[0]
 );
-
-const actions = (row) => [
-  [
-    {
-      label: "Edit",
-      icon: "i-heroicons-pencil",
-      action: "edit",
-      to: `/product/${row.productId}/edit`,
-    },
-    {
-      label: "Delete",
-      icon: "i-heroicons-trash",
-      action: "delete",
-      click: () => {
-        products.value = products.value.filter((p) => p.id !== row.id);
-      },
-    },
-  ],
-];
 
 const products = ref([]);
 const totalElements = ref(0);
@@ -208,4 +199,29 @@ const fetchData = async () => {
 onMounted(async () => {
   await fetchData();
 });
+
+const toggleActiveData = async (product) => {
+  product.isActive = product.isActive === 1 ? 0 : 1;
+
+  const statusChangeRequest = {
+    id: product.id,
+    isActive: product.isActive,
+  };
+
+  const response = await fetch("/api/products/status", {
+    method: "PATCH",
+    body: JSON.stringify(statusChangeRequest),
+  });
+
+  const status = response.status;
+  const toast = useToast();
+
+  if (status === 200) {
+    toast.add({ title: "Product status updated successfully" });
+  } else {
+    toast.add({ title: "Error updating product status" });
+  }
+
+  await fetchData();
+};
 </script>

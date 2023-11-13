@@ -4,7 +4,6 @@ export default defineEventHandler(async (event) => {
   const sub = getRouterParam(event, "sub");
 
   const fetchRes = await fetchBackend(`/api/users/detail?sub=${sub}`);
-  console.log(fetchRes.status);
   const detail = await fetchRes.json();
 
   return {

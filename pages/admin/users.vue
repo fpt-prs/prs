@@ -5,21 +5,37 @@
       <UTable :rows="users" :columns="colums">
         <template #actions-data="{ row }">
           <div class="flex gap-4">
-            <UButton :to="`/admin/user/${row.userId}`" label="Detail" />
-            <ConfirmButton
-              v-if="row.isActive === 1"
-              color="red"
-              default-label="Deactive"
-              @confirm="disableUser(row.id)"
-              class="w-20"
-            />
-            <ConfirmButton
-              v-else
-              color="green"
-              default-label="Active"
-              @confirm="enableUser(row.id)"
-              class="w-20"
-            />
+            <UButton :to="`/user/${row.userId}`" label="Detail" />
+            <UPopover :popper="{ placement: 'bottom-end' }">
+              <UButton
+                color="gray"
+                trailing-icon="i-heroicons-ellipsis-horizontal"
+              />
+
+              <template #panel>
+                <div class="p-2 flex flex-col">
+                  <ModalConfirmButton
+                    v-if="row.isActive === 1"
+                    variant="ghost"
+                    color="red"
+                    label="Deactive user..."
+                    @confirm="disableUser(row.id)"
+                  />
+                  <ModalConfirmButton
+                    v-else
+                    variant="ghost"
+                    color="green"
+                    label="Active user..."
+                    @confirm="enableUser(row.id)"
+                  />
+                  <UButton
+                    variant="ghost"
+                    color="gray"
+                    label="Change role..."
+                  />
+                </div>
+              </template>
+            </UPopover>
           </div>
         </template>
       </UTable>

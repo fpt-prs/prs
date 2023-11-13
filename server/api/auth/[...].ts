@@ -8,6 +8,9 @@ export default NuxtAuthHandler({
     maxAge: 60 * 60 * 24, // 1 day
   },
   callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      return true;
+    },
     // Callback when the JWT is created / updated, see https://next-auth.js.org/configuration/callbacks#jwt-callback
     jwt: async ({ token, account, user }) => {
       const isSignIn = user ? true : false;

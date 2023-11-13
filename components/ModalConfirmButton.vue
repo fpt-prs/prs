@@ -5,6 +5,7 @@
     @click="confirm = true"
     :variant="variant"
     :icon="icon"
+    :class="class"
   />
   <UModal v-model="confirm" @close="confirm = false">
     <UCard>
@@ -54,6 +55,10 @@ const props = defineProps({
     type: String,
     default: "",
   },
+  class: {
+    type: String,
+    default: "",
+  },
 });
 
 // confirm state
@@ -62,10 +67,8 @@ const confirm = ref(false);
 // confirm event
 const emit = defineEmits(["confirm"]);
 const confirmEvent = () => {
-  if (confirm.value) {
-    emit("confirm");
-  }
-  confirm.value = !confirm.value;
+  emit("confirm");
+  confirm.value = false;
 };
 </script>
 
