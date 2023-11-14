@@ -2,45 +2,33 @@
   <NuxtLayout name="settings">
     <div class="grow">
       <p class="text-xl px-4 py-3">Billing</p>
-      <p class="border-y border-color px-4 py-3">Billing history</p>
-      <div class="px-4 py-3 space-y-4">
-        <div
-          class="px-4 py-3 bg-color rounded-xl border border-color flex justify-between"
-          v-for="bill in bills"
-        >
-          <div class="space-y-9">
-            <p class="text-3xl">
-              {{ `${numberWithSep(bill.pricingOption?.price)} VND` }}
-            </p>
-            <div class="">
-              <p class="">
-                Client: <span class="text-color">{{ bill.client?.name }}</span>
-              </p>
-            </div>
-          </div>
-          <div class="flex flex-col justify-between">
-            <p>{{ bill.created?.toLocaleString() }}</p>
-            <div class="">
-              <p class="">
-                Verified by:
-                <span class="text-color">{{ bill.verifier?.name }}</span>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
       <p class="border-y border-color px-4 py-3">Purchase new views</p>
       <div class="px-4 py-3">
         <div class="grid grid-cols-3 gap-4">
-          <UCard
+          <a
+            class="p-3 rounded-lg border border-color text-center"
             v-for="option of options"
-            class="cursor-pointer hover:bg-gray-600"
-            as="a"
             :href="`/purchase?optionId=${option.id}`"
           >
-            <p>{{ `${numberWithSep(option.price)} VND` }}</p>
+            <p class="text-xl">{{ option.description }}</p>
+            <p class="text-3xl py-4 font-semibold">
+              {{ `${numberWithSep(option.price)} VND` }}
+            </p>
             <p class="text-gray-500">{{ option.numsOfView }} views</p>
-          </UCard>
+          </a>
+        </div>
+      </div>
+      <p class="border-y border-color px-4 py-3">Billing history</p>
+      <div class="px-4 py-3 space-y-4">
+        <div class="px-4 py-3 flex justify-between" v-for="bill in bills">
+          <div class="space-y-9">
+            <p class="text-3xl">
+              {{ `+ ${numberWithSep(bill.pricingOption?.price)} VND` }}
+            </p>
+          </div>
+          <div class="flex flex-col justify-between">
+            <p>{{ formatDateTime(parseDateTime(bill.created)) }}</p>
+          </div>
         </div>
       </div>
     </div>

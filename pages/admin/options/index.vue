@@ -96,14 +96,18 @@ const removeOption = async (option) => {
 
 const updateOption = async () => {
   const updateOptionReq = {
-    id: editingOption.value.id,
-    name: editingOption.value.name,
+    description: editingOption.value.description,
+    price: parseFloat(editingOption.value.price),
+    numsOfView: parseInt(editingOption.value.numsOfView),
   };
 
-  const updateRes = await fetch(`/api/options`, {
-    method: "POST",
-    body: JSON.stringify(updateOptionReq),
-  });
+  const updateRes = await fetch(
+    `/api/pricing-options/${editingOption.value.id}`,
+    {
+      method: "POST",
+      body: JSON.stringify(updateOptionReq),
+    }
+  );
 
   const status = updateRes.status;
   const toast = useToast();
@@ -210,14 +214,34 @@ const updateOption = async () => {
               />
             </div>
           </template>
-          <UFormGroup label="Name">
-            <UInput
-              placeholder="Name"
-              size="lg"
-              class="w-full"
-              v-model="editingOption.name"
-            />
-          </UFormGroup>
+          <div class="space-y-5">
+            <UFormGroup label="Description">
+              <UInput
+                placeholder="Description"
+                size="lg"
+                class="w-full"
+                v-model="editingOption.description"
+              />
+            </UFormGroup>
+            <UFormGroup label="Price">
+              <UInput
+                placeholder="Price"
+                type="number"
+                size="lg"
+                class="w-full"
+                v-model="editingOption.price"
+              />
+            </UFormGroup>
+            <UFormGroup label="Number of views">
+              <UInput
+                placeholder="Number of views"
+                type="number"
+                size="lg"
+                class="w-full"
+                v-model="editingOption.numsOfView"
+              />
+            </UFormGroup>
+          </div>
           <template #footer>
             <div class="space-x-4">
               <UButton label="Cancel" @click="isEditing = false" color="gray" />

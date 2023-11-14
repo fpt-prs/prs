@@ -1,5 +1,5 @@
 <template>
-  <div class="border-t border-color px-4 py-3">
+  <div class="border-t border-color px-4 py-3 dark:bg-gray-950 bg-zinc-100">
     <div class="flex justify-between mx-auto max-w-[1200px] pt-12 pb-24">
       <a href="/" class="flex items-center gap-4">
         <img src="/logo.svg" alt="logo" class="w-10 h-10" />

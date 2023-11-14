@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: "GitLab Sans";
   font-style: normal;
@@ -23,7 +27,7 @@ body {
 }
 
 .bg-color {
-  @apply bg-white dark:bg-gray-900;
+  @apply bg-gray-200 dark:bg-gray-800;
 }
 
 .text-color {

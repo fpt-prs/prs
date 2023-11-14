@@ -34,10 +34,14 @@ onMounted(async () => {
   option.value = body;
 });
 
+const user = ref({});
+onMounted(async () => {
+  const response = await fetch(`/api/users/me`);
+  const data = await response.json();
+  const body = JSON.parse(data.body);
+  user.value = body;
+})
 
-const { getSession } = useAuth();
-const session = await getSession();
-const user = session?.user;
 </script>
 
 <style></style>

@@ -2,7 +2,6 @@
   <UButton
     icon="i-heroicons-plus"
     color="gray"
-    variant="ghost"
     label="Create"
     :trailing="false"
     @click="isCreate = true"

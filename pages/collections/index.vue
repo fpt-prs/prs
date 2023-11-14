@@ -134,7 +134,7 @@ const removeProduct = async (id) => {
           <ModalConfirmButton
             icon="i-heroicons-trash"
             color="red"
-            variant="ghost"
+            variant="solid"
             label="Delete"
             @confirm="removeCollection"
           />
@@ -161,7 +161,7 @@ const removeProduct = async (id) => {
             <ModalConfirmButton
               icon="i-heroicons-trash"
               color="red"
-              variant="ghost"
+              variant="soft"
               label="Remove"
               @confirm="removeProduct(row.id)"
             />
