@@ -8,13 +8,13 @@ const isEditing = ref(false);
 const editingPermission = ref({});
 
 const permissions = ref([]);
-
-onMounted(async () => {
+const fetchPer = async () => {
   const response = await fetch("/api/permissions");
   const data = await response.json();
   const body = JSON.parse(data.body);
   permissions.value = body;
-});
+};
+onMounted(fetchPer);
 
 const columns = [
   { key: "id", label: "ID" },
@@ -29,7 +29,7 @@ const actions = (permission) => [
       icon: "i-heroicons-pencil-20-solid",
       click: () => {
         isEditing.value = true;
-        editingPermission.value = permission;
+        editingPermission.value = { ...permission };
       },
     },
     {
@@ -72,6 +72,30 @@ const removePermission = async (permission) => {
   const updateRes = await fetch(`/api/permissions?id=${permission.id}`, {
     method: "DELETE",
   });
+};
+
+const updatePermission = async () => {
+  const updatePermissionReq = {
+    id: editingPermission.value.id,
+    name: editingPermission.value.name,
+  };
+
+  const updateRes = await fetch(`/api/permissions`, {
+    method: "POST",
+    body: JSON.stringify(updatePermissionReq),
+  });
+
+  const status = updateRes.status;
+  const toast = useToast();
+  if (status === 200) {
+    toast.add({ title: "Permission updated successfully" });
+    await fetchPer();
+  } else {
+    toast.add({ title: "Error updating permission" });
+  }
+
+  isEditing.value = false;
+  editingPermission.value = {};
 };
 </script>
 
@@ -155,6 +179,17 @@ const removePermission = async (permission) => {
               v-model="editingPermission.name"
             />
           </UFormGroup>
+          <template #footer>
+            <div class="space-x-4">
+              <UButton label="Cancel" @click="isEditing = false" color="gray" />
+              <UButton
+                label="Update"
+                variant="soft"
+                @click="updatePermission"
+                color="green"
+              />
+            </div>
+          </template>
         </UCard>
       </UModal>
     </div>

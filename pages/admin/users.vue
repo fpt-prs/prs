@@ -5,13 +5,12 @@
       <UTable :rows="users" :columns="colums">
         <template #actions-data="{ row }">
           <div class="flex gap-4">
-            <UButton :to="`/user/${row.userId}`" label="Detail" />
+            <UButton :to="`/user/${row.userCode}`" label="Detail" />
             <UPopover :popper="{ placement: 'bottom-end' }">
               <UButton
                 color="gray"
                 trailing-icon="i-heroicons-ellipsis-horizontal"
               />
-
               <template #panel>
                 <div class="p-2 flex flex-col">
                   <ModalConfirmButton
@@ -32,7 +31,44 @@
                     variant="ghost"
                     color="gray"
                     label="Change role..."
+                    @click="startAssignUser(row)"
                   />
+                  <UModal v-model="isChangingRole">
+                    <div class="rounded-lg bg-color">
+                      <div class="px-3 pt-2 flex justify-between items-center">
+                        <p class="text-sm font-semibold">
+                          Change the role of {{ editingUser.name }} ?
+                        </p>
+                        <UButton
+                          icon="i-heroicons-x-mark"
+                          color="gray"
+                          variant="ghost"
+                          @click="isChangingRole = false"
+                        />
+                      </div>
+                      <div class="p-4">
+                        <div class="p-2">
+                          <p class="pb-4">Select role</p>
+                          <URadio
+                            v-for="role of roles"
+                            :key="role.id"
+                            v-model="selectedRoles"
+                            :value="role.id"
+                            :label="role.name"
+                          />
+                        </div>
+                      </div>
+                      <hr class="text-color border-color m-4" />
+                      <div class="mx-4 mt-4 mb-8">
+                        <UButton
+                          label="Change role"
+                          variant="outline"
+                          color="red"
+                          @click="changeRole(row.id)"
+                        />
+                      </div>
+                    </div>
+                  </UModal>
                 </div>
               </template>
             </UPopover>
@@ -60,7 +96,7 @@ onMounted(async () => {
 // table
 const colums = [
   { key: "id", label: "ID" },
-  { key: "userId", label: "User ID" },
+  { key: "userCode", label: "User ID" },
   { key: "name", label: "Name" },
   { key: "actions", label: "Actions" },
 ];
@@ -99,4 +135,32 @@ const enableUser = async (id) => {
     }),
   });
 };
+
+const isChangingRole = ref(false);
+const editingUser = ref({});
+const startAssignUser = (user) => {
+  editingUser.value = user;
+  isChangingRole.value = true;
+};
+const selectedRoles = ref([]);
+const changeRole = async (user) => {
+  const updateRes = await fetch(`/api/users?id=${user}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      roleIds: selectedRoles.value,
+    }),
+  });
+};
+
+// roles
+const roles = ref([]);
+onMounted(async () => {
+  const response = await fetch("/api/roles");
+  const data = await response.json();
+  const body = JSON.parse(data.body);
+  roles.value = body;
+});
 </script>

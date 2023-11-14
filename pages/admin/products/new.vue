@@ -33,7 +33,7 @@ const removeImage = (imageUrl) => {
 
 const create = async (c) => {
   const productCreateRequest = {
-    productId: product.value.productId,
+    productCode: product.value.productCode,
     name: product.value.name,
     description: product.value.description,
     price: product.value.price,
@@ -55,7 +55,7 @@ const create = async (c) => {
     toast.add({ title: "Error creating product" });
   }
   const router = useRouter();
-  router.push("/admin/products/" + product.value.productId);
+  router.push("/admin/products/" + product.value.productCode);
 };
 </script>
 
@@ -78,10 +78,10 @@ const create = async (c) => {
       <UFormGroup label="Product ID">
         <UInput
           autoresize
-          v-model="product.productId"
+          v-model="product.productCode"
           placeholder="Product Code"
           type="text"
-          name="productId"
+          name="productCode"
         />
       </UFormGroup>
       <UFormGroup label="URL">

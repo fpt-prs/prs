@@ -5,7 +5,9 @@ export default defineEventHandler(async (event) => {
   const session = await getServerSession(event);
   const userId = (session?.user as any).id;
 
-  const fetchRes = await fetchBackend(`/api/notifications/user/${userId}`);
+  const fetchRes = await fetchBackend(
+    `/api/notifications/user/${userId.toString()}`
+  );
 
   const data = await fetchRes.json();
 

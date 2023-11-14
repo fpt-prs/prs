@@ -69,7 +69,7 @@
       </div>
       <div class="gap-5 p-5 space-y-5">
         <div class="flex items-center" v-for="row in products">
-          <a class="flex min-w-0 grow" :href="`/product/${row.productId}`">
+          <a class="flex min-w-0 grow" :href="`/product/${row.productCode}`">
             <img
               class="w-36 h-36 mr-4"
               :src="
@@ -89,7 +89,7 @@
               label="Edit"
               icon="i-heroicons-pencil-square"
               color="blue"
-              :to="`/product/${row.productId}/edit`"
+              :to="`/product/${row.productCode}/edit`"
             />
             <ModalConfirmButton
               label="Delete"

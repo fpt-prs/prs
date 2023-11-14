@@ -6,7 +6,7 @@ useHead({
 const products = ref([]);
 
 const fetchData = async () => {
-  const response = await fetch(`/api/suggest`);
+  const response = await fetch(`http://localhost:3000/api/suggest`);
   const data = await response.json();
   products.value = JSON.parse(data.body);
 };
@@ -18,6 +18,45 @@ onMounted(async () => {
 const viewMode = ref("list");
 
 await fetchData();
+
+const exportCsv = async () => {
+  const csv = jsonToCSV(products.value);
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "products.csv");
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+const jsonToCSV = (json) => {
+  const jsonToExport = json.map((row) => ({
+    name: row.name,
+    description: row.description,
+    price: row.price,
+    url: row.url,
+    category: row.category,
+  }));
+
+  const fields = Object.keys(jsonToExport[0]);
+  const replacer = (key, value) => (value === null ? "" : value);
+  let csv = fields
+    .map((fieldName) => `"${fieldName}"`)
+    .join(",")
+    .concat("\r\n");
+
+  csv += jsonToExport
+    .map((row) =>
+      fields
+        .map((fieldName) => JSON.stringify(row[fieldName], replacer))
+        .join(",")
+    )
+    .join("\r\n");
+  // return the fields and the CSV
+  return csv;
+};
 </script>
 
 <template>
@@ -32,6 +71,7 @@ await fetchData();
           label="Export"
           :trailing="false"
           icon="i-heroicons-arrow-down-tray"
+          @click="exportCsv"
         />
       </div>
       <div class="flex mx-5 mt-5">
@@ -70,7 +110,7 @@ await fetchData();
         class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-5 p-5"
         v-if="viewMode === 'grid'"
       >
-        <a class="" :href="`/product/${row.productId}`" v-for="row in products">
+        <a class="" :href="`/product/${row.productCode}`" v-for="row in products">
           <div class="">
             <img
               class="w-full h-80 mr-4"
@@ -93,7 +133,7 @@ await fetchData();
         class="grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-5 p-5"
         v-if="viewMode === 'dense'"
       >
-        <a class="" :href="`/product/${row.productId}`" v-for="row in products">
+        <a class="" :href="`/product/${row.productCode}`" v-for="row in products">
           <div class="">
             <img
               class="w-full h-60 mr-4"
@@ -115,7 +155,7 @@ await fetchData();
       <div class="gap-5 p-5 space-y-5" v-if="viewMode === 'list'">
         <a
           class="block"
-          :href="`/product/${row.productId}`"
+          :href="`/product/${row.productCode}`"
           v-for="row in products"
         >
           <div class="flex">

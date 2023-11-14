@@ -1,9 +1,7 @@
 <template>
   <NuxtLayout name="admin">
-    <div class="">
-      <div
-        class="px-4 py-3 text-xl font-medium border-b border-color flex justify-between"
-      >
+    <div class="max-w-[1000px] mx-5">
+      <div class="px-4 py-3 text-xl font-medium flex justify-between">
         <!-- back -->
         <UButton
           color="black"
@@ -13,11 +11,15 @@
           to="."
         />
       </div>
-      <div
-        class="px-4 py-3 text-xl font-medium border-b border-color flex justify-between"
-      >
-        <div class="">User Update</div>
-        <div class="">
+      <div class="px-4 py-3 text-xl font-medium flex justify-between">
+        <div class="">Profile update</div>
+        <div class="flex gap-4">
+          <UButton
+            color="gray"
+            label="Go to profile"
+            to="."
+          />
+
           <ModalConfirmButton
             variant="solid"
             label="Update"
@@ -25,10 +27,11 @@
           />
         </div>
       </div>
+      <hr class="border-color" />
       <div class="p-4 space-y-5">
         <!-- country -->
         <UFormGroup label="Country">
-          <UInput v-model="user.country" />
+          <UInput v-model="user.country" color="gray" />
         </UFormGroup>
 
         <!-- gender -->
@@ -44,12 +47,12 @@
 
         <!-- dob -->
         <UFormGroup label="Date of birth">
-          <UInput type="date" v-model="user.dob" />
+          <UInput type="date" color="gray" v-model="user.dob" />
         </UFormGroup>
 
         <!-- phone number with regex -->
         <UFormGroup label="Phone number">
-          <UInput v-model="user.phoneNumber" />
+          <UInput v-model="user.phoneNumber" color="gray" />
         </UFormGroup>
 
         <UFormGroup label="Active">
@@ -67,11 +70,12 @@
 <script setup>
 // meta
 useHead({
-  title: "User Update",
+  title: "Profile",
 });
 
-const router = useRoute();
-const sub = router.params.sub;
+const { getSession } = useAuth();
+const session = await getSession();
+const sub = session.user?.sub;
 const toast = useToast();
 
 const user = ref({});
@@ -103,7 +107,31 @@ onMounted(async () => {
 
 const updateUser = async () => {
   const userUpdateReq = {
-    ...user.value,
+    country: user.value.country,
+    gender: user.value.gender,
+    dob: user.value.dob,
+    phoneNumber: user.value.phoneNumber,
+  };
+
+  const updateRes = await fetch(`/api/users`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(userUpdateReq),
+  });
+
+  const status = updateRes.status;
+  const router = useRouter();
+  if (status === 200) {
+    toast.add({
+      title: "User updated successfully",
+    });
+    await router.push("/settings/profile");
+  } else {
+    toast.add({
+      title: "Failed to update user",
+    });
   }
 };
 </script>

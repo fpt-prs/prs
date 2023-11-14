@@ -39,12 +39,16 @@ const items = [
 ];
 
 const notifications = ref([]);
-onMounted(async () => {
+const isLoadingNotifications = ref(false);
+
+const loadNotifications = async () => {
+  isLoadingNotifications.value = true;
   const response = await fetch("/api/notifications/user");
   const data = await response.json();
   const body = JSON.parse(data.body);
   notifications.value = body;
-});
+  isLoadingNotifications.value = false;
+};
 </script>
 
 <template>
@@ -81,16 +85,27 @@ onMounted(async () => {
         to="/admin/products"
         :trailing="false"
       />
-      <UPopover>
+      <UPopover :popper="{ placement: 'bottom-end' }">
         <UButton
           color="gray"
           variant="ghost"
           trailing-icon="i-heroicons-bell"
+          @click="loadNotifications"
         />
 
         <template #panel>
-          <div class="p-4 space-y-4">
-            <div class="border border-color rounded-lg p-4" v-for="notification in notifications">
+          <div class="" v-if="isLoadingNotifications">
+            <UIcon
+              name="i-heroicons-arrow-path"
+              class="animate-spin m-10"
+            />
+          </div>
+
+          <div class="p-4 space-y-4" v-else>
+            <div
+              class="border border-color rounded-lg p-4"
+              v-for="notification in notifications"
+            >
               <p class="text-sm">{{ notification.header }}</p>
               <p class="text-color text-sm">{{ notification.content }}</p>
             </div>

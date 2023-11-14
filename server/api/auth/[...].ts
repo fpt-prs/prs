@@ -8,19 +8,25 @@ export default NuxtAuthHandler({
     maxAge: 60 * 60 * 24, // 1 day
   },
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      return true;
+    signIn: async ({ user, account, profile, email, credentials }) => {
+      if (!profile) return false;
+
+      let [dbProfile, _] = await getAccount(profile.sub);
+
+      if (!dbProfile) {
+        return true;
+      }
+
+      return dbProfile.isActive;
     },
     // Callback when the JWT is created / updated, see https://next-auth.js.org/configuration/callbacks#jwt-callback
     jwt: async ({ token, account, user }) => {
-      const isSignIn = user ? true : false;
       // console.log("account", account);
       // console.log("token", token);
       // console.log("user", user);
-      if (isSignIn) {
-        token.jwt = account?.id_token || "";
-        token.id = user ? user.id || "" : "";
-      } else {
+
+      const isLoggedIn = !account;
+      if (!isLoggedIn) {
         let [profile, _] = await getAccount(token.sub);
 
         const name = user?.name;
@@ -34,13 +40,9 @@ export default NuxtAuthHandler({
         }
 
         token.id = profile.id;
-        token.country = profile.country;
+        token.jwt = account?.id_token || "";
         token.roles = profile.roles;
         token.isActive = profile.isActive;
-        token.gender = profile.gender;
-        token.phoneNumber = profile.phoneNumber;
-        token.dob = profile.dob;
-        token.hash = profile.hash;
       }
 
       return Promise.resolve(token);
@@ -87,5 +89,10 @@ const registerAccount = async (profile: any) => {
     method: "POST",
     body: JSON.stringify(profile),
   });
-  return await res.json();
+  const status = res.status;
+  if (status !== 200) {
+    return [null, status];
+  }
+  const data = await res.json();
+  return [data, status];
 };

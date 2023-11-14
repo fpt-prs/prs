@@ -141,7 +141,7 @@ const removeProduct = async (id) => {
         </div>
         <div class="space-y-3 p-4">
           <div class="flex items-center" v-for="row in products">
-            <a class="min-w-0 grow block" :href="`/product/${row.productId}`">
+            <a class="min-w-0 grow block" :href="`/product/${row.productCode}`">
               <div class="flex">
                 <img
                   class="w-36 h-36 mr-4"
