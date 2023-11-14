@@ -32,7 +32,7 @@
                 <td class="px-4 py-3">{{ notification.header }}</td>
                 <td class="px-4 py-3">{{ notification.content }}</td>
                 <td class="px-4 py-3">
-                  {{ formatDate(notification.created) }}
+                  {{ formatDateTime(notification.created) }}
                 </td>
                 <td class="px-4 py-3">
                   <UDropdown
@@ -53,38 +53,6 @@
         </table>
       </div>
     </div>
-    <UModal v-model="isEditing">
-      <UCard>
-        <template #header>
-          <div class="flex justify-between items-center">
-            <h3 class="text-lg font-medium">Edit Notification</h3>
-            <UButton
-              label=""
-              variant="ghost"
-              size="lg"
-              trailing-icon="i-heroicons-x-mark"
-              @click="isEditing = false"
-            />
-          </div>
-        </template>
-        <UFormGroup label="Name" class="mb-3">
-          <UInput
-            placeholder="Name"
-            size="lg"
-            class="w-full"
-            v-model="editingNotification.header"
-          />
-        </UFormGroup>
-        <UFormGroup label="Permissions">
-          <UTextarea
-            placeholder="Name"
-            size="lg"
-            class="w-full"
-            v-model="editingNotification.content"
-          />
-        </UFormGroup>
-      </UCard>
-    </UModal>
   </NuxtLayout>
 </template>
 
@@ -106,9 +74,9 @@ const columns = [
 const actions = (notification) => [
   [
     {
-      label: "Edit",
-      icon: "i-heroicons-pencil-20-solid",
-      to: `/admin/notifications/${notification.id}/edit`,
+      label: "View",
+      icon: "i-heroicons-eye",
+      to: `/admin/notifications/${notification.id}`,
     },
     {
       label: "Delete",
@@ -118,18 +86,7 @@ const actions = (notification) => [
   ],
 ];
 
-// edit
-const isEditing = ref(false);
-const editingNotification = ref({});
-
-// remove notification
-const removeNotification = (notification) => {
-  notifications.value = notifications.value.filter(
-    (r) => r.id !== notification.id
-  );
-};
-
-const formatDate = (date) => {
+const formatDateTime = (date) => {
   if (!date) {
     return "Undefined";
   }

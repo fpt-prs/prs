@@ -71,6 +71,15 @@
               to="/admin/payment"
               class="w-full"
             />
+            <UButton
+              icon="i-heroicons-banknotes"
+              color="gray"
+              variant="ghost"
+              label="Pricing options"
+              :trailing="false"
+              to="/admin/options"
+              class="w-full"
+            />
           </ul>
         </div>
         <div class="w-screen overflow-y-auto">

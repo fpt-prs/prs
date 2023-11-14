@@ -64,6 +64,27 @@ const addRole = async () => {
 const isEditing = ref(false);
 const editingRole = ref({});
 
+const updateRole = async () => {
+  isEditing.value = false;
+
+  // push to server
+  const updateRes = await fetch("/api/roles", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(editingRole.value),
+  });
+
+  const status = updateRes.status;
+  const toast = useToast();
+  if (status === 200) {
+    toast.add({ title: "Role updated successfully" });
+  } else {
+    toast.add({ title: "Error updating role" });
+  }
+};
+
 // remove role
 const removeRole = async (role) => {
   roles.value = roles.value.filter((r) => r.id !== role.id);
@@ -143,7 +164,7 @@ onMounted(() => {
             <td></td>
             <td class="px-4 py-3">
               <UInput
-                placeholder="Name"
+                placeholder="New role name"
                 size="lg"
                 class="w-full"
                 v-model="newRoleName"
@@ -202,6 +223,13 @@ onMounted(() => {
               <br />
             </div>
           </UFormGroup>
+          <template #footer>
+            <UButton
+              label="Save"
+              @click="updateRole"
+              :disabled="!editingRole.name"
+            />
+          </template>
         </UCard>
       </UModal>
     </div>

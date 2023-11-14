@@ -137,7 +137,7 @@ const updatePermission = async () => {
             <td></td>
             <td class="px-4 py-3">
               <UInput
-                placeholder="Name"
+                placeholder="New permission name"
                 size="lg"
                 class="w-full"
                 v-model="newPermissionName"
