@@ -7,6 +7,11 @@ const products = ref([]);
 
 const fetchData = async () => {
   const response = await fetch(`http://localhost:3000/api/suggest`);
+  const status = response.status;
+  if (status !== 200) {
+    return;
+  }
+
   const data = await response.json();
   products.value = JSON.parse(data.body);
 };
@@ -110,7 +115,11 @@ const jsonToCSV = (json) => {
         class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-5 p-5"
         v-if="viewMode === 'grid'"
       >
-        <a class="" :href="`/product/${row.productCode}`" v-for="row in products">
+        <a
+          class=""
+          :href="`/product/${row.productCode}`"
+          v-for="row in products"
+        >
           <div class="">
             <img
               class="w-full h-80 mr-4"
@@ -133,7 +142,11 @@ const jsonToCSV = (json) => {
         class="grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-5 p-5"
         v-if="viewMode === 'dense'"
       >
-        <a class="" :href="`/product/${row.productCode}`" v-for="row in products">
+        <a
+          class=""
+          :href="`/product/${row.productCode}`"
+          v-for="row in products"
+        >
           <div class="">
             <img
               class="w-full h-60 mr-4"
