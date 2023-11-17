@@ -2,7 +2,7 @@
   <NuxtLayout name="admin">
     <div class="flex flex-col min-h-full">
       <div
-        class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color bg-color z-[100]"
+        class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color bg-gray-100 dark:bg-gray-900 z-[100]"
       >
         <p class="font-semibold text-lg">Manage products</p>
         <div class="flex gap-4">
