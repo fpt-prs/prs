@@ -71,10 +71,18 @@ const loadNotifications = async () => {
         :trailing="false"
       />
       <UButton
+        icon="i-heroicons-magnifying-glass"
+        color="gray"
+        variant="ghost"
+        label="Products"
+        to="/products"
+        :trailing="false"
+      />
+      <UButton
         icon="i-heroicons-inbox"
         color="gray"
         variant="ghost"
-        label="My collections"
+        label="Collections"
         to="/collections"
         :trailing="false"
       />
@@ -83,7 +91,7 @@ const loadNotifications = async () => {
         color="gray"
         variant="ghost"
         label="Admin"
-        to="/admin/products"
+        to="/admin/users"
         :trailing="false"
         v-if="user?.roles.map((role) => role.name).includes('Admin')"
       />
@@ -97,10 +105,7 @@ const loadNotifications = async () => {
 
         <template #panel>
           <div class="" v-if="isLoadingNotifications">
-            <UIcon
-              name="i-heroicons-arrow-path"
-              class="animate-spin m-10"
-            />
+            <UIcon name="i-heroicons-arrow-path" class="animate-spin m-10" />
           </div>
 
           <div class="p-4 space-y-4" v-else>

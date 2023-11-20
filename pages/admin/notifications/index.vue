@@ -60,6 +60,9 @@
 useHead({
   title: "Notifications",
 });
+const router = useRouter();
+const { getSession } = useAuth();
+const session = await getSession();
 
 const notifications = ref([]);
 
@@ -77,11 +80,6 @@ const actions = (notification) => [
       label: "View",
       icon: "i-heroicons-eye",
       to: `/admin/notifications/${notification.id}`,
-    },
-    {
-      label: "Delete",
-      icon: "i-heroicons-trash-20-solid",
-      click: () => {},
     },
   ],
 ];

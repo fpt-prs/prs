@@ -62,9 +62,12 @@
 useHead({
   title: "New notification",
 });
+const router = useRouter();
+const { getSession } = useAuth();
+const session = await getSession();
 
-const router = useRoute();
-const id = router.params.id;
+const route = useRoute();
+const id = route.params.id;
 
 const notification = ref({});
 onMounted(async () => {

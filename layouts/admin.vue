@@ -1,5 +1,4 @@
-<script setup>
-</script>
+<script setup></script>
 
 <template>
   <div class="h-screen flex flex-col dark:bg-gray-900 bg-white">
@@ -8,15 +7,6 @@
       <div class="flex h-full">
         <div class="p-5 border-r border-color lg:min-w-[20ch]">
           <ul class="flex flex-col">
-            <UButton
-              icon="i-heroicons-building-storefront"
-              color="gray"
-              variant="ghost"
-              label="Products"
-              :trailing="false"
-              to="/admin/products"
-              class="w-full"
-            />
             <UButton
               icon="i-heroicons-user-circle"
               color="gray"

@@ -31,7 +31,7 @@
           </div>
         </div>
       </div>
-      <div class="min-w-[24em]">
+      <div class="min-w-[24em]" v-if="isPaymentWritable">
         <p class="text-2xl px-4 py-3">Verify payment</p>
         <UForm
           :validate="validate"
@@ -59,6 +59,9 @@
 useHead({
   title: "Payment",
 });
+const { getSession } = useAuth();
+const session = await getSession();
+const isPaymentWritable = await isAuthorized(session, "payment.write.all");
 
 const paymentForm = reactive({
   message: "",

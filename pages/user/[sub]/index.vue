@@ -36,7 +36,7 @@
         <div class="user-user-id">
           UUID:
           <span class="text-color">
-            {{ user.userId }}
+            {{ user.userCode }}
           </span>
         </div>
         <div class="user-active">
@@ -80,13 +80,20 @@
 </template>
 
 <script setup>
+const router = useRouter();
+const { getSession } = useAuth();
+const session = await getSession();
+if (!(await isAuthorized(session, "users.read.all"))) {
+  router.push("/login");
+}
+
 // meta
 useHead({
   title: "User Detail",
 });
 
-const router = useRoute();
-const sub = router.params.sub;
+const route = useRoute();
+const sub = route.params.sub;
 const toast = useToast();
 
 const user = ref({});

@@ -1,16 +1,17 @@
 <template>
-  <NuxtLayout name="admin">
+  <NuxtLayout name="default">
     <div class="flex flex-col min-h-full">
       <div
-        class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[100]"
+        class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[100] bg-white dark:bg-gray-900"
       >
-        <p class="font-semibold text-lg bg-color">Manage products</p>
+        <p class="font-semibold text-lg">Manage products</p>
         <div class="flex gap-4">
           <UButton
             color="gray"
             icon="i-heroicons-plus"
             label="New"
             to="/admin/products/new"
+            v-if="isAdmin"
           />
           <UInput
             v-model="search"
@@ -226,4 +227,8 @@ const toggleActiveData = async (product) => {
 
   await fetchData();
 };
+
+const { getSession } = useAuth();
+const session = await getSession();
+const isAdmin = await isAuthorized(session, "product.write.all");
 </script>

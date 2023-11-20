@@ -1,9 +1,11 @@
 <script setup>
-import { computed } from "vue";
-
 useHead({
   title: "Option Management",
 });
+const router = useRouter();
+const { getSession } = useAuth();
+const session = await getSession();
+const isPaymentWritable = await isAuthorized(session, "payment.write.all");
 
 const newOption = ref({});
 const validate = computed(() => {
@@ -159,7 +161,7 @@ const updateOption = async () => {
               </UDropdown>
             </td>
           </tr>
-          <tr>
+          <tr v-if="isPaymentWritable">
             <td></td>
             <td class="px-4 py-3">
               <UInput
