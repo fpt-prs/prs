@@ -1,5 +1,6 @@
 // file: ~/middleware/authentication.global.ts
 export default defineNuxtRouteMiddleware((to) => {
+  
   const { status, signIn } = useAuth();
 
   const isPublicRoute = to.path === "/login" || to.path === "/";

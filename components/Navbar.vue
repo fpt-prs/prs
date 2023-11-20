@@ -1,12 +1,13 @@
 <script setup>
 const { getSession, signOut } = useAuth();
 const session = await getSession();
+const user = session?.user;
 let theme = useColorMode();
 const isDark = computed(() => theme.value === "dark");
 const items = [
   [
     {
-      label: session?.user?.email || "",
+      label: user?.email || "",
       slot: "account",
       disabled: true,
     },
@@ -84,6 +85,7 @@ const loadNotifications = async () => {
         label="Admin"
         to="/admin/products"
         :trailing="false"
+        v-if="user?.roles.map((role) => role.name).includes('Admin')"
       />
       <UPopover :popper="{ placement: 'bottom-end' }">
         <UButton
@@ -124,7 +126,7 @@ const loadNotifications = async () => {
         :popper="{ placement: 'bottom-end' }"
         class="ml-2"
       >
-        <UAvatar :src="session?.user?.image || '/blank.webp'" />
+        <UAvatar :src="user?.image || '/blank.webp'" />
         <template #account="{ item }">
           <div class="text-left w-full z-[99]">
             <p>Signed in as</p>
