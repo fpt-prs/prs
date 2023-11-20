@@ -4,7 +4,7 @@
       <div
         class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[100]"
       >
-        <p class="font-semibold text-lg">Manage products</p>
+        <p class="font-semibold text-lg bg-color">Manage products</p>
         <div class="flex gap-4">
           <UButton
             color="gray"

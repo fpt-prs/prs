@@ -12,8 +12,6 @@ export default defineEventHandler(async (event) => {
     id: (user as any)?.id,
   };
 
-  console.log(">>>>>>>>> " + JSON.stringify(profileUpdateRequest));
-
   const fetchRes = await fetchBackend(`/api/users/update`, {
     method: "POST",
     body: JSON.stringify(profileUpdateRequest),

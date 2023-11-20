@@ -33,7 +33,7 @@ export default NuxtAuthHandler({
 
         if (!profile) {
           profile = await registerAccount({
-            userId: token.sub,
+            userCode: token.sub,
             email: token.email,
             name: name,
           });
