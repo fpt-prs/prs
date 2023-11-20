@@ -63,10 +63,10 @@ const loadNotifications = async () => {
     </div>
     <div class="flex items-center px-2">
       <UButton
-        icon="i-heroicons-magnifying-glass"
+        icon="i-heroicons-arrow-trending-up"
         color="gray"
         variant="ghost"
-        label="HOT products"
+        label="Hot products"
         to="/search"
         :trailing="false"
       />

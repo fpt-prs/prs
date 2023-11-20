@@ -6,7 +6,7 @@ useHead({
 const products = ref([]);
 
 const fetchData = async () => {
-  const response = await fetch(`http://localhost:3000/api/suggest`);
+  const response = await fetch(`/api/suggest`);
   const status = response.status;
   if (status !== 200) {
     return;
