@@ -31,7 +31,6 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   for (const matcher in routeAction) {
     if (to.path.match(matcher)) {
-      console.log("matcher", matcher);
       const routePermission = routeAction[matcher as keyof typeof routeAction];
       const hasPermission =
         !routePermission || userPermissions.includes(routePermission);

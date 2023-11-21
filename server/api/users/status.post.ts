@@ -5,10 +5,12 @@ export default defineEventHandler(async (event) => {
 
   const fetchRes = await fetchBackend(`/api/users/update/admin`, {
     method: "POST",
-    body: reqBodyRaw,
+    body: JSON.stringify(reqBodyRaw),
   });
 
   const status = fetchRes.status;
+
+  setResponseStatus(event, status);
 
   return status;
 });

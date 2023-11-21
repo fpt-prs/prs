@@ -39,9 +39,7 @@ export default defineEventHandler(async (event) => {
   const hasPermission = permissions.includes(neededPermissions);
 
   if (!hasPermission) {
-    console.log("403");
-    // return sendError(event, createError({ statusCode: 403 }));
+    // console.log("403");
+    return sendError(event, createError({ statusCode: 403 }));
   }
-
-  console.log("route", route);
 });

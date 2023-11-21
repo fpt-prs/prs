@@ -80,8 +80,6 @@
 </template>
 
 <script setup>
-import user from "~/server/api/bills/user";
-
 useHead({
   title: "User Management",
 });
@@ -129,35 +127,50 @@ const enableUser = async (id) => {
     return user;
   });
 
+  const currentUser = users.value.find((user) => user.id === id);
+
   const status = await fetch(`/api/users/status`, {
     method: "POST",
     body: JSON.stringify({
       id: id,
       isActive: 1,
-      roleIds: user.roles.map((role) => role.id),
+      roleIds: currentUser.roles.map((role) => role.id),
     }),
   });
 };
 
 const isChangingRole = ref(false);
 const editingUser = ref({});
+const selectedRoles = ref(0);
 const startAssignUser = (user) => {
   editingUser.value = user;
   isChangingRole.value = true;
+  selectedRoles.value = user.roles[0].id;
 };
-const selectedRoles = ref([]);
-const changeRole = async (user) => {
+const changeRole = async (id) => {
+  const currentUser = users.value.find((user) => user.id === id);
+  console.log(currentUser);
   const updateRes = await fetch(`/api/users/status`, {
-    method: "PUT",
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      id: user,
-      isActive: 1,
-      roleIds: selectedRoles.value,
+      id: id,
+      isActive: currentUser.isActive,
+      roleIds: [selectedRoles.value],
     }),
   });
+
+  const status = updateRes.status;
+  const toast = useToast();
+  if (status === 200) {
+    toast.add({ title: "Role updated successfully" });
+  } else {
+    toast.add({ title: "Error updating role" });
+  }
+  editingUser.value = {};
+  isChangingRole.value = false;
 };
 
 // roles
