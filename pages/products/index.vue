@@ -164,7 +164,7 @@ watch(page, async (newPage) => {
   await fetchData();
 });
 
-const searchByName = () => {
+const searchByName = async () => {
   router.push({
     query: {
       field: sortCriteria.field,
@@ -174,12 +174,11 @@ const searchByName = () => {
     },
   });
   page.value = 1;
-  fetchData();
+  await fetchData();
 };
 
 const fetchData = async () => {
   isLoading.value = true;
-  products.value = [];
 
   const params = new URLSearchParams();
   params.append("field", sortCriteria.value.field);

@@ -37,13 +37,13 @@ const loginWithGoogle = async () => {
         Get real-time insights delivered daily so lucrative opportunities never
         pass you by.
       </p>
-      <a
+      <!-- <a
         href="/login"
         class="bg-gray-200 dark:bg-gray-800 border border-color px-4 py-3 mt-5 rounded-3xl font-semibold text-sm flex items-center gap-2"
       >
         <img src="/google.svg" class="w-5 h-5" alt="" />
         Continue with Google
-      </a>
+      </a> -->
     </div>
   </div>
 </template>

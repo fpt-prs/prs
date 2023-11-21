@@ -3,7 +3,7 @@ useHead({
   title: "Search",
 });
 const runtimeConfig = useRuntimeConfig();
-
+const toast = useToast();
 const products = ref([]);
 
 const fetchData = async () => {
@@ -20,8 +20,8 @@ const fetchData = async () => {
   // console.log(products.value.map((product) => product.images));
 };
 
-onMounted(async () => {
-  await fetchData();
+onMounted(() => {
+  fetchData();
 });
 
 const viewMode = ref("list");
@@ -29,6 +29,22 @@ const viewMode = ref("list");
 await fetchData();
 
 const exportCsv = async () => {
+  const req = await fetch(`${runtimeConfig.public.domain}/api/profile/balance`);
+
+  const status = req.status;
+  const detail = await req.json();
+  if (status !== 200) {
+    const err = detail.error;
+    toast.add({ title: err });
+    return;
+  }
+
+  const balance = detail.value;
+  if (balance <= 0) {
+    toast.add({ title: "Insufficient balance" });
+    return;
+  }
+
   const csv = jsonToCSV(products.value);
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const url = window.URL.createObjectURL(blob);

@@ -9,8 +9,8 @@
           <ul class="flex flex-col">
             <UButton
               icon="i-heroicons-user-circle"
-              color="gray"
               variant="ghost"
+              size="lg"
               label="Users"
               :trailing="false"
               to="/admin/users"
@@ -18,8 +18,8 @@
             />
             <UButton
               icon="i-heroicons-user-group"
-              color="gray"
               variant="ghost"
+              size="lg"
               label="Roles"
               :trailing="false"
               to="/admin/roles"
@@ -27,8 +27,8 @@
             />
             <UButton
               icon="i-heroicons-shield-check"
-              color="gray"
               variant="ghost"
+              size="lg"
               label="Permissions"
               :trailing="false"
               to="/admin/permissions"
@@ -36,8 +36,8 @@
             />
             <UButton
               icon="i-heroicons-globe-alt"
-              color="gray"
               variant="ghost"
+              size="lg"
               label="Crawl"
               :trailing="false"
               to="/admin/crawl"
@@ -45,7 +45,7 @@
             />
             <UButton
               icon="i-heroicons-bell"
-              color="gray"
+              size="lg"
               variant="ghost"
               label="Notifications"
               :trailing="false"
@@ -54,7 +54,7 @@
             />
             <UButton
               icon="i-heroicons-currency-dollar"
-              color="gray"
+              size="lg"
               variant="ghost"
               label="Payment"
               :trailing="false"
@@ -63,7 +63,7 @@
             />
             <UButton
               icon="i-heroicons-banknotes"
-              color="gray"
+              size="lg"
               variant="ghost"
               label="Pricing options"
               :trailing="false"
