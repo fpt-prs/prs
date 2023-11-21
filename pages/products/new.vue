@@ -22,10 +22,10 @@ const addImage = () => {
 };
 
 const removeImage = (imageUrl) => {
-  if (!product.value.imageUrls) {
+  if (!product.value.images) {
     return;
   }
-  product.value.imageUrls = product.value.imageUrls.filter(
+  product.value.images = product.value.images.filter(
     (image) => image.imageUrl !== imageUrl
   );
 };

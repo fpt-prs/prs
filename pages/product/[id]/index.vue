@@ -1,5 +1,6 @@
 <script setup>
 const route = useRoute();
+const router = useRouter();
 const currentImage = ref(0);
 
 useHead({
@@ -12,6 +13,10 @@ useHead({
 const product = ref({});
 onMounted(async () => {
   const response = await fetch(`/api/products/${route.params.id}`);
+  const status = response.status;
+  if (status !== 200) {
+    router.push("/404");
+  }
   const data = await response.json();
   const body = JSON.parse(data.body);
   product.value = body;
@@ -58,10 +63,7 @@ const update = async (collection) => {
         </div>
         <img
           v-if="product.images"
-          :src="
-            product.images[currentImage]?.imageUrl ||
-            '/no-image.png'
-          "
+          :src="product.images[currentImage]?.imageUrl || '/no-image.png'"
           class="w-80 h-80 mr-3"
         />
         <div class="">

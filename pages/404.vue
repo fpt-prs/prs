@@ -2,13 +2,12 @@
   <div
     class="w-screen h-screen flex flex-col gap-5 justify-center items-center"
   >
-    <div class="text-6xl">What you ask for does not exist, boss</div>
+    <div class="text-6xl">What you ask for does not exist</div>
     <UButton
-      label="Back"
-      icon="i-heroicons-arrow-left"
+      label="Go back home"
       size="xl"
       color="gray"
-      to="/"
+      to="/suggest"
     />
   </div>
 </template>

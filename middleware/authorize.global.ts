@@ -1,11 +1,12 @@
 const routeAction = {
-  "/admin/users": "users.read.all",
+  "/admin/users": "user.read.all",
   "/admin/notifications": "notification.read.all",
   "/admin/roles": "role.read.all",
   "/admin/permissions": "permission.read.all",
   "/admin/notifications/new": "notification.write.all",
   "/admin/payment": "payment.read.all",
   "/admin/options": "payment.read.all",
+  "/product/new": "product.write.all",
 };
 
 export default defineNuxtRouteMiddleware(async (to) => {
