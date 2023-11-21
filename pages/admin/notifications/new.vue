@@ -69,8 +69,6 @@ const toggleRole = (role) => {
 };
 
 const submit = async () => {
-  console.log(selectedRoles.value);
-
   const createNotiRequest = {
     header: notification.value.header,
     content: notification.value.content,

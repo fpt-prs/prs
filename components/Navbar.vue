@@ -67,7 +67,7 @@ const loadNotifications = async () => {
         color="gray"
         variant="ghost"
         label="Hot products"
-        to="/search"
+        to="/suggest"
         :trailing="false"
       />
       <UButton

@@ -10,7 +10,7 @@
             color="gray"
             icon="i-heroicons-plus"
             label="New"
-            to="/admin/products/new"
+            to="/products/new"
             v-if="isAdmin"
           />
           <UInput

@@ -13,7 +13,6 @@ const product = ref({
 });
 
 const addImage = () => {
-  console.log(product.value);
   if (!newImage) {
     return;
   }

@@ -93,7 +93,6 @@ const bills = ref([]);
 onMounted(async () => {
   const res = await fetch("/api/bills");
   const data = await res.json();
-  console.log(data);
   const body = JSON.parse(data.body);
   const page = body.content;
   bills.value = page;

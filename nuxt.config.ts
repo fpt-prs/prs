@@ -13,4 +13,9 @@ export default defineNuxtConfig({
     },
   },
   css: ["~/assets/css/global.css"],
+  runtimeConfig: {
+    public: {
+      domain: process.env.DOMAIN_NAME,
+    },
+  },
 });

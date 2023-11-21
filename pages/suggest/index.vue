@@ -2,11 +2,13 @@
 useHead({
   title: "Search",
 });
+const runtimeConfig = useRuntimeConfig();
 
 const products = ref([]);
 
 const fetchData = async () => {
-  const response = await fetch(`/api/suggest`);
+  const domain = runtimeConfig.public.domain;
+  const response = await fetch(`${domain}/api/suggest`);
   const status = response.status;
   if (status !== 200) {
     return;
@@ -14,6 +16,8 @@ const fetchData = async () => {
 
   const data = await response.json();
   products.value = JSON.parse(data.body);
+  console.log(products.value);
+  // console.log(products.value.map((product) => product.images));
 };
 
 onMounted(async () => {
