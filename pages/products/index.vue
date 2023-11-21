@@ -15,20 +15,7 @@
           />
           <UInput
             v-model="search"
-            @keyup.enter="
-              () => {
-                router.push({
-                  query: {
-                    field: sortCriteria.field,
-                    order: sortCriteria.order,
-                    page: '1',
-                    search: search,
-                  },
-                });
-                page = 1;
-                fetchData();
-              }
-            "
+            @keyup.enter="searchByName"
             placeholder="Enter to Search..."
             color="gray"
             icon="i-heroicons-magnifying-glass"
@@ -161,6 +148,7 @@ watch(sortCriteria, async (newCriteria) => {
     },
   });
   page.value = 1;
+  sortCriteria.value = newCriteria;
   await fetchData();
 });
 
@@ -172,8 +160,22 @@ watch(page, async (newPage) => {
       page: newPage.toString(),
     },
   });
+  page.value = newPage;
   await fetchData();
 });
+
+const searchByName = () => {
+  router.push({
+    query: {
+      field: sortCriteria.field,
+      order: sortCriteria.order,
+      page: "1",
+      search: search.value,
+    },
+  });
+  page.value = 1;
+  fetchData();
+};
 
 const fetchData = async () => {
   isLoading.value = true;

@@ -80,6 +80,8 @@
 </template>
 
 <script setup>
+import user from "~/server/api/bills/user";
+
 useHead({
   title: "User Management",
 });
@@ -132,6 +134,7 @@ const enableUser = async (id) => {
     body: JSON.stringify({
       id: id,
       isActive: 1,
+      roleIds: user.roles.map((role) => role.id),
     }),
   });
 };
@@ -144,12 +147,14 @@ const startAssignUser = (user) => {
 };
 const selectedRoles = ref([]);
 const changeRole = async (user) => {
-  const updateRes = await fetch(`/api/users?id=${user}`, {
+  const updateRes = await fetch(`/api/users/status`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      id: user,
+      isActive: 1,
       roleIds: selectedRoles.value,
     }),
   });
