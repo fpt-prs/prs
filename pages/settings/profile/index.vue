@@ -7,7 +7,7 @@ const session = await getSession();
 const sessionUser = session?.user;
 const dbUser = ref({});
 onMounted(async () => {
-  const response = await fetch(`/api/users/me`);
+  const response = await fetch(`/api/profile`);
   const data = await response.json();
   const body = JSON.parse(data.body);
   dbUser.value = body;
@@ -50,7 +50,11 @@ onMounted(async () => {
           <div class="">
             <span>Gender:</span>
             <span class="text-color pl-3">{{
-              dbUser.gender ? "Male" : "Female"
+              dbUser.gender !== null
+                ? dbUser.gender
+                  ? "Male"
+                  : "Female"
+                : "---"
             }}</span>
           </div>
 

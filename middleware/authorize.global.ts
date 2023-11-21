@@ -1,12 +1,14 @@
 const routeAction = {
   "/admin/users": "user.read.all",
-  "/admin/notifications": "notification.read.all",
+  "/admin/notifications/new": "notification.write.all",
+  "/admin/notifications/.*": "notification.read.all",
   "/admin/roles": "role.read.all",
   "/admin/permissions": "permission.read.all",
-  "/admin/notifications/new": "notification.write.all",
   "/admin/payment": "payment.read.all",
   "/admin/options": "payment.read.all",
   "/product/new": "product.write.all",
+  "/product/.*/edit": "product.write.all",
+  "user/.*": "user.read.all",
 };
 
 export default defineNuxtRouteMiddleware(async (to) => {
@@ -26,13 +28,18 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }, []);
 
   const userPermissions = permissions.map((p: any) => p.name);
-  const routePermission = routeAction[to.path as keyof typeof routeAction];
 
-  const hasPermission =
-    !routePermission || userPermissions.includes(routePermission);
+  for (const matcher in routeAction) {
+    if (to.path.match(matcher)) {
+      console.log("matcher", matcher);
+      const routePermission = routeAction[matcher as keyof typeof routeAction];
+      const hasPermission =
+        !routePermission || userPermissions.includes(routePermission);
 
-  if (!hasPermission) {
-    return router.push("/404");
+      if (!hasPermission) {
+        return router.push("/404");
+      }
+    }
   }
 
   return;

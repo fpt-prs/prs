@@ -16,7 +16,7 @@ const fetchData = async () => {
 
   const data = await response.json();
   products.value = JSON.parse(data.body);
-  console.log(products.value);
+  // console.log(products.value);
   // console.log(products.value.map((product) => product.images));
 };
 

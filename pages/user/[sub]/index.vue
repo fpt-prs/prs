@@ -6,11 +6,12 @@
       >
         <div class="">User Detail</div>
         <div class="">
-          <ConfirmButton
+          <ModalConfirmButton
             :color="user.isActive === 1 ? 'red' : 'green'"
-            :default-label="user.isActive === 1 ? 'Deactive' : 'Active'"
+            variant="solid"
+            :label="user.isActive === 1 ? 'Deactive' : 'Active'"
             @confirm="toggleActive"
-            class="w-24 text-center"
+            v-if="isWritable"
           />
         </div>
       </div>
@@ -83,9 +84,7 @@
 const router = useRouter();
 const { getSession } = useAuth();
 const session = await getSession();
-if (!(await isAuthorized(session, "users.read.all"))) {
-  router.push("/login");
-}
+const isWritable = await isAuthorized(session, "user.write.all");
 
 // meta
 useHead({

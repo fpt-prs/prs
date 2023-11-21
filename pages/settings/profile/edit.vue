@@ -14,11 +14,7 @@
       <div class="px-4 py-3 text-xl font-medium flex justify-between">
         <div class="">Profile update</div>
         <div class="flex gap-4">
-          <UButton
-            color="gray"
-            label="Go to profile"
-            to="."
-          />
+          <UButton color="gray" label="Go to profile" to="." />
 
           <ModalConfirmButton
             variant="solid"
@@ -54,14 +50,6 @@
         <UFormGroup label="Phone number">
           <UInput v-model="user.phoneNumber" color="gray" />
         </UFormGroup>
-
-        <UFormGroup label="Active">
-          <UCheckbox
-            :checked="user.isActive === 1"
-            @change="user.isActive = user.isActive === 1 ? 0 : 1"
-            label="Active"
-          />
-        </UFormGroup>
       </div>
     </div>
   </NuxtLayout>
@@ -80,7 +68,7 @@ const toast = useToast();
 
 const user = ref({});
 onMounted(async () => {
-  const response = await fetch("/api/users/" + sub);
+  const response = await fetch("/api/profile");
   const data = await response.json();
   const body = JSON.parse(data.body);
   user.value = body;
@@ -97,14 +85,6 @@ const genders = [
   },
 ];
 
-const roles = ref([]);
-onMounted(async () => {
-  const response = await fetch("/api/roles");
-  const data = await response.json();
-  const body = JSON.parse(data.body);
-  roles.value = body;
-});
-
 const updateUser = async () => {
   const userUpdateReq = {
     country: user.value.country,
@@ -113,7 +93,7 @@ const updateUser = async () => {
     phoneNumber: user.value.phoneNumber,
   };
 
-  const updateRes = await fetch(`/api/users`, {
+  const updateRes = await fetch(`/api/profile`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

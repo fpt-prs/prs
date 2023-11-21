@@ -56,7 +56,7 @@
         />
       </div>
       <div
-        class="grow w-full h-full text-center flex justify-center items-center"
+        class="grow w-full h-screen text-center flex justify-center items-center"
         v-if="isLoading"
       >
         <UIcon name="i-heroicons-arrow-path" class="animate-spin" size="lg" />
@@ -86,7 +86,7 @@
               </div>
             </div>
           </a>
-          <div class="space-y-4 flex flex-col">
+          <div class="space-y-4 flex flex-col" v-if="isAdmin">
             <UButton
               label="Edit"
               icon="i-heroicons-pencil-square"
