@@ -2,6 +2,12 @@
   <NuxtLayout name="settings">
     <div class="grow">
       <p class="text-xl px-4 py-3">Billing</p>
+      <div class="px-4 py-3">
+        <UCard>
+          <p>View balance</p>
+          <p class="text-4xl">{{ balance || "---" }}</p>
+        </UCard>
+      </div>
       <p class="border-y border-color px-4 py-3">Purchase new views</p>
       <div class="px-4 py-3">
         <div class="grid grid-cols-3 gap-4">
@@ -38,6 +44,13 @@
 <script setup>
 useHead({
   title: "Billing",
+});
+
+const balance = ref(null);
+onMounted(async () => {
+  const response = await fetch(`/api/profile/balance`);
+  const data = await response.json();
+  balance.value = data.value;
 });
 
 const bills = ref([]);

@@ -3,7 +3,7 @@ definePageMeta({ auth: false });
 useHead({
   title: "Supercharge your business",
 });
-const { signIn } = useAuth();
+const { status, signIn } = useAuth();
 const loginWithGoogle = async () => {
   await signIn("google", { callbackUrl: "/settings/profile" });
 };
@@ -23,7 +23,20 @@ const loginWithGoogle = async () => {
     </a>
     <div class=""></div>
     <div class="">
-      <UButton color="black" label="Login" to="/login" :trailing="false" />
+      <UButton
+        color="black"
+        label="Login"
+        to="/login"
+        :trailing="false"
+        v-if="status !== 'authenticated'"
+      />
+      <UButton
+        color="black"
+        label="Open app"
+        to="/suggest"
+        :trailing="false"
+        v-else
+      />
     </div>
   </header>
   <div class="flex flex-col items-center justify-center max-w-[1000px] mx-auto">

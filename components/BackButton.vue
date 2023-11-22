@@ -15,7 +15,7 @@ const goBack = () => {
   let currentRoute = router.currentRoute;
   router.go(-1);
   if (router.currentRoute == currentRoute) {
-    router.push({ path: "/search" });
+    router.push({ path: "/suggest" });
   }
 };
 </script>

@@ -57,7 +57,7 @@ const loadNotifications = async () => {
     class="fixed top-0 h-14 dark:bg-gray-900 bg-white w-full border-b border-color flex items-center justify-between z-[999]"
   >
     <div class="flex items-center justify-between px-4 h-14">
-      <a href="/search">
+      <a href="/suggest">
         <img src="/logo.svg" alt="" />
       </a>
     </div>
