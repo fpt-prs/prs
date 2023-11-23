@@ -36,7 +36,7 @@ onMounted(async () => {
 
 const user = ref({});
 onMounted(async () => {
-  const response = await fetch(`/api/users/me`);
+  const response = await fetch(`/api/profile`);
   const data = await response.json();
   const body = JSON.parse(data.body);
   user.value = body;

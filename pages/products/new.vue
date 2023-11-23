@@ -47,14 +47,37 @@ const create = async (c) => {
   });
 
   const status = response.status;
+  const body = await response.json();
+  console.log(body);
+
   const toast = useToast();
   if (status === 200) {
     toast.add({ title: "Product created successfully" });
+    const router = useRouter();
+    router.push("/product/" + product.value.productCode);
   } else {
-    toast.add({ title: "Error creating product" });
+    toast.add({ title: "Error creating product: " + body.body });
   }
-  const router = useRouter();
-  router.push("/admin/products/" + product.value.productCode);
+};
+
+const validate = () => {
+  const errors = [];
+  if (!product.value.productCode) {
+    errors.push({ path: "productCode", message: "Required" });
+  }
+  if (!product.value.name) {
+    errors.push({ path: "name", message: "Required" });
+  }
+  if (!product.value.price) {
+    errors.push({ path: "price", message: "Required" });
+  }
+  if (!product.value.url) {
+    errors.push({ path: "url", message: "Required" });
+  }
+  if (!product.value.category) {
+    errors.push({ path: "category", message: "Required" });
+  }
+  return errors;
 };
 </script>
 
@@ -74,61 +97,58 @@ const create = async (c) => {
         type="checkbox"
         name="active"
       />
-      <UFormGroup label="Product ID">
-        <UInput
-          autoresize
-          v-model="product.productCode"
-          placeholder="Product Code"
-          type="text"
-          name="productCode"
-        />
-      </UFormGroup>
-      <UFormGroup label="URL">
-        <UTextarea
-          autoresize
-          v-model="product.url"
-          placeholder="Product URL"
-          type="text"
-          name="url"
-        />
-      </UFormGroup>
-      <UFormGroup label="Name">
-        <UTextarea
-          autoresize
-          v-model="product.name"
-          placeholder="Name"
-          type="text"
-          name="name"
-        />
-      </UFormGroup>
-      <UFormGroup label="Description">
-        <UTextarea
-          autoresize
-          v-model="product.description"
-          placeholder="Description"
-          type="text"
-          name="description"
-        />
-      </UFormGroup>
-      <UFormGroup label="Category">
-        <UTextarea
-          autoresize
-          v-model="product.category"
-          placeholder="Category"
-          type="text"
-          name="category"
-        />
-      </UFormGroup>
+      <UForm
+        :validate="validate"
+        :state="product"
+        class="space-y-4"
+        @submit="create"
+      >
+        <UFormGroup label="Product ID" name="productCode">
+          <UInput
+            autoresize
+            v-model="product.productCode"
+            placeholder="Product Code"
+            type="text"
+          />
+        </UFormGroup>
+        <UFormGroup label="URL" name="url">
+          <UTextarea
+            autoresize
+            v-model="product.url"
+            placeholder="Product URL"
+            type="text"
+          />
+        </UFormGroup>
+        <UFormGroup label="Name" name="name">
+          <UTextarea
+            autoresize
+            v-model="product.name"
+            placeholder="Name"
+            type="text"
+          />
+        </UFormGroup>
+        <UFormGroup label="Description">
+          <UTextarea
+            autoresize
+            v-model="product.description"
+            placeholder="Description"
+            type="text"
+          />
+        </UFormGroup>
+        <UFormGroup label="Category">
+          <UTextarea
+            autoresize
+            v-model="product.category"
+            placeholder="Category"
+            type="text"
+          />
+        </UFormGroup>
 
-      <!-- price -->
-      <UFormGroup label="Price">
-        <UInput
-          v-model="product.price"
-          placeholder="Price"
-          type="number"
-          name="price"
-        />
-      </UFormGroup>
+        <!-- price -->
+        <UFormGroup label="Price" name="price">
+          <UInput v-model="product.price" placeholder="Price" type="number" />
+        </UFormGroup>
+      </UForm>
       <UFormGroup label="Images">
         <div
           class="flex items-center gap-5 pb-5"

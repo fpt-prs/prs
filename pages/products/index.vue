@@ -4,7 +4,7 @@
       <div
         class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[100] bg-white dark:bg-gray-900"
       >
-        <p class="font-semibold text-lg">Manage products</p>
+        <p class="font-semibold text-lg">Products</p>
         <div class="flex gap-4">
           <UButton
             color="gray"
@@ -16,7 +16,7 @@
           <UInput
             v-model="search"
             @keyup.enter="searchByName"
-            placeholder="Enter to Search..."
+            placeholder="Press enter to search..."
             color="gray"
             icon="i-heroicons-magnifying-glass"
           />
@@ -50,7 +50,7 @@
         <p class="text-xl ml-1">Loading...</p>
       </div>
       <div
-        class="grow w-full h-full text-center flex flex-col justify-center items-center"
+        class="grow w-full h-full my-20 text-center flex flex-col justify-center items-center"
         v-if="!isLoading && products?.length === 0"
       >
         <UIcon name="i-heroicons-circle-stack-solid" size="xl" />
@@ -115,7 +115,7 @@
 
 <script setup>
 useHead({
-  title: "Product Management",
+  title: "Products",
 });
 
 const router = useRouter();

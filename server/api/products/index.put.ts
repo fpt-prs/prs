@@ -11,17 +11,17 @@ export default defineEventHandler(async (event) => {
   });
 
   const status = response.status;
-  const json = await response.json();
+  setResponseStatus(event, status);
 
   if (status !== 200) {
     return {
       statusCode: status,
-      body: json.error,
+      body: "Failed to create product",
     };
   }
 
   return {
     statusCode: 200,
-    body: json.value,
+    body: "Product created",
   };
 });

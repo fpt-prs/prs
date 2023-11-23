@@ -1,12 +1,18 @@
 import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
-  const fetchRes = await fetchBackend(`/api/payment/bills`);
+  const { page, size } = getQuery(event);
 
-  const page = await fetchRes.json();
+  const params = new URLSearchParams();
+  params.append("page", page as string);
+  params.append("size", size as string);
+
+  const fetchRes = await fetchBackend(`/api/payment/bills?${params.toString()}`);
+
+  const data = await fetchRes.json();
 
   return {
     statusCode: fetchRes.status,
-    body: JSON.stringify(page),
+    body: JSON.stringify(data),
   };
 });

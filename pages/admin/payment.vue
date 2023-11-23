@@ -3,33 +3,34 @@
     <div class="flex min-h-full">
       <div class="grow border-r border-color">
         <p class="text-2xl px-4 py-3">Billing history</p>
-        <div class="px-4 py-3 space-y-4">
-          <div
-            class="px-4 py-3 bg-color rounded-xl border border-color flex justify-between"
-            v-for="bill in bills"
-          >
-            <div class="space-y-9">
-              <p class="text-3xl">
-                {{ `${numberWithSep(bill.pricingOption?.price)} VND` }}
-              </p>
-              <div class="">
-                <p class="">
-                  Client:
-                  <span class="text-color">{{ bill.client?.name }}</span>
+        <Paginator :loader="loadBills" :size="5">
+          <template #default="{ data }">
+            <div
+              class="px-4 py-3 bg-color rounded-xl border border-color flex justify-between"
+            >
+              <div class="space-y-9">
+                <p class="text-3xl">
+                  {{ `${numberWithSep(data.pricingOption?.price)} VND` }}
                 </p>
+                <div class="">
+                  <p class="">
+                    Client:
+                    <span class="text-color">{{ data.client?.name }}</span>
+                  </p>
+                </div>
+              </div>
+              <div class="flex flex-col justify-between items-end">
+                <p>{{ data.created?.toLocaleString() }}</p>
+                <div class="">
+                  <p class="">
+                    Verified by:
+                    <span class="text-color">{{ data.verifier?.name }}</span>
+                  </p>
+                </div>
               </div>
             </div>
-            <div class="flex flex-col justify-between">
-              <p>{{ bill.created?.toLocaleString() }}</p>
-              <div class="">
-                <p class="">
-                  Verified by:
-                  <span class="text-color">{{ bill.verifier?.name }}</span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+          </template>
+        </Paginator>
       </div>
       <div class="min-w-[24em]" v-if="isPaymentWritable">
         <p class="text-2xl px-4 py-3">Verify payment</p>
@@ -88,15 +89,12 @@ async function onSubmit(event) {
   });
 }
 
-const bills = ref([]);
-
-onMounted(async () => {
-  const res = await fetch("/api/bills");
-  const data = await res.json();
-  const body = JSON.parse(data.body);
-  const page = body.content;
-  bills.value = page;
-});
+const loadBills = async (page, size) => {
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+  params.append("size", size.toString());
+  return await fetch(`/api/bills?${params.toString()}`);
+};
 </script>
 
 <style></style>
