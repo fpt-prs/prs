@@ -20,13 +20,11 @@ const fetchData = async () => {
   // console.log(products.value.map((product) => product.images));
 };
 
-onMounted(() => {
-  fetchData();
+onMounted(async () => {
+  await fetchData();
 });
 
 const viewMode = ref("list");
-
-await fetchData();
 
 const exportCsv = async () => {
   const req = await fetch(`${runtimeConfig.public.domain}/api/profile/balance`);
@@ -144,7 +142,7 @@ const jsonToCSV = (json) => {
             <img
               class="w-full h-80 mr-4"
               :src="
-                row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
+                row.images[0]?.imageUrl || '/no-image.png'
               "
               loading="lazy"
               alt="Product image"
@@ -171,7 +169,7 @@ const jsonToCSV = (json) => {
             <img
               class="w-full h-60 mr-4"
               :src="
-                row.images[0]?.imageUrl || 'https://via.placeholder.com/550'
+                row.images[0]?.imageUrl || '/no-image.png'
               "
               loading="lazy"
               alt="Product image"
@@ -195,7 +193,7 @@ const jsonToCSV = (json) => {
             <img
               class="w-36 h-36 mr-4"
               :src="
-                row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
+                row.images[0]?.imageUrl || '/no-image.png'
               "
               loading="lazy"
               alt="Product image"

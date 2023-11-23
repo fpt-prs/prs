@@ -4,7 +4,7 @@
   <div class="h-screen flex flex-col dark:bg-gray-900 bg-white">
     <Navbar />
     <div class="grow overflow-x-auto mt-14">
-      <div class="flex">
+      <div class="flex min-h-full">
         <div class="p-5 border-r border-color lg:min-w-[20ch]">
           <ul class="flex flex-col">
             <UButton

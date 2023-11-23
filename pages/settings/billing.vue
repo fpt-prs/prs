@@ -25,18 +25,20 @@
         </div>
       </div>
       <p class="border-y border-color px-4 py-3">Billing history</p>
-      <div class="px-4 py-3 space-y-4">
-        <div class="px-4 py-3 flex justify-between" v-for="bill in bills">
-          <div class="space-y-9">
-            <p class="text-3xl">
-              {{ `+ ${numberWithSep(bill.pricingOption?.price)} VND` }}
-            </p>
+      <Paginator :loader="fetchBillHistory" :size="3">
+        <template #default="{ data: bill }">
+          <div class="px-4 py-3 flex justify-between">
+            <div class="space-y-9">
+              <p class="text-3xl">
+                {{ `+ ${numberWithSep(bill.pricingOption?.price)} VND` }}
+              </p>
+            </div>
+            <div class="flex flex-col justify-between">
+              <p>{{ formatDateTime(parseDateTime(bill.created)) }}</p>
+            </div>
           </div>
-          <div class="flex flex-col justify-between">
-            <p>{{ formatDateTime(parseDateTime(bill.created)) }}</p>
-          </div>
-        </div>
-      </div>
+        </template>
+      </Paginator>
     </div>
   </NuxtLayout>
 </template>
@@ -53,13 +55,13 @@ onMounted(async () => {
   balance.value = data.value;
 });
 
-const bills = ref([]);
-onMounted(async () => {
-  const response = await fetch(`/api/bills/user`);
-  const data = await response.json();
-  const body = JSON.parse(data.body);
-  bills.value = body.content;
-});
+const fetchBillHistory = async (page, size) => {
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+  params.append("size", size.toString());
+
+  return await fetch(`/api/bills/user?${params.toString()}`);
+};
 
 const options = ref([]);
 onMounted(async () => {

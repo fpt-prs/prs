@@ -42,7 +42,7 @@
 
 <script lang="ts" setup>
 const page = ref(1);
-const totalElements = ref(10);
+const totalElements = ref(0);
 const elements = ref([]);
 const isLoading = ref(false);
 

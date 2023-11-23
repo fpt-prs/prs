@@ -1,5 +1,3 @@
-import { NuxtPage } from "nuxt/schema";
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -12,7 +10,9 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/x-icon", href: "/logo.svg" }],
     },
   },
-  css: ["~/assets/css/global.css"],
+  nitro: {
+    compressPublicAssets: true,
+  },
   runtimeConfig: {
     public: {
       domain: process.env.DOMAIN_NAME,
