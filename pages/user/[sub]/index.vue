@@ -46,6 +46,12 @@
             {{ user.isActive ? "Active" : "Inactive" }}
           </span>
         </div>
+        <div class="user-active">
+          Role:
+          <span class="text-color">
+            {{ user.roles ? user.roles[0].name : "---" }}
+          </span>
+        </div>
       </div>
     </div>
     <div class="px-4 py-3 text-xl font-medium border-b border-color">
@@ -100,6 +106,7 @@ onMounted(async () => {
   const response = await fetch("/api/users/" + sub);
   const data = await response.json();
   const body = JSON.parse(data.body);
+  console.log(body);
   user.value = body;
 });
 

@@ -14,6 +14,8 @@ export default defineEventHandler(async (event) => {
     method: "PUT",
   });
   const data = await fetchRes.json();
+  const status = fetchRes.status;
+  setResponseStatus(event, status);
 
   if (fetchRes.status !== 200) {
     return {

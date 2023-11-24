@@ -156,6 +156,14 @@ const jsonToCSV = (json) => {
                 {{ "$" + row.price }}
               </div>
             </div>
+            <UTooltip
+              :text="`The popularity score of product`"
+              :popper="{ arrow: true }"
+            >
+              <p class="text-green-600 dark:text-green-400 p-2">
+                {{ Math.round((row.score - 4) * 10000) / 1000 }}
+              </p>
+            </UTooltip>
           </div>
         </a>
       </div>
@@ -181,6 +189,14 @@ const jsonToCSV = (json) => {
                 {{ "$" + row.price }}
               </div>
             </div>
+            <UTooltip
+              :text="`The popularity score of product`"
+              :popper="{ arrow: true }"
+            >
+              <p class="text-green-600 dark:text-green-400 p-2">
+                {{ Math.round(row.score * 1000) / 1000 }}
+              </p>
+            </UTooltip>
           </div>
         </a>
       </div>
@@ -190,19 +206,29 @@ const jsonToCSV = (json) => {
           :href="`/product/${row.productCode}`"
           v-for="row in products"
         >
-          <div class="flex">
-            <img
-              class="w-36 h-36 mr-4"
-              :src="row.images[0]?.imageUrl || '/no-image.png'"
-              loading="lazy"
-              alt="Product image"
-            />
-            <div class="break-words p-2 truncate">
-              <p class="truncate">{{ row.name }}</p>
-              <div class="text-gray-500 mt-2">
-                {{ "$" + row.price }}
+          <div class="flex justify-between gap-4 items-center">
+            <div class="flex min-w-0">
+              <img
+                class="w-36 h-36 mr-4"
+                :src="row.images[0]?.imageUrl || '/no-image.png'"
+                loading="lazy"
+                alt="Product image"
+              />
+              <div class="break-words p-2 truncate">
+                <p class="truncate">{{ row.name }}</p>
+                <div class="text-gray-500 mt-2">
+                  {{ "$" + row.price }}
+                </div>
               </div>
             </div>
+            <UTooltip
+              :text="`The popularity score of product`"
+              :popper="{ arrow: true }"
+            >
+              <p class="text-green-600 dark:text-green-400">
+                {{ Math.round(row.score * 1000) / 1000 }}
+              </p>
+            </UTooltip>
           </div>
         </a>
       </div>

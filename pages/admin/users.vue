@@ -2,7 +2,6 @@
   <NuxtLayout name="admin">
     <div class="grow">
       <p class="text-xl px-4 py-3 border-b border-color">Users</p>
-
       <Paginator :loader="fetchUser" :size="5" type="all">
         <template #all="{ data }">
           <UTable :rows="data" :columns="colums">
@@ -69,7 +68,7 @@
                               label="Change role"
                               variant="outline"
                               color="red"
-                              @click="changeRole(row.id)"
+                              @click="changeRole(row)"
                             />
                           </div>
                         </div>
@@ -149,16 +148,14 @@ const startAssignUser = (user) => {
   isChangingRole.value = true;
   selectedRoles.value = user.roles[0].id;
 };
-const changeRole = async (id) => {
-  const currentUser = users.value.find((user) => user.id === id);
-  console.log(currentUser);
+const changeRole = async (currentUser) => {
   const updateRes = await fetch(`/api/users/status`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      id: id,
+      id: currentUser.id,
       isActive: currentUser.isActive,
       roleIds: [selectedRoles.value],
     }),

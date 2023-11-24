@@ -1,10 +1,13 @@
 import fetchBackend from "~/utils/fetchBackend";
+import { getServerSession } from "#auth";
 
 export default defineEventHandler(async (event) => {
   const { collectionId, productId, mode } = JSON.parse(await readBody(event));
+  const session = await getServerSession(event);
   const parsedCollectionId = parseInt(collectionId);
   const parsedProductId = parseInt(productId);
   if (mode !== "add" && mode !== "remove") {
+    setResponseStatus(event, 400);
     return {
       statusCode: 400,
       body: "Invalid mode",
@@ -14,6 +17,7 @@ export default defineEventHandler(async (event) => {
   let params = new URLSearchParams();
   params.append("collectionId", parsedCollectionId.toString());
   params.append("productId", parsedProductId.toString());
+  params.append("userId", (session?.user as any).id.toString());
 
   let fetchRes;
   if (mode === "add") {
@@ -28,6 +32,9 @@ export default defineEventHandler(async (event) => {
       }
     );
   }
+
+  const status = fetchRes.status;
+  setResponseStatus(event, status);
 
   if (fetchRes.status !== 200) {
     return {

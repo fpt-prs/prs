@@ -2,7 +2,6 @@ import { getServerSession } from "#auth";
 
 const apiMap: any = {
   "/api/bills": "payment",
-  "/api/collection": "collection",
   "/api/notifications": "notification",
   "/api/permissions": "permission",
   "/api/products": "product",

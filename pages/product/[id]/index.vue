@@ -1,7 +1,29 @@
 <script setup>
+import { LineChart } from "vue-chart-3";
+import {
+  Chart as ChartJS,
+  Title,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  LineController,
+  PointElement,
+  LineElement,
+} from "chart.js";
 const route = useRoute();
 const router = useRouter();
 const currentImage = ref(0);
+ChartJS.register(
+  Title,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale,
+  LineController,
+  PointElement,
+  LineElement
+);
 
 useHead({
   title: "Product",
@@ -11,6 +33,17 @@ useHead({
 });
 
 const product = ref({});
+let graph = {
+  labels: [],
+  datasets: [
+    {
+      label: "Popularity",
+      backgroundColor: "#3B82F6",
+      data: [],
+    },
+  ],
+};
+
 onMounted(async () => {
   const response = await fetch(`/api/products/${route.params.id}`);
   const status = response.status;
@@ -26,6 +59,25 @@ onMounted(async () => {
   const collectionData = await collectionResponse.json();
   const collectionBody = JSON.parse(collectionData.body);
   collections.value = collectionBody;
+
+  const labels = product.value.scores.map((p) => p.date);
+});
+
+const graphComputed = computed(() => {
+  if (!product.value.scores) {
+    return graph;
+  }
+
+  return {
+    labels: product.value.scores.map((p) => p.date),
+    datasets: [
+      {
+        label: "Popularity",
+        backgroundColor: "#3B82F6",
+        data: product.value.scores.map((p) => (p.score - 4) * 10),
+      },
+    ],
+  };
 });
 
 const collections = ref([]);
@@ -46,6 +98,11 @@ const update = async (collection) => {
 const { getSession } = useAuth();
 const session = await getSession();
 const isAdmin = await isAuthorized(session, "product.write.all");
+
+const chartOptions = ref({
+  responsive: true,
+  maintainAspectRatio: false,
+});
 </script>
 
 <template>
@@ -109,6 +166,7 @@ const isAdmin = await isAuthorized(session, "product.write.all");
             <UButton
               color="gray"
               icon="i-heroicons-pencil"
+              size="lg"
               label="Edit"
               :to="`/product/${product.productCode}/edit`"
               v-if="isAdmin"
@@ -117,9 +175,20 @@ const isAdmin = await isAuthorized(session, "product.write.all");
         </div>
       </div>
       <div class="py-3 border-t border-color">
+        <h2 class="text-2xl py-3 font-semibold">Popularity graph</h2>
+        <div class="w-full bg-white">
+          <LineChart
+            v-if="product"
+            id="popularity-graph"
+            :chartData="graphComputed"
+            :options="chartOptions"
+          />
+        </div>
+      </div>
+      <div class="py-3 border-t border-color mb-10">
         <h2 class="text-2xl py-3 font-semibold">Description</h2>
         <p class="whitespace-pre-line">
-          {{ product.description || "No description"}}
+          {{ product.description || "No description" }}
         </p>
       </div>
     </div>
