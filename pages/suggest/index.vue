@@ -1,6 +1,6 @@
 <script setup>
 useHead({
-  title: "Search",
+  title: "Hot products",
 });
 const runtimeConfig = useRuntimeConfig();
 const toast = useToast();
@@ -27,23 +27,23 @@ onMounted(async () => {
 const viewMode = ref("list");
 
 const exportCsv = async () => {
-  const req = await fetch(`${runtimeConfig.public.domain}/api/profile/balance`);
-
+  const req = await fetch(`${runtimeConfig.public.domain}/api/export`);
   const status = req.status;
-  const detail = await req.json();
+  const json = await req.json();
+
   if (status !== 200) {
-    const err = detail.error;
-    toast.add({ title: err });
+    const error = json.body;
+    toast.add({
+      title: error,
+      color: "red",
+      description: "Click here to buy more credits",
+      onClick: goToBilling,
+    });
     return;
   }
 
-  const balance = detail.value;
-  if (balance <= 0) {
-    toast.add({ title: "Insufficient balance" });
-    return;
-  }
-
-  const csv = jsonToCSV(products.value);
+  const products = JSON.parse(json.body);
+  const csv = jsonToCSV(products);
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const url = window.URL.createObjectURL(blob);
   const link = document.createElement("a");
@@ -52,6 +52,11 @@ const exportCsv = async () => {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+};
+
+const goToBilling = () => {
+  const router = useRouter();
+  router.push("/settings/billing");
 };
 
 const jsonToCSV = (json) => {
@@ -141,9 +146,7 @@ const jsonToCSV = (json) => {
           <div class="">
             <img
               class="w-full h-80 mr-4"
-              :src="
-                row.images[0]?.imageUrl || '/no-image.png'
-              "
+              :src="row.images[0]?.imageUrl || '/no-image.png'"
               loading="lazy"
               alt="Product image"
             />
@@ -168,9 +171,7 @@ const jsonToCSV = (json) => {
           <div class="">
             <img
               class="w-full h-60 mr-4"
-              :src="
-                row.images[0]?.imageUrl || '/no-image.png'
-              "
+              :src="row.images[0]?.imageUrl || '/no-image.png'"
               loading="lazy"
               alt="Product image"
             />
@@ -192,9 +193,7 @@ const jsonToCSV = (json) => {
           <div class="flex">
             <img
               class="w-36 h-36 mr-4"
-              :src="
-                row.images[0]?.imageUrl || '/no-image.png'
-              "
+              :src="row.images[0]?.imageUrl || '/no-image.png'"
               loading="lazy"
               alt="Product image"
             />

@@ -1,8 +1,8 @@
 import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
-  const fetchRes = await fetchBackend(`/api/payment/qr`);
-  const accounts = await fetchRes.json();
+  const fetchRes = await fetchBackend(`/api/payment/qr/active`);
+  const account = await fetchRes.json();
 
   const status = fetchRes.status;
   setResponseStatus(event, status);
@@ -13,6 +13,6 @@ export default defineEventHandler(async (event) => {
   }
 
   return {
-    body: JSON.stringify(accounts.value),
+    body: JSON.stringify(account.value),
   };
 });

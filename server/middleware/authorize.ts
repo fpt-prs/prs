@@ -8,6 +8,7 @@ const apiMap: any = {
   "/api/products": "product",
   "/api/roles": "role",
   "/api/users": "user",
+  "/api/accounts": "payment",
 };
 
 export default defineEventHandler(async (event) => {
@@ -35,11 +36,16 @@ export default defineEventHandler(async (event) => {
       actionPer = "write";
       break;
   }
-  const neededPermissions = `${apiMap[route]}.${actionPer}.all`;
-  const hasPermission = permissions.includes(neededPermissions);
 
-  if (!hasPermission) {
-    // console.log("403");
-    return sendError(event, createError({ statusCode: 403 }));
+  for (const route of includedPaths) {
+    if (event.path.startsWith(route)) {
+      const neededPermissions = `${apiMap[route]}.${actionPer}.all`;
+      const hasPermission = permissions.includes(neededPermissions);
+
+      if (!hasPermission) {
+        // console.log("403");
+        return sendError(event, createError({ statusCode: 403 }));
+      }
+    }
   }
 });

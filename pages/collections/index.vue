@@ -127,7 +127,19 @@ const removeProduct = async (id) => {
         </ul>
       </div>
       <div class="grow min-w-0">
-        <div class="w-full flex justify-between px-4 py-3">
+        <div
+          class="w-full flex justify-center items-center px-4 py-3 pt-12"
+          v-if="!collection.name"
+        >
+          <p class="text-4xl text-center text-color">
+            Select a collection or create a new one to view products
+          </p>
+        </div>
+
+        <div
+          class="w-full flex justify-between px-4 py-3"
+          v-if="collection.name"
+        >
           <div class="">
             <p class="text-xl">{{ collection.name }}</p>
           </div>

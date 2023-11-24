@@ -5,12 +5,14 @@
       <div class="px-4 py-3">
         <UCard>
           <p>View balance</p>
-          <p class="text-4xl">{{ balance || "---" }}</p>
+          <p class="text-4xl">
+            {{ balance != null && balance !== undefined ? balance : "---" }}
+          </p>
         </UCard>
       </div>
       <p class="border-y border-color px-4 py-3">Purchase new views</p>
       <div class="px-4 py-3">
-        <div class="grid grid-cols-3 gap-4">
+        <div class="flex flex-wrap lg:justify-center gap-4">
           <a
             class="p-3 rounded-lg border border-color text-center"
             v-for="option of options"
@@ -26,7 +28,7 @@
       </div>
       <p class="border-y border-color px-4 py-3">Billing history</p>
       <Paginator :loader="fetchBillHistory" :size="3">
-        <template #default="{ data: bill }">
+        <template #item="{ data: bill }">
           <div class="px-4 py-3 flex justify-between">
             <div class="space-y-9">
               <p class="text-3xl">

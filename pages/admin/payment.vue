@@ -4,7 +4,7 @@
       <div class="grow border-r border-color">
         <p class="text-2xl px-4 py-3">Billing history</p>
         <Paginator :loader="loadBills" :size="5">
-          <template #default="{ data }">
+          <template #item="{ data }">
             <div
               class="px-4 py-3 bg-color rounded-xl border border-color flex justify-between"
             >
@@ -87,6 +87,19 @@ async function onSubmit(event) {
       note: paymentForm.note,
     }),
   });
+
+  const status = res.status;
+  const toast = useToast();
+
+  if (status !== 200) {
+    const json = await res.json();
+    const error = json.body;
+    toast.add({
+      title: error,
+      color: "red",
+    });
+    return;
+  }
 }
 
 const loadBills = async (page, size) => {

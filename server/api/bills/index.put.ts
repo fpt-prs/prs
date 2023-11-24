@@ -12,17 +12,22 @@ export default defineEventHandler(async (event) => {
     note: req.note,
     verifierId: userId,
   };
-  console.log(requestBody);
 
   const fetchRes = await fetchBackend(`/api/payment/pay`, {
     method: "PUT",
     body: JSON.stringify(requestBody),
   });
 
-  const data = await fetchRes.json();
+  setResponseStatus(event, fetchRes.status);
+
+  if (fetchRes.status !== 200) {
+    return {
+      statusCode: fetchRes.status,
+      body: "Something went wrong. Please check your input.",
+    };
+  }
 
   return {
-    statusCode: fetchRes.status,
-    body: JSON.stringify(data),
+    body: "Verified successfully.",
   };
 });

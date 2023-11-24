@@ -2,79 +2,86 @@
   <NuxtLayout name="admin">
     <div class="grow">
       <p class="text-xl px-4 py-3 border-b border-color">Users</p>
-      <UTable :rows="users" :columns="colums">
-        <template #actions-data="{ row }">
-          <div class="flex gap-4">
-            <UButton :to="`/user/${row.userCode}`" label="Detail" />
-            <UPopover :popper="{ placement: 'bottom-end' }">
-              <UButton
-                color="gray"
-                trailing-icon="i-heroicons-ellipsis-horizontal"
-              />
-              <template #panel>
-                <div class="p-2 flex flex-col">
-                  <ModalConfirmButton
-                    v-if="row.isActive === 1"
-                    variant="ghost"
-                    color="red"
-                    label="Deactive user..."
-                    @confirm="disableUser(row.id)"
-                  />
-                  <ModalConfirmButton
-                    v-else
-                    variant="ghost"
-                    color="green"
-                    label="Active user..."
-                    @confirm="enableUser(row.id)"
-                  />
+
+      <Paginator :loader="fetchUser" :size="5" type="all">
+        <template #all="{ data }">
+          <UTable :rows="data" :columns="colums">
+            <template #actions-data="{ row }">
+              <div class="flex gap-4">
+                <UButton :to="`/user/${row.userCode}`" label="Detail" />
+                <UPopover :popper="{ placement: 'bottom-end' }">
                   <UButton
-                    variant="ghost"
                     color="gray"
-                    label="Change role..."
-                    @click="startAssignUser(row)"
+                    trailing-icon="i-heroicons-ellipsis-horizontal"
                   />
-                  <UModal v-model="isChangingRole">
-                    <div class="rounded-lg bg-color">
-                      <div class="px-3 pt-2 flex justify-between items-center">
-                        <p class="text-sm font-semibold">
-                          Change the role of {{ editingUser.name }} ?
-                        </p>
-                        <UButton
-                          icon="i-heroicons-x-mark"
-                          color="gray"
-                          variant="ghost"
-                          @click="isChangingRole = false"
-                        />
-                      </div>
-                      <div class="p-4">
-                        <div class="p-2">
-                          <p class="pb-4">Select role</p>
-                          <URadio
-                            v-for="role of roles"
-                            :key="role.id"
-                            v-model="selectedRoles"
-                            :value="role.id"
-                            :label="role.name"
-                          />
+                  <template #panel>
+                    <div class="p-2 flex flex-col">
+                      <ModalConfirmButton
+                        v-if="row.isActive === 1"
+                        variant="ghost"
+                        color="red"
+                        label="Deactive user..."
+                        @confirm="disableUser(row.id)"
+                      />
+                      <ModalConfirmButton
+                        v-else
+                        variant="ghost"
+                        color="green"
+                        label="Active user..."
+                        @confirm="enableUser(row.id)"
+                      />
+                      <UButton
+                        variant="ghost"
+                        color="gray"
+                        label="Change role..."
+                        @click="startAssignUser(row)"
+                      />
+                      <UModal v-model="isChangingRole">
+                        <div class="rounded-lg bg-color">
+                          <div
+                            class="px-3 pt-2 flex justify-between items-center"
+                          >
+                            <p class="text-sm font-semibold">
+                              Change the role of {{ editingUser.name }} ?
+                            </p>
+                            <UButton
+                              icon="i-heroicons-x-mark"
+                              color="gray"
+                              variant="ghost"
+                              @click="isChangingRole = false"
+                            />
+                          </div>
+                          <div class="p-4">
+                            <div class="p-2">
+                              <p class="pb-4">Select role</p>
+                              <URadio
+                                v-for="role of roles"
+                                :key="role.id"
+                                v-model="selectedRoles"
+                                :value="role.id"
+                                :label="role.name"
+                              />
+                            </div>
+                          </div>
+                          <hr class="text-color border-color m-4" />
+                          <div class="mx-4 mt-4 mb-8">
+                            <UButton
+                              label="Change role"
+                              variant="outline"
+                              color="red"
+                              @click="changeRole(row.id)"
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <hr class="text-color border-color m-4" />
-                      <div class="mx-4 mt-4 mb-8">
-                        <UButton
-                          label="Change role"
-                          variant="outline"
-                          color="red"
-                          @click="changeRole(row.id)"
-                        />
-                      </div>
+                      </UModal>
                     </div>
-                  </UModal>
-                </div>
-              </template>
-            </UPopover>
-          </div>
+                  </template>
+                </UPopover>
+              </div>
+            </template>
+          </UTable>
         </template>
-      </UTable>
+      </Paginator>
     </div>
   </NuxtLayout>
 </template>
@@ -84,14 +91,9 @@ useHead({
   title: "User Management",
 });
 
-// users data
-const users = ref([]);
-onMounted(async () => {
-  const response = await fetch("/api/users");
-  const data = await response.json();
-  const body = JSON.parse(data.body);
-  users.value = body.content;
-});
+const fetchUser = async (page, size) => {
+  return await fetch(`/api/users?page=${page}&size=${size}`);
+};
 
 // table
 const colums = [

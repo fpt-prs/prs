@@ -24,8 +24,9 @@
       <UIcon name="i-heroicons-circle-stack-solid" size="xl" />
       <p class="text-xl ml-1 text-color">No Item</p>
     </div>
-    <div class="gap-5 p-5 space-y-5">
-      <slot :data="element" v-for="element in elements" />
+    <slot name="all" :data="elements" />
+    <div class="gap-5 p-5 space-y-5" v-if="type === 'item'">
+      <slot name="item" :data="element" v-for="element in elements" />
     </div>
     <div
       class="flex justify-between items-center gap-5 p-5 dark:border-t border-color"
@@ -68,7 +69,6 @@ const fetchData = async () => {
 
   elements.value = detail.content;
   totalElements.value = parseInt(detail.totalElements);
-  console.log(totalElements.value);
   isLoading.value = false;
 };
 
@@ -81,6 +81,10 @@ const props = defineProps({
   size: {
     type: Number,
     default: 5,
+  },
+  type: {
+    type: String,
+    default: "item",
   },
 });
 </script>

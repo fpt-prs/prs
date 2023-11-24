@@ -42,6 +42,10 @@ const update = async (collection) => {
 
   const data = await response.json();
 };
+
+const { getSession } = useAuth();
+const session = await getSession();
+const isAdmin = await isAuthorized(session, "product.write.all");
 </script>
 
 <template>
@@ -67,9 +71,11 @@ const update = async (collection) => {
           class="w-80 h-80 mr-3"
         />
         <div class="">
-          <div class="text-2xl font-bold">{{ product.name }}</div>
+          <div class="text-2xl font-bold">
+            {{ product.name || "Loading..." }}
+          </div>
           <div class="my-4">
-            {{ "$" + product.price || "" }}
+            {{ "$" + product.price !== undefined ? product.price : "" }}
           </div>
           <div class="lg:flex gap-5 pt-3 max-lg:space-y-2">
             <UButton
@@ -100,13 +106,20 @@ const update = async (collection) => {
                 </UCard>
               </template>
             </UPopover>
+            <UButton
+              color="gray"
+              icon="i-heroicons-pencil"
+              label="Edit"
+              :to="`/product/${product.productCode}/edit`"
+              v-if="isAdmin"
+            />
           </div>
         </div>
       </div>
       <div class="py-3 border-t border-color">
         <h2 class="text-2xl py-3 font-semibold">Description</h2>
         <p class="whitespace-pre-line">
-          {{ product.description }}
+          {{ product.description || "No description"}}
         </p>
       </div>
     </div>

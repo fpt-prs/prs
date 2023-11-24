@@ -18,6 +18,14 @@ const validate = computed(() => {
 
 const isEditing = ref(false);
 const editingAccount = ref({});
+const isEditingAccountActive = computed({
+  get() {
+    return editingAccount.value.isActive !== 0;
+  },
+  set(value) {
+    editingAccount.value.isActive = value ? 1 : 0;
+  },
+});
 
 const accounts = ref([]);
 const fetchAccounts = async () => {
@@ -45,6 +53,7 @@ const actions = (account) => [
       click: () => {
         isEditing.value = true;
         editingAccount.value = { ...account };
+        fetchCurrentQR(account.id);
       },
     },
     {
@@ -58,23 +67,14 @@ const actions = (account) => [
 ];
 
 const addAccount = async () => {
-  const accountCreateRequest = {
-    name: newAccount.value.name,
-    accountNumber: newAccount.value.accountNumber,
-    bankName: newAccount.value.bankName,
-    qrCode: newQR.value,
-  };
-
   const formData = new FormData();
-  for (const key in accountCreateRequest) {
-    formData.append(key, accountCreateRequest[key]);
-  }
+  formData.append("name", newAccount.value.name);
+  formData.append("accountNumber", newAccount.value.accountNumber);
+  formData.append("bankName", newAccount.value.bankName);
+  formData.append("qrCode", newQR.value);
 
   const addRes = await fetch(`/api/accounts`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "multipart/form-data",
-    },
     body: formData,
   });
 
@@ -85,6 +85,7 @@ const addAccount = async () => {
   if (status === 200) {
     toast.add({ title: "Account added successfully" });
     newAccount.value = {};
+    newQR.value = null;
     await fetchAccounts();
   } else {
     toast.add({ title: "Error adding account" });
@@ -98,7 +99,7 @@ const removeAccount = async (account) => {
 
   const status = updateRes.status;
   const toast = useToast();
-  if (status === 204) {
+  if (status === 200) {
     toast.add({ title: "Account deleted successfully" });
     await fetchAccounts();
   } else {
@@ -107,15 +108,18 @@ const removeAccount = async (account) => {
 };
 
 const updateAccount = async () => {
-  const updateAccountReq = {
-    description: editingAccount.value.description,
-    price: parseFloat(editingAccount.value.price),
-    numsOfView: parseInt(editingAccount.value.numsOfView),
-  };
+  const formData = new FormData();
+  formData.append("id", editingAccount.value.id);
+  formData.append("name", editingAccount.value.name);
+  formData.append("accountNumber", editingAccount.value.accountNumber);
+  formData.append("bankName", editingAccount.value.bankName);
+  formData.append("isActive", editingAccount.value.isActive);
+  const file = new File([editingQR.value], "qr.png");
+  formData.append("qrCode", file);
 
-  const updateRes = await fetch(`/api/accounts/${editingAccount.value.id}`, {
+  const updateRes = await fetch(`/api/accounts`, {
     method: "POST",
-    body: JSON.stringify(updateAccountReq),
+    body: formData,
   });
 
   const status = updateRes.status;
@@ -134,6 +138,32 @@ const updateAccount = async () => {
 const newQR = ref(null);
 const onFileChange = (event) => {
   newQR.value = event.target.files[0];
+};
+
+const editingQR = ref(null);
+const base64QR = computed(() => {
+  const base64 = btoa(
+    new Uint8Array(editingQR.value).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ""
+    )
+  );
+  return base64;
+});
+const onFileChangeEditing = (event) => {
+  const file = event.target.files[0];
+  // convert to array buffer
+  const reader = new FileReader();
+  reader.readAsArrayBuffer(file);
+  reader.onload = () => {
+    editingQR.value = reader.result;
+  };
+};
+const fetchCurrentQR = async (id) => {
+  editingQR.value = null;
+  const response = await fetch(`/api/accounts/${id}/image`);
+  const data = await response.arrayBuffer();
+  editingQR.value = data;
 };
 </script>
 
@@ -183,7 +213,7 @@ const onFileChange = (event) => {
                 placeholder="Enter name"
                 size="lg"
                 class="w-full"
-                v-model="newAccount.description"
+                v-model="newAccount.name"
               />
             </td>
             <td class="px-4 py-3">
@@ -211,8 +241,23 @@ const onFileChange = (event) => {
               />
               <label for="fileInput">
                 <div
-                  class="border px-3 py-2 border-dashed border-color rounded-lg cursor-pointer hover:border-solid hover:bg-gray-100 dark:hover:bg-gray-800"
+                  :class="{
+                    'border px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2': true,
+                    'border-dashed border-color hover:border-solid': !newQR,
+                    'border-solid border-green-400 hover:border-solid text-green-600 dark:text-green-400':
+                      newQR,
+                  }"
                 >
+                  <UIcon
+                    name="i-heroicons-check"
+                    class="w-5 h-5 text-green-600 dark:text-green-400"
+                    v-if="newQR"
+                  />
+                  <UIcon
+                    name="i-heroicons-arrow-up-tray"
+                    class="w-5 h-5 text-color"
+                    v-else
+                  />
                   Upload QR code
                 </div>
               </label>
@@ -253,25 +298,27 @@ const onFileChange = (event) => {
                 v-model="editingAccount.name"
               />
             </UFormGroup>
-            <UFormGroup label="Account Number">
-              <UInput
-                placeholder="Account Number"
-                size="lg"
-                class="w-full"
-                v-model="editingAccount.accountNumber"
-              />
-            </UFormGroup>
-            <UFormGroup label="Bank Name">
-              <UInput
-                placeholder="Bank Name"
-                size="lg"
-                class="w-full"
-                v-model="editingAccount.bankName"
-              />
-            </UFormGroup>
+            <div class="flex gap-4">
+              <UFormGroup label="Account Number">
+                <UInput
+                  placeholder="Account Number"
+                  size="lg"
+                  class="w-full"
+                  v-model="editingAccount.accountNumber"
+                />
+              </UFormGroup>
+              <UFormGroup label="Bank Name">
+                <UInput
+                  placeholder="Bank Name"
+                  size="lg"
+                  class="w-full"
+                  v-model="editingAccount.bankName"
+                />
+              </UFormGroup>
+            </div>
             <UFormGroup label="Active">
               <div class="flex items-center gap-3">
-                <UToggle v-model="editingAccount.isActive" />
+                <UToggle v-model="isEditingAccountActive" />
                 <p class="text-sm text-color">
                   {{ editingAccount.isActive ? "Active" : "Inactive" }}
                 </p>
@@ -283,6 +330,28 @@ const onFileChange = (event) => {
                     class="w-4 h-4 text-color cursor-pointer"
                   />
                 </UTooltip>
+              </div>
+            </UFormGroup>
+            <UFormGroup label="QR Code">
+              <div class="flex items-center gap-4">
+                <img
+                  :src="`data:image/png;base64,${base64QR}`"
+                  class="w-32 h-32"
+                />
+                <input
+                  id="fileInputEditing"
+                  type="file"
+                  @change="onFileChangeEditing"
+                  class="hidden"
+                  accept="image/*"
+                />
+                <label for="fileInputEditing">
+                  <div
+                    class="border px-3 py-2 border-dashed border-green-400 rounded-lg cursor-pointer hover:border-solid hover:bg-green-100 dark:hover:bg-green-950 hover:text-green-500 dark:hover:text-green-300"
+                  >
+                    Upload new QR code
+                  </div>
+                </label>
               </div>
             </UFormGroup>
           </div>

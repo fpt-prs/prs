@@ -13,6 +13,9 @@ export default defineNuxtConfig({
   nitro: {
     compressPublicAssets: true,
   },
+  webpack:{
+    optimizeCSS: true,
+  },
   runtimeConfig: {
     public: {
       domain: process.env.DOMAIN_NAME,
