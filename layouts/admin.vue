@@ -70,6 +70,15 @@
               to="/admin/options"
               class="w-full"
             />
+            <UButton
+              icon="i-heroicons-banknotes"
+              size="lg"
+              variant="ghost"
+              label="Bank accounts"
+              :trailing="false"
+              to="/admin/accounts"
+              class="w-full"
+            />
           </ul>
         </div>
         <div class="w-screen overflow-y-auto">

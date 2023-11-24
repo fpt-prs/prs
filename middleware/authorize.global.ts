@@ -3,6 +3,7 @@ const routeAction = {
   "/admin/notifications/new": "notification.write.all",
   "/admin/notifications/.*": "notification.read.all",
   "/admin/roles": "role.read.all",
+  "/admin/accounts": "payment.read.all",
   "/admin/permissions": "permission.read.all",
   "/admin/payment": "payment.read.all",
   "/admin/options": "payment.read.all",
