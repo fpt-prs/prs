@@ -4,145 +4,113 @@ const session = await getSession();
 const user = session?.user;
 let theme = useColorMode();
 const isDark = computed(() => theme.value === "dark");
-const items = [
-  [
-    {
-      label: user?.email || "",
-      slot: "account",
-      disabled: true,
-    },
-  ],
-  [
-    {
-      label: "Settings",
-      icon: "i-heroicons-cog-6-tooth",
-      to: "/settings/profile",
-    },
-  ],
-  [
-    {
-      label: "Help & Feedback",
-      icon: "i-heroicons-chat-bubble-left-right",
-      to: "/feedback",
-    },
-  ],
-  [
-    {
-      label: "Logout",
-      icon: "i-heroicons-arrow-right-on-rectangle",
-      click: () => {
-        signOut({
-          callbackUrl: "/",
-        });
-      },
-    },
-  ],
-];
-
-const notifications = ref([]);
-const isLoadingNotifications = ref(false);
-
-const loadNotifications = async () => {
-  isLoadingNotifications.value = true;
-  const response = await fetch("/api/notifications/user");
-  const data = await response.json();
-  const body = JSON.parse(data.body);
-  notifications.value = body;
-  isLoadingNotifications.value = false;
-};
 </script>
 
 <template>
   <div
-    class="fixed top-0 h-14 dark:bg-gray-900 bg-white w-full border-b border-color flex items-center justify-between z-[999]"
+    class="fixed top-0 dark:bg-gray-900 bg-white h-full w-56 border-r border-color justify-between z-[9] p-3 flex flex-col items-start"
   >
-    <div class="flex items-center justify-between px-4 h-14">
+    <div class="items-center justify-between">
       <a href="/suggest">
-        <img src="/logo.svg" alt="" />
+        <img src="/logo.svg" class="p-4" alt="" />
       </a>
-    </div>
-    <div class="flex items-center px-2">
+      <a
+        href="/settings/profile"
+        class="block border border-color rounded-lg p-2 w-[12.5rem] my-2 border-dashed hover:border-solid"
+      >
+        <div class="flex items-center gap-3 overflow-hidden">
+          <UAvatar :src="user?.image || '/blank.webp'" />
+          <div class="text-ellipsis overflow-hidden">
+            <p class="">
+              {{ user?.name || "" }}
+            </p>
+            <p class="text-ellipsis overflow-hidden text-color text-sm">
+              {{ user?.email || "" }}
+            </p>
+          </div>
+        </div>
+      </a>
       <UButton
         icon="i-heroicons-arrow-trending-up"
-        color="gray"
         variant="ghost"
         label="Hot products"
         to="/suggest"
         :trailing="false"
+        size="lg"
+        class="w-full"
       />
       <UButton
         icon="i-heroicons-magnifying-glass"
-        color="gray"
         variant="ghost"
         label="Products"
         to="/products"
         :trailing="false"
+        size="lg"
+        class="w-full"
       />
       <UButton
         icon="i-heroicons-inbox"
-        color="gray"
         variant="ghost"
         label="Collections"
         to="/collections"
         :trailing="false"
+        size="lg"
+        class="w-full"
       />
       <UButton
         icon="i-heroicons-user-group"
-        color="gray"
         variant="ghost"
         label="Admin"
         to="/admin/users"
+        size="lg"
+        class="w-full"
         :trailing="false"
         v-if="user?.roles.map((role) => role.name).includes('Admin')"
       />
-      <UPopover :popper="{ placement: 'bottom-end' }">
-        <UButton
-          color="gray"
-          variant="ghost"
-          trailing-icon="i-heroicons-bell"
-          @click="loadNotifications"
-        />
-
-        <template #panel>
-          <div class="" v-if="isLoadingNotifications">
-            <UIcon name="i-heroicons-arrow-path" class="animate-spin m-10" />
-          </div>
-
-          <div class="p-4 space-y-4" v-else>
-            <div
-              class="border border-color rounded-lg p-4"
-              v-for="notification in notifications"
-            >
-              <p class="text-sm">{{ notification.header }}</p>
-              <p class="text-color text-sm">{{ notification.content }}</p>
-            </div>
-          </div>
-        </template>
-      </UPopover>
+    </div>
+    <div class="w-full">
       <UButton
-        :icon="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'"
-        color="gray"
+        icon="i-heroicons-banknotes"
         variant="ghost"
-        @click="theme.preference = isDark ? 'light' : 'dark'"
+        label="Billing"
+        size="lg"
+        class="w-full"
+        to="/settings/billing"
         :trailing="false"
       />
-      <UDropdown
-        :items="items"
-        :popper="{ placement: 'bottom-end' }"
-        class="ml-2"
-      >
-        <UAvatar :src="user?.image || '/blank.webp'" />
-        <template #account="{ item }">
-          <div class="text-left w-full z-[99]">
-            <p>Signed in as</p>
-            <p
-              class="w-full truncate font-medium text-gray-900 dark:text-white"
-            >
-              {{ item.label }}
-            </p>
-          </div>
-        </template>
-      </UDropdown>
+      <UButton
+        icon="i-heroicons-bell"
+        variant="ghost"
+        label="Notifications"
+        size="lg"
+        class="w-full"
+        to="/notifications"
+        :trailing="false"
+      />
+      <ClientOnly>
+        <UButton
+        :icon="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'"
+        variant="ghost"
+        :label="isDark ? 'Light mode' : 'Dark mode'"
+        size="lg"
+        class="w-full"
+        @click="theme.preference = isDark ? 'light' : 'dark'"
+        :trailing="false"
+        />
+      </ClientOnly>
+      <UButton
+        icon="i-heroicons-arrow-left-on-rectangle"
+        variant="ghost"
+        label="Logout"
+        size="lg"
+        class="w-full"
+        @click="
+          signOut({
+            callbackUrl: '/',
+          })
+        "
+        :trailing="false"
+      />
     </div>
   </div>
 </template>

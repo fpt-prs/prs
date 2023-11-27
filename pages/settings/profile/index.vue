@@ -15,7 +15,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <NuxtLayout name="settings">
+  <NuxtLayout name="default">
     <div class="grow flex">
       <div class="p-5">
         <img :src="sessionUser.image" class="rounded-full w-52 h-52" alt="" />
@@ -69,9 +69,9 @@ onMounted(async () => {
           <!-- phone -->
           <div class="">
             <span>Phone:</span>
-            <span class="text-color pl-3">{{
-              dbUser.phoneNumber || "---"
-            }}</span>
+            <span class="text-color pl-3">
+              {{ dbUser.phoneNumber || "---" }}
+            </span>
           </div>
         </div>
       </div>

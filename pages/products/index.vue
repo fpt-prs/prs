@@ -60,7 +60,7 @@
         <div class="flex items-center" v-for="row in products">
           <a class="flex min-w-0 grow" :href="`/product/${row.productCode}`">
             <img
-              class="w-36 h-36 mr-4"
+              class="w-28 h-28 mr-4 rounded"
               :src="
                 row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
               "

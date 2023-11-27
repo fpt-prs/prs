@@ -1,42 +1,96 @@
 <template>
-  <NuxtLayout name="settings">
+  <NuxtLayout name="default">
     <div class="grow">
       <p class="text-xl px-4 py-3">Billing</p>
-      <div class="px-4 py-3">
-        <UCard>
-          <p>View balance</p>
+      <div class="px-4 py-3 flex items-center gap-4">
+        <UCard class="grow">
+          <p>Current subscription</p>
+          <p class="text-4xl">
+            {{
+              currentSubDetail != null
+                ? currentSubDetail.subscription.name
+                : "---"
+            }}
+          </p>
+        </UCard>
+        <UCard class="grow">
+          <p>Credits</p>
           <p class="text-4xl">
             {{ balance != null && balance !== undefined ? balance : "---" }}
           </p>
         </UCard>
+        <UButton
+          icon="i-heroicons-plus"
+          label="Buy more credits"
+          size="xl"
+          to="/purchase"
+        />
       </div>
-      <p class="border-y border-color px-4 py-3">Purchase new views</p>
-      <div class="px-4 py-3">
-        <div class="flex flex-wrap lg:justify-center gap-4">
-          <a
-            class="p-3 rounded-lg border border-color text-center"
-            v-for="option of options"
-            :href="`/purchase?optionId=${option.id}`"
-          >
-            <p class="text-xl">{{ option.description }}</p>
-            <p class="text-3xl py-4 font-semibold">
-              {{ `${numberWithSep(option.price)} VND` }}
-            </p>
-            <p class="text-gray-500">{{ option.numsOfView }} views</p>
-          </a>
+      <p class="border-y border-color px-4 py-3">Subscribe</p>
+      <div class="px-4 py-3 flex gap-3">
+        <div
+          class="px-6 py-5 border border-color rounded-lg cursor-pointer"
+          v-for="subscription of subscriptions"
+          :key="subscription.id"
+          @click="selectSubscription(subscription)"
+        >
+          <p class="text-2xl font-semibold">
+            {{ subscription.name }}
+          </p>
+          <p>
+            {{
+              subscription.price + " VND / " + subscription.duration + " days"
+            }}
+          </p>
         </div>
+        <UModal v-model="isConfirm" @close="isConfirm = false">
+          <UCard>
+            <template #header>
+              <div class="flex justify-between">
+                <p>Subscribe</p>
+                <UButton
+                  icon="i-heroicons-x-mark"
+                  color="gray"
+                  variant="ghost"
+                  @click="isConfirm = false"
+                />
+              </div>
+            </template>
+            <div>Confirm subscribe ?</div>
+            <template #footer>
+              <div class="space-x-4">
+                <UButton
+                  label="Cancel"
+                  color="gray"
+                  @click="isConfirm = false"
+                />
+                <UButton
+                  label="Confirm"
+                  variant="ghost"
+                  :color="color"
+                  @click="subscribe()"
+                />
+              </div>
+            </template>
+          </UCard>
+        </UModal>
       </div>
-      <p class="border-y border-color px-4 py-3">Billing history</p>
+      <p class="border-y border-color px-4 py-3">Credit history</p>
       <Paginator :loader="fetchBillHistory" :size="3">
         <template #item="{ data: bill }">
-          <div class="px-4 py-3 flex justify-between">
-            <div class="space-y-9">
+          <div class="px-4 py-3 flex justify-between items-center">
+            <div class="">
               <p class="text-3xl">
-                {{ `+ ${numberWithSep(bill.pricingOption?.price)} VND` }}
+                {{ `${numberWithSep(bill.balanceChange)} VND` }}
+              </p>
+              <p class="text-color">
+                {{ bill.reason }}
               </p>
             </div>
             <div class="flex flex-col justify-between">
-              <p>{{ formatDateTime(parseDateTime(bill.created)) }}</p>
+              <p class="text-color">
+                {{ formatDateTime(parseDateTime(bill.timestamp)) }}
+              </p>
             </div>
           </div>
         </template>
@@ -49,6 +103,7 @@
 useHead({
   title: "Billing",
 });
+const toast = useToast();
 
 const balance = ref(null);
 onMounted(async () => {
@@ -65,12 +120,68 @@ const fetchBillHistory = async (page, size) => {
   return await fetch(`/api/bills/user?${params.toString()}`);
 };
 
-const options = ref([]);
+const subscriptions = ref([]);
 onMounted(async () => {
-  const response = await fetch(`/api/pricing-options`);
+  const response = await fetch(`/api/subscriptions`);
   const data = await response.json();
-  const body = JSON.parse(data.body);
-  options.value = body;
+  subscriptions.value = JSON.parse(data.body);
+});
+
+const isConfirm = ref(false);
+const selectingSubscription = ref(null);
+const selectSubscription = (subscription) => {
+  console.log(currentSubDetail.value);
+  const currentSubDuration = currentSubDetail.value.subscription.duration;
+  const currentSubPrice = currentSubDetail.value.subscription.price;
+
+  const newSubDuration = subscription.duration;
+
+  if (currentSubDuration > newSubDuration) {
+    toast.add({
+      title: "Cannot downgrade subscription",
+      description: "Please cancel first",
+      color: "red",
+    });
+    return;
+  }
+  if (currentSubDuration === newSubDuration) {
+    toast.add({ title: "You are already using this subscription", color: "red" });
+    return;
+  }
+
+  if (currentSubPrice > balance.value) {
+    toast.add({ title: "Insufficient balance", color: "red" });
+    return;
+  }
+
+  selectingSubscription.value = subscription;
+  isConfirm.value = true;
+};
+const subscribe = async () => {
+  const response = await fetch(`/api/profile/sub`, {
+    method: "PUT",
+    body: JSON.stringify({
+      subscriptionId: selectingSubscription.value.id,
+    }),
+  });
+
+  const body = await response.json();
+  if (response.status === 200) {
+    toast.add({ title: "Subscribed" });
+    isConfirm.value = false;
+  } else {
+    toast.add({ title: "Failed to subscribe", description: body.error });
+  }
+};
+
+const currentSubDetail = ref(null);
+onMounted(async () => {
+  const response = await fetch(`/api/profile/sub`);
+  const data = await response.json();
+  if (!data.value) {
+    return;
+  }
+  currentSubDetail.value = data.value;
 });
 </script>
 

@@ -34,6 +34,8 @@ export default defineEventHandler(async (event) => {
   );
 
   const data = await fetchRes.json();
+  const status = fetchRes.status;
+  setResponseStatus(event, status);
 
   const { content, totalElements } = data;
 

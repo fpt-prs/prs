@@ -7,8 +7,7 @@ const toast = useToast();
 const products = ref([]);
 
 const fetchData = async () => {
-  const domain = runtimeConfig.public.domain;
-  const response = await fetch(`${domain}/api/suggest`);
+  const response = await fetch(`/api/suggest`);
   const status = response.status;
   if (status !== 200) {
     return;
@@ -156,14 +155,24 @@ const jsonToCSV = (json) => {
                 {{ "$" + row.price }}
               </div>
             </div>
-            <UTooltip
-              :text="`The popularity score of product`"
-              :popper="{ arrow: true }"
-            >
-              <p class="text-green-600 dark:text-green-400 p-2">
-                {{ Math.round((row.score - 4) * 10000) / 1000 }}
-              </p>
-            </UTooltip>
+            <div class="flex gap-4 p-2">
+              <UTooltip
+                :text="`How highly rated the product is`"
+                :popper="{ arrow: true }"
+              >
+                <p class="text-green-600 dark:text-green-400">
+                  {{ Math.round(row.rating * 1000) / 1000 }}
+                </p>
+              </UTooltip>
+              <UTooltip
+                :text="`How positive the review is`"
+                :popper="{ arrow: true }"
+              >
+                <p class="text-green-600 dark:text-green-400">
+                  {{ Math.round(row.comment * 1000) / 1000 }}
+                </p>
+              </UTooltip>
+            </div>
           </div>
         </a>
       </div>
@@ -189,14 +198,24 @@ const jsonToCSV = (json) => {
                 {{ "$" + row.price }}
               </div>
             </div>
-            <UTooltip
-              :text="`The popularity score of product`"
-              :popper="{ arrow: true }"
-            >
-              <p class="text-green-600 dark:text-green-400 p-2">
-                {{ Math.round(row.score * 1000) / 1000 }}
-              </p>
-            </UTooltip>
+            <div class="flex gap-4 p-2">
+              <UTooltip
+                :text="`How highly rated the product is`"
+                :popper="{ arrow: true }"
+              >
+                <p class="text-green-600 dark:text-green-400">
+                  {{ Math.round(row.rating * 1000) / 1000 }}
+                </p>
+              </UTooltip>
+              <UTooltip
+                :text="`How positive the review is`"
+                :popper="{ arrow: true }"
+              >
+                <p class="text-green-600 dark:text-green-400">
+                  {{ Math.round(row.comment * 1000) / 1000 }}
+                </p>
+              </UTooltip>
+            </div>
           </div>
         </a>
       </div>
@@ -222,11 +241,19 @@ const jsonToCSV = (json) => {
               </div>
             </div>
             <UTooltip
-              :text="`The popularity score of product`"
+              :text="`How highly rated the product is`"
               :popper="{ arrow: true }"
             >
               <p class="text-green-600 dark:text-green-400">
-                {{ Math.round(row.score * 1000) / 1000 }}
+                {{ Math.round(row.rating * 1000) / 1000 }}
+              </p>
+            </UTooltip>
+            <UTooltip
+              :text="`How positive the review is`"
+              :popper="{ arrow: true }"
+            >
+              <p class="text-green-600 dark:text-green-400">
+                {{ Math.round(row.comment * 1000) / 1000 }}
               </p>
             </UTooltip>
           </div>

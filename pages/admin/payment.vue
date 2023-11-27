@@ -100,6 +100,15 @@ async function onSubmit(event) {
     });
     return;
   }
+
+  toast.add({
+    title: "Success",
+    color: "green",
+  });
+
+  paymentForm.message = "";
+  paymentForm.amount = 0;
+  paymentForm.note = "";
 }
 
 const loadBills = async (page, size) => {

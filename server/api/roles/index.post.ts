@@ -19,8 +19,6 @@ export default defineEventHandler(async (event) => {
   const data = await fetchRes.json();
   const status = fetchRes.status;
 
-  console.log(status);
-
   if (status !== 200) {
     return {
       statusCode: status,

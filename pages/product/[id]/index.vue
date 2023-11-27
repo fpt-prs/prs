@@ -59,8 +59,6 @@ onMounted(async () => {
   const collectionData = await collectionResponse.json();
   const collectionBody = JSON.parse(collectionData.body);
   collections.value = collectionBody;
-
-  const labels = product.value.scores.map((p) => p.date);
 });
 
 const graphComputed = computed(() => {
@@ -68,13 +66,20 @@ const graphComputed = computed(() => {
     return graph;
   }
 
+  console.log(product.value);
+
   return {
     labels: product.value.scores.map((p) => p.date),
     datasets: [
       {
         label: "Popularity",
         backgroundColor: "#3B82F6",
-        data: product.value.scores.map((p) => (p.score - 4) * 10),
+        data: product.value.scores.map((p) => p.rating),
+      },
+      {
+        label: "Comment score",
+        backgroundColor: "#fff000",
+        data: product.value.scores.map((p) => p.comment),
       },
     ],
   };
@@ -132,7 +137,7 @@ const chartOptions = ref({
             {{ product.name || "Loading..." }}
           </div>
           <div class="my-4">
-            {{ "$" + product.price !== undefined ? product.price : "" }}
+            {{ "$" + (product.price !== undefined ? product.price : "") }}
           </div>
           <div class="lg:flex gap-5 pt-3 max-lg:space-y-2">
             <UButton
@@ -176,7 +181,7 @@ const chartOptions = ref({
       </div>
       <div class="py-3 border-t border-color">
         <h2 class="text-2xl py-3 font-semibold">Popularity graph</h2>
-        <div class="w-full bg-white">
+        <div class="w-full px-5 bg-white rounded-lg">
           <LineChart
             v-if="product"
             id="popularity-graph"

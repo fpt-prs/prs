@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="admin">
+  <NuxtLayout name="default">
     <div class="max-w-[1000px] mx-5">
       <div class="px-4 py-3 text-xl font-medium flex justify-between">
         <!-- back -->
