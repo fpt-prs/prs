@@ -5,6 +5,7 @@ export default defineEventHandler(async (event) => {
   const response = await fetchBackend(`/api/products?code=${id}`);
   const productDetail = await response.json();
   const status = response.status;
+  setResponseStatus(event, status);
 
   if (status === 404) {
     return {

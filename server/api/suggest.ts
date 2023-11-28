@@ -15,9 +15,10 @@ export type Product = {
 export default defineEventHandler(async (event) => {
   const fetchRes = await fetchBackend("/api/products/suggest");
   const data = await fetchRes.json();
+  const status = fetchRes.status;
+  setResponseStatus(event, status);
 
   return {
-    statusCode: 200,
     body: JSON.stringify(data),
   };
 });

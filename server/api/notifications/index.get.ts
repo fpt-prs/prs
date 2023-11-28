@@ -2,7 +2,7 @@ import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
 
-  const fetchRes = await fetchBackend(`/api/notifications/all`);
+  const fetchRes = await fetchBackend(`/api/notifications`);
 
   if (fetchRes.status !== 200) {
     return {

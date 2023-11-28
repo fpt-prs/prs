@@ -111,7 +111,7 @@ const removeProduct = async (id) => {
   <NuxtLayout name="default">
     <div class="flex max-w-screen min-h-screen">
       <div class="p-5 border-r border-color">
-        <ul class="flex flex-col w-48 sticky">
+        <ul class="flex flex-col w-48 sticky top-0">
           <UButton
             v-for="c in collections"
             :key="c.id"

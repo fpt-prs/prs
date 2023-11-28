@@ -11,7 +11,7 @@
     <UCard>
       <template #header>
         <div class="flex justify-between">
-          <p>Delete</p>
+          <p>Confirm</p>
           <UButton
             icon="i-heroicons-x-mark"
             color="gray"

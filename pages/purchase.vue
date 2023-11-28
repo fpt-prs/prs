@@ -11,7 +11,6 @@
   <div class="w-full h-screen flex flex-col gap-5 items-center justify-center">
     <img :src="qrCode" alt="QR Code" class="w-52 h-52" />
 
-    <p class="text-xl">Amount: {{ option.price }} VND</p>
     <p class="text-xl">Account number: {{ account.accountNumber }}</p>
     <p class="text-xl">Owner name: {{ account.name }}</p>
     <p class="text-xl">Bank name: {{ account.bankName }}</p>
@@ -21,18 +20,6 @@
 </template>
 
 <script setup>
-// get query
-const { query } = useRoute();
-const optionId = query.optionId;
-const option = ref({});
-
-onMounted(async () => {
-  const response = await fetch(`/api/pricing-options/${optionId}`);
-  const data = await response.json();
-  const body = JSON.parse(data.body);
-  option.value = body;
-});
-
 const user = ref({});
 onMounted(async () => {
   const response = await fetch(`/api/profile`);

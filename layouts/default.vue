@@ -7,9 +7,11 @@ useHead({
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col dark:bg-gray-900 bg-white">
-    <Navbar />
-    <div class="grow overflow-x-auto mt-14">
+  <div class="min-h-screen flex dark:bg-gray-900 bg-white">
+    <div class="">
+      <Navbar />
+    </div>
+    <div class="grow overflow-x-auto ml-56">
       <slot />
       <a
         href="/"
@@ -24,5 +26,4 @@ useHead({
       </a>
     </div>
   </div>
-  <Footer />
 </template>

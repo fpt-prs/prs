@@ -13,7 +13,7 @@ const loginWithGoogle = async () => {
   <img
     src="/hero.png"
     alt="hero"
-    class="absolute object-cover -top-20 w-screen h-[calc(100vh+162px)] md:h-[calc(100vh+120px)] -z-[10]"
+    class="absolute object-cover -top-20 w-screen h-[100vmax] -z-[10]"
   />
   <header
     class="flex lg:w-[80vw] mx-auto h-20 justify-between items-center px-5"
@@ -57,6 +57,29 @@ const loginWithGoogle = async () => {
         <img src="/google.svg" class="w-5 h-5" alt="" />
         Continue with Google
       </a> -->
+    </div>
+  </div>
+  <div class="m-10 mx-auto px-5 max-w-[1200px]">
+    <img
+      src="/screenshot.png"
+      alt="hero"
+      class="object-cover border border-color rounded-xl w-full"
+    />
+  </div>
+  <div
+    class="flex items-center justify-between max-w-[1200px] mx-auto gap-5 px-5 py-10"
+  >
+    <div class="">
+      <p class="text-5xl font-semibold">
+        Unlock E-commerce Success with Winning Products
+      </p>
+      <p class="py-4 text-lg">
+        At PRS, we specialize in identifying the trending products based on our
+        extensive information acquisition system and advanced algorithms.
+      </p>
+    </div>
+    <div class="">
+      <img src="/hero.png" class="w-96 h-96" alt="" />
     </div>
   </div>
 </template>

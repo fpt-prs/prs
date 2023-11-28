@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   params.append("page", page as string);
   params.append("size", size as string);
 
-  const fetchRes = await fetchBackend(`/api/payment/bills?${params.toString()}`);
+  const fetchRes = await fetchBackend(`/api/payment/user-history?${params.toString()}`);
 
   const data = await fetchRes.json();
 

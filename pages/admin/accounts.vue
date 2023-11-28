@@ -169,7 +169,7 @@ const fetchCurrentQR = async (id) => {
 
 <template>
   <NuxtLayout name="admin">
-    <p class="text-2xl px-4 py-3">Pricing accounts</p>
+    <p class="text-2xl px-4 py-3">Bank accounts</p>
     <div class="border border-color rounded-lg mx-4">
       <table class="w-full">
         <thead class="border-b border-color">

@@ -21,7 +21,11 @@
       class="grow w-full h-full my-20 text-center flex flex-col justify-center items-center"
       v-if="!isLoading && elements?.length === 0"
     >
-      <UIcon name="i-heroicons-circle-stack-solid" size="xl" />
+      <UIcon
+        name="i-heroicons-inbox"
+        class="text-color w-12 h-12"
+        size="xl"
+      />
       <p class="text-xl ml-1 text-color">No Item</p>
     </div>
     <slot name="all" :data="elements" />
