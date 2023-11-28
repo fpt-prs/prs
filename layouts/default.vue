@@ -26,7 +26,4 @@ useHead({
       </a>
     </div>
   </div>
-  <div class="ml-56">
-    <Footer />
-  </div>
 </template>

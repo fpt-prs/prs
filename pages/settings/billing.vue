@@ -16,7 +16,11 @@
         <UCard class="grow">
           <p>Credits</p>
           <p class="text-4xl">
-            {{ balance != null && balance !== undefined ? balance : "---" }}
+            {{
+              balance != null && balance !== undefined
+                ? Math.round(balance)
+                : "---"
+            }}
           </p>
         </UCard>
         <UButton
@@ -67,7 +71,6 @@
                 <UButton
                   label="Confirm"
                   variant="ghost"
-                  :color="color"
                   @click="subscribe()"
                 />
               </div>
@@ -95,6 +98,16 @@
           </div>
         </template>
       </Paginator>
+    </div>
+    <p class="border-y border-color px-4 py-3">Unsubscribe</p>
+    <div class="px-4 py-3 flex gap-3">
+      <ModalConfirmButton
+        icon="i-heroicons-trash"
+        label="Unsubscribe"
+        color="red"
+        variant="outline"
+        @confirm="cancelSubscription"
+      />
     </div>
   </NuxtLayout>
 </template>
@@ -130,9 +143,8 @@ onMounted(async () => {
 const isConfirm = ref(false);
 const selectingSubscription = ref(null);
 const selectSubscription = (subscription) => {
-  console.log(currentSubDetail.value);
-  const currentSubDuration = currentSubDetail.value.subscription.duration;
-  const currentSubPrice = currentSubDetail.value.subscription.price;
+  const currentSubDuration = currentSubDetail.value?.subscription?.duration || 0;
+  const currentSubPrice = currentSubDetail.value?.subscription?.price || 0;
 
   const newSubDuration = subscription.duration;
 
@@ -145,7 +157,10 @@ const selectSubscription = (subscription) => {
     return;
   }
   if (currentSubDuration === newSubDuration) {
-    toast.add({ title: "You are already using this subscription", color: "red" });
+    toast.add({
+      title: "You are already using this subscription",
+      color: "red",
+    });
     return;
   }
 
@@ -171,6 +186,22 @@ const subscribe = async () => {
     isConfirm.value = false;
   } else {
     toast.add({ title: "Failed to subscribe", description: body.error });
+  }
+};
+
+const cancelSubscription = async () => {
+  const response = await fetch(`/api/profile/sub/cancel`, {
+    method: "POST",
+  });
+
+  const body = await response.json();
+  if (response.status === 200) {
+    toast.add({ title: "Canceled subscription" });
+  } else {
+    toast.add({
+      title: "Failed to cancel subscription",
+      description: body.error,
+    });
   }
 };
 

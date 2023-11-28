@@ -240,22 +240,24 @@ const jsonToCSV = (json) => {
                 </div>
               </div>
             </div>
-            <UTooltip
-              :text="`How highly rated the product is`"
-              :popper="{ arrow: true }"
-            >
-              <p class="text-green-600 dark:text-green-400">
-                {{ Math.round(row.rating * 1000) / 1000 }}
-              </p>
-            </UTooltip>
-            <UTooltip
-              :text="`How positive the review is`"
-              :popper="{ arrow: true }"
-            >
-              <p class="text-green-600 dark:text-green-400">
-                {{ Math.round(row.comment * 1000) / 1000 }}
-              </p>
-            </UTooltip>
+            <div class="flex gap-12">
+              <UTooltip
+                :text="`How highly rated the product is`"
+                :popper="{ arrow: true }"
+              >
+                <p class="text-green-600 dark:text-green-400">
+                  {{ Math.round(row.rating * 1000) / 1000 }}
+                </p>
+              </UTooltip>
+              <UTooltip
+                :text="`How positive the review is`"
+                :popper="{ arrow: true }"
+              >
+                <p class="text-green-600 dark:text-green-400">
+                  {{ Math.round(row.comment * 1000) / 1000 }}
+                </p>
+              </UTooltip>
+            </div>
           </div>
         </a>
       </div>

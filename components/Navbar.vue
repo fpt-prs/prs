@@ -21,7 +21,7 @@ const isDark = computed(() => theme.value === "dark");
         <div class="flex items-center gap-3 overflow-hidden">
           <UAvatar :src="user?.image || '/blank.webp'" />
           <div class="text-ellipsis overflow-hidden">
-            <p class="">
+            <p class="whitespace-nowrap overflow-hidden text-ellipsis">
               {{ user?.name || "" }}
             </p>
             <p class="text-ellipsis overflow-hidden text-color text-sm">

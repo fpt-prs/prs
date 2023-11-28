@@ -3,7 +3,7 @@ import fetchBackend from "~/utils/fetchBackend";
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
-  const fetchRes = await fetchBackend(`/api/payment/options`, {
+  const fetchRes = await fetchBackend(`/api/payment/subscriptions`, {
     method: "PUT",
     body: body,
   });

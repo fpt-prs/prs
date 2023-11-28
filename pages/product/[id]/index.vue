@@ -165,6 +165,9 @@ const chartOptions = ref({
                     v-model="collection.isProductInCollection"
                     @click="update(collection)"
                   />
+                  <p v-if="collections.length === 0" class="text-color">
+                    No collections
+                  </p>
                 </UCard>
               </template>
             </UPopover>
@@ -192,9 +195,9 @@ const chartOptions = ref({
       </div>
       <div class="py-3 border-t border-color mb-10">
         <h2 class="text-2xl py-3 font-semibold">Description</h2>
-        <p class="whitespace-pre-line">
+        <pre class="whitespace-pre-line">
           {{ product.description || "No description" }}
-        </p>
+        </pre>
       </div>
     </div>
   </NuxtLayout>

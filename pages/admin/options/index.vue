@@ -17,7 +17,7 @@ const validate = computed(() => {
 });
 
 const isEditing = ref(false);
-const editingOption = ref({});
+const editingOpt = ref({});
 
 const options = ref([]);
 const fetchOptions = async () => {
@@ -30,9 +30,9 @@ onMounted(fetchOptions);
 
 const columns = [
   { key: "id", label: "ID" },
-  { key: "description", label: "Description" },
+  { key: "name", label: "Name" },
   { key: "price", label: "Price" },
-  { key: "numsOfView", label: "Number of views" },
+  { key: "duration", label: "Duration in days" },
   { key: "actions", label: "Actions" },
 ];
 
@@ -43,7 +43,7 @@ const actions = (option) => [
       icon: "i-heroicons-pencil-20-solid",
       click: () => {
         isEditing.value = true;
-        editingOption.value = { ...option };
+        editingOpt.value = { ...option };
       },
     },
     {
@@ -98,13 +98,13 @@ const removeOption = async (option) => {
 
 const updateOption = async () => {
   const updateOptionReq = {
-    description: editingOption.value.description,
-    price: parseFloat(editingOption.value.price),
-    numsOfView: parseInt(editingOption.value.numsOfView),
+    description: editingOpt.value.description,
+    price: parseFloat(editingOpt.value.price),
+    numsOfView: parseInt(editingOpt.value.numsOfView),
   };
 
   const updateRes = await fetch(
-    `/api/pricing-options/${editingOption.value.id}`,
+    `/api/pricing-options/${editingOpt.value.id}`,
     {
       method: "POST",
       body: JSON.stringify(updateOptionReq),
@@ -121,7 +121,7 @@ const updateOption = async () => {
   }
 
   isEditing.value = false;
-  editingOption.value = {};
+  editingOpt.value = {};
 };
 </script>
 
@@ -144,9 +144,9 @@ const updateOption = async () => {
         <tbody>
           <tr v-for="option of options" :key="option.id">
             <td class="px-4 py-3">{{ option.id }}</td>
-            <td class="px-4 py-3">{{ option.description }}</td>
+            <td class="px-4 py-3">{{ option.name }}</td>
             <td class="px-4 py-3">{{ option.price }}</td>
-            <td class="px-4 py-3">{{ option.numsOfView }}</td>
+            <td class="px-4 py-3">{{ option.duration }}</td>
             <td class="px-4 py-3">
               <UDropdown
                 :items="actions(option)"
@@ -168,7 +168,7 @@ const updateOption = async () => {
                 placeholder="Enter name"
                 size="lg"
                 class="w-full"
-                v-model="newOption.description"
+                v-model="newOption.name"
               />
             </td>
             <td class="px-4 py-3">
@@ -182,11 +182,11 @@ const updateOption = async () => {
             </td>
             <td class="px-4 py-3">
               <UInput
-                placeholder="Enter number of views"
+                placeholder="Enter duration in days"
                 type="number"
                 size="lg"
                 class="w-full"
-                v-model="newOption.numsOfView"
+                v-model="newOption.duration"
               />
             </td>
             <td class="px-4 py-3">
@@ -217,12 +217,12 @@ const updateOption = async () => {
             </div>
           </template>
           <div class="space-y-5">
-            <UFormGroup label="Description">
+            <UFormGroup label="Name">
               <UInput
-                placeholder="Description"
+                placeholder="Name"
                 size="lg"
                 class="w-full"
-                v-model="editingOption.description"
+                v-model="editingOpt.name"
               />
             </UFormGroup>
             <UFormGroup label="Price">
@@ -231,16 +231,16 @@ const updateOption = async () => {
                 type="number"
                 size="lg"
                 class="w-full"
-                v-model="editingOption.price"
+                v-model="editingOpt.price"
               />
             </UFormGroup>
-            <UFormGroup label="Number of views">
+            <UFormGroup label="Duration in days">
               <UInput
-                placeholder="Number of views"
+                placeholder="Duration in days"
                 type="number"
                 size="lg"
                 class="w-full"
-                v-model="editingOption.numsOfView"
+                v-model="editingOpt.duration"
               />
             </UFormGroup>
           </div>

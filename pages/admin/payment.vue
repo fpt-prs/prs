@@ -6,27 +6,13 @@
         <Paginator :loader="loadBills" :size="5">
           <template #item="{ data }">
             <div
-              class="px-4 py-3 bg-color rounded-xl border border-color flex justify-between"
+              class="px-4 py-3 bg-color rounded-xl border border-color flex justify-between items-center"
             >
-              <div class="space-y-9">
-                <p class="text-3xl">
-                  {{ `${numberWithSep(data.pricingOption?.price)} VND` }}
-                </p>
-                <div class="">
-                  <p class="">
-                    Client:
-                    <span class="text-color">{{ data.client?.name }}</span>
-                  </p>
-                </div>
-              </div>
+              <p class="text-3xl">
+                {{ `${numberWithSep(data.balanceChange)} VND` }}
+              </p>
               <div class="flex flex-col justify-between items-end">
-                <p>{{ data.created?.toLocaleString() }}</p>
-                <div class="">
-                  <p class="">
-                    Verified by:
-                    <span class="text-color">{{ data.verifier?.name }}</span>
-                  </p>
-                </div>
+                <p>{{ formatDateTime(data.timestamp) }}</p>
               </div>
             </div>
           </template>
