@@ -9,49 +9,48 @@
           to="/admin/notifications/new"
         />
       </div>
-      <div class="border border-color rounded-lg mx-4">
-        <table class="w-full">
-          <thead class="border-b border-color">
-            <tr>
-              <th
-                v-for="column in columns"
-                :key="column.key"
-                class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider"
-              >
-                {{ column.label }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <template
-              v-for="notification of notifications"
-              :key="notification.id"
-            >
-              <tr class="">
-                <td class="px-4 py-3">{{ notification.id }}</td>
-                <td class="px-4 py-3">{{ notification.header }}</td>
-                <td class="px-4 py-3">{{ notification.content }}</td>
-                <td class="px-4 py-3">
-                  {{ formatDateTime(notification.created) }}
-                </td>
-                <td class="px-4 py-3">
-                  <UDropdown
-                    :items="actions(notification)"
-                    :popper="{ placement: 'bottom-end' }"
-                  >
-                    <UButton
-                      color="white"
-                      variant="ghost"
-                      label=""
-                      trailing-icon="i-heroicons-ellipsis-horizontal"
-                    />
-                  </UDropdown>
-                </td>
+      <Paginator :loader="loadNotification" type="all">
+        <template #all="{ data: notifications }">
+          <table class="w-full">
+            <thead class="border-b border-color">
+              <tr class="text-left">
+                <th class="px-4 py-3">ID</th>
+                <th class="px-4 py-3">Header</th>
+                <th class="px-4 py-3">Content</th>
+                <th class="px-4 py-3">Created</th>
+                <th class="px-4 py-3">Actions</th>
               </tr>
-            </template>
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tr class="" v-for="notification in notifications">
+              <td class="px-4 py-3">{{ notification.id }}</td>
+              <td class="px-4 py-3">{{ notification.header }}</td>
+              <td class="px-4 py-3">
+                {{
+                  (notification.content?.length > 50
+                    ? notification.content.substring(0, 50) + "..."
+                    : notification.content) || "Undefined"
+                }}
+              </td>
+              <td class="px-4 py-3">
+                {{ formatDateTime(notification.created) }}
+              </td>
+              <td class="px-4 py-3">
+                <UDropdown
+                  :items="actions(notification)"
+                  :popper="{ placement: 'bottom-end' }"
+                >
+                  <UButton
+                    color="white"
+                    variant="ghost"
+                    label=""
+                    trailing-icon="i-heroicons-ellipsis-horizontal"
+                  />
+                </UDropdown>
+              </td>
+            </tr>
+          </table>
+        </template>
+      </Paginator>
     </div>
   </NuxtLayout>
 </template>
@@ -99,14 +98,12 @@ const formatDateTime = (date) => {
   });
 };
 
-onMounted(async () => {
-  const res = await fetch("/api/notifications");
-  const json = await res.json();
-  const body = JSON.parse(json.body);
-  if (body) {
-    notifications.value = body;
-  }
-});
+const loadNotification = async (page, size) => {
+  const params = new URLSearchParams();
+  params.append("page", page.toString());
+  params.append("size", size.toString());
+  return await fetch(`/api/notifications?${params.toString()}`);
+};
 </script>
 
 <style></style>

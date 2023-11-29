@@ -1,6 +1,6 @@
 <script setup>
 useHead({
-  title: "Option Management",
+  title: "Subscription Management",
 });
 const router = useRouter();
 const { getSession } = useAuth();
@@ -88,7 +88,7 @@ const removeOption = async (option) => {
 
   const status = updateRes.status;
   const toast = useToast();
-  if (status === 204) {
+  if (status === 200) {
     toast.add({ title: "Option deleted successfully" });
     await fetchOptions();
   } else {

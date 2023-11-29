@@ -18,11 +18,15 @@ const loginWithGoogle = async () => {
   <header
     class="flex lg:w-[80vw] mx-auto h-20 justify-between items-center px-5"
   >
-    <a href="/">
+    <a href="">
       <img src="/logo.svg" class="h-8 w-8" alt="" />
     </a>
-    <div class=""></div>
     <div class="">
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="/about" class="text-color hover:text-black dark:hover:text-white">
+        About us
+      </a>
       <UButton
         color="black"
         label="Login"

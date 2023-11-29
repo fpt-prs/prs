@@ -24,7 +24,7 @@
         <UFormGroup label="Content" name="content">
           <UTextarea v-model="notification.content" />
         </UFormGroup>
-        <UButton @click="submit" label="Send" />
+        <UButton @click="submit" label="Send" :disabled="!validate()" />
       </div>
       <div class="grow py-3">
         <UCheckbox
@@ -95,7 +95,11 @@ const submit = async () => {
 };
 
 const validate = () => {
-  return true;
+  return (
+    notification.value.header &&
+    notification.value.content &&
+    selectedRoles.value.length > 0
+  );
 };
 </script>
 

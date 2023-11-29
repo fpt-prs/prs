@@ -2,11 +2,18 @@ import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
-  const body = await readBody(event);
+  const rawBody = await readBody(event);
 
-  const fetchRes = await fetchBackend(`/api/payment/subscriptions/${id}`, {
+  const body = JSON.parse(rawBody);
+
+  const req = {
+    id: parseInt(id as string),
+    ...body,
+  };
+
+  const fetchRes = await fetchBackend(`/api/payment/subscriptions`, {
     method: "POST",
-    body: body,
+    body: JSON.stringify(req),
   });
 
   const status = fetchRes.status;
@@ -15,13 +22,11 @@ export default defineEventHandler(async (event) => {
 
   if (status !== 200) {
     return {
-      statusCode: status,
-      body: data.error,
+      rawBody: data.error,
     };
   }
 
   return {
-    statusCode: 200,
-    body: data.value,
+    rawBody: data.value,
   };
 });

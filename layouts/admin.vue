@@ -67,9 +67,9 @@
               icon="i-heroicons-banknotes"
               size="lg"
               variant="ghost"
-              label="Pricing options"
+              label="Subscriptions"
               :trailing="false"
-              to="/admin/options"
+              to="/admin/subsctiptions"
               class="w-full"
             />
             <UButton

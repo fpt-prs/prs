@@ -2,15 +2,17 @@ import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
   // get body
-  const idRaw = getQuery(event)
-  const id = parseInt(idRaw.id as string);
+  const query = getQuery(event);
+  const id = parseInt(query.id as string);
+  console.log("id", id);
 
   const response = await fetchBackend(`/api/roles?id=${id}`, {
     method: "DELETE",
   });
+  const status = response.status;
+  setResponseStatus(event, status);
 
   return {
-    status: response.status,
     body: await response.text(),
   };
 });

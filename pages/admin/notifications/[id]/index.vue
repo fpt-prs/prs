@@ -21,22 +21,7 @@
         <hr class="border-color" />
         <p class="text-xl font-medium">Content</p>
         <p>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Recusandae
-          delectus iure, odio, veritatis esse reprehenderit possimus omnis
-          obcaecati sequi deleniti saepe sed ipsam, praesentium debitis sunt
-          illo optio exercitationem in. Lorem ipsum dolor sit amet, consectetur
-          adipisicing elit. Pariatur hic reprehenderit ipsum voluptatibus
-          deleniti accusantium laboriosam sapiente, quisquam, perferendis ex cum
-          ratione autem sunt voluptatem enim modi, possimus tempore molestiae
-          fugit minus? Velit sequi similique adipisci dicta maxime, laboriosam
-          aliquam! Harum natus, quaerat modi, autem maiores expedita voluptatem
-          ad reprehenderit laudantium ipsum eius sapiente excepturi architecto
-          delectus eos exercitationem pariatur? Eligendi, laboriosam! Libero
-          dolor fugit illum, modi aliquam doloremque voluptas, dolorem,
-          laboriosam vel saepe quam mollitia. Hic laboriosam, nisi illo
-          dignissimos nostrum, laudantium, debitis commodi sequi ut voluptates
-          harum enim soluta. Dolorem error officia inventore, neque quae
-          molestiae consequuntur nesciunt!
+          {{ notification.content || "---"}}
         </p>
         <hr class="border-color" />
         <p class="text-xl font-medium">Created</p>
