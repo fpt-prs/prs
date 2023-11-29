@@ -232,7 +232,7 @@ const fetchCurrentQR = async (id) => {
                 v-model="newAccount.bankName"
               />
             </td>
-            <td class="px-4 py-3">
+            <td class="px-4 py-3 w-[20%]">
               <input
                 id="fileInput"
                 type="file"

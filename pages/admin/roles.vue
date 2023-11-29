@@ -2,6 +2,7 @@
 useHead({
   title: "Role Management",
 });
+const toast = useToast();
 
 // roles data
 const roles = ref([]);
@@ -33,7 +34,8 @@ const actions = (role) => [
       label: "Delete",
       icon: "i-heroicons-trash-20-solid",
       click: () => {
-        removeRole(role);
+        removingRole.value = role;
+        isConfirmRemove.value = true;
       },
     },
   ],
@@ -58,6 +60,14 @@ const addRole = async () => {
     },
     body: JSON.stringify(newRole),
   });
+
+  const status = addRes.status;
+  if (status === 200) {
+    toast.add({ title: "Role added successfully" });
+    await loadRoles();
+  } else {
+    toast.add({ title: "Error adding role" });
+  }
 };
 
 // edit role
@@ -80,19 +90,29 @@ const updateRole = async () => {
   const toast = useToast();
   if (status === 200) {
     toast.add({ title: "Role updated successfully" });
+    await loadRoles();
   } else {
     toast.add({ title: "Error updating role" });
   }
 };
 
 // remove role
-const removeRole = async (role) => {
-  roles.value = roles.value.filter((r) => r.id !== role.id);
-
+const isConfirmRemove = ref(false);
+const removingRole = ref({});
+const removeRole = async () => {
   // push to server
-  const updateRes = await fetch(`/api/roles?id=${role.id}`, {
+  const updateRes = await fetch(`/api/roles?id=${removingRole.value.id}`, {
     method: "DELETE",
   });
+  isConfirmRemove.value = false;
+
+  const status = updateRes.status;
+  if (status === 200) {
+    toast.add({ title: "Role deleted successfully" });
+    await loadRoles();
+  } else {
+    toast.add({ title: "Error deleting role" });
+  }
 };
 
 // permissions data
@@ -229,6 +249,37 @@ onMounted(() => {
               @click="updateRole"
               :disabled="!editingRole.name"
             />
+          </template>
+        </UCard>
+      </UModal>
+      <UModal v-model="isConfirmRemove">
+        <UCard>
+          <template #header>
+            <div class="flex justify-between">
+              <p>Confirm</p>
+              <UButton
+                icon="i-heroicons-x-mark"
+                color="gray"
+                variant="ghost"
+                @click="isConfirmRemove = false"
+              />
+            </div>
+          </template>
+          <div>Confirm delete ?</div>
+          <template #footer>
+            <div class="space-x-4">
+              <UButton
+                label="Cancel"
+                color="gray"
+                @click="isConfirmRemove = false"
+              />
+              <UButton
+                label="Confirm"
+                variant="ghost"
+                color="red"
+                @click="removeRole"
+              />
+            </div>
           </template>
         </UCard>
       </UModal>

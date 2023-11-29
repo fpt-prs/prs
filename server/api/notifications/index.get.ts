@@ -1,12 +1,17 @@
 import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
+  const { page, size } = getQuery(event);
+  const params = new URLSearchParams();
+  params.append("page", page as string);
+  params.append("size", size as string);
 
-  const fetchRes = await fetchBackend(`/api/notifications`);
+  const fetchRes = await fetchBackend(`/api/notifications?${params.toString()}`);
+  const status = fetchRes.status;
+  setResponseStatus(event, status);
 
-  if (fetchRes.status !== 200) {
+  if (status !== 200) {
     return {
-      statusCode: fetchRes.status,
       body: "Something went wrong",
     };
   }
@@ -14,7 +19,6 @@ export default defineEventHandler(async (event) => {
   const data = await fetchRes.json();
 
   return {
-    statusCode: 200,
     body: JSON.stringify(data),
   };
 });

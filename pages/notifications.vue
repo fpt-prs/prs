@@ -10,10 +10,10 @@
               class="border border-color p-4 rounded-xl flex justify-between items-center"
             >
               <div class="">
-                <p class="text-xl">
+                <p class="text-xl text-medium">
                   {{ notification.header }}
                 </p>
-                <p class="">
+                <p class="text-color">
                   {{ notification.content }}
                 </p>
               </div>

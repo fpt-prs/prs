@@ -11,8 +11,8 @@
               <p class="text-3xl">
                 {{ `${numberWithSep(data.balanceChange)} VND` }}
               </p>
-              <div class="flex flex-col justify-between items-end">
-                <p>{{ formatDateTime(data.timestamp) }}</p>
+              <div class="">
+                <p class="text-color">{{ formatDateTime(data.timestamp) }}</p>
               </div>
             </div>
           </template>
