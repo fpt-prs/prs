@@ -4,7 +4,7 @@ export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, "id");
   const body = await readBody(event);
 
-  const fetchRes = await fetchBackend(`/api/payment/options/${id}`, {
+  const fetchRes = await fetchBackend(`/api/payment/subscriptions/${id}`, {
     method: "POST",
     body: body,
   });

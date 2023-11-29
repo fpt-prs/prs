@@ -10,9 +10,9 @@ const isPaymentWritable = await isAuthorized(session, "payment.write.all");
 const newOption = ref({});
 const validate = computed(() => {
   return (
-    newOption.value.description &&
+    newOption.value.name &&
     newOption.value.price &&
-    newOption.value.numsOfView
+    newOption.value.duration
   );
 });
 
@@ -58,9 +58,9 @@ const actions = (option) => [
 
 const addOption = async () => {
   const optionCreateRequest = {
-    description: newOption.value.description,
+    name: newOption.value.name,
     price: parseFloat(newOption.value.price),
-    numsOfView: parseInt(newOption.value.numsOfView),
+    duration: parseInt(newOption.value.duration),
   };
 
   const addRes = await fetch(`/api/pricing-options`, {
@@ -98,9 +98,9 @@ const removeOption = async (option) => {
 
 const updateOption = async () => {
   const updateOptionReq = {
-    description: editingOpt.value.description,
+    name: editingOpt.value.name,
     price: parseFloat(editingOpt.value.price),
-    numsOfView: parseInt(editingOpt.value.numsOfView),
+    duration: parseInt(editingOpt.value.duration),
   };
 
   const updateRes = await fetch(
@@ -127,7 +127,7 @@ const updateOption = async () => {
 
 <template>
   <NuxtLayout name="admin">
-    <p class="text-2xl px-4 py-3">Pricing options</p>
+    <p class="text-2xl px-4 py-3">Subscription</p>
     <div class="border border-color rounded-lg mx-4">
       <table class="w-full">
         <thead class="border-b border-color">
