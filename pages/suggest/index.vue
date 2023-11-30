@@ -2,264 +2,162 @@
 useHead({
   title: "Hot products",
 });
-const runtimeConfig = useRuntimeConfig();
 const toast = useToast();
-const products = ref([]);
 
-const fetchData = async () => {
-  const response = await fetch(`/api/suggest`);
-  const status = response.status;
-  if (status !== 200) {
-    return;
-  }
-
-  const data = await response.json();
-  products.value = JSON.parse(data.body);
-  // console.log(products.value);
-  // console.log(products.value.map((product) => product.images));
-};
+const categories = ref([]);
+const selectedCategory = ref(null);
 
 onMounted(async () => {
-  await fetchData();
+  const cateFetch = await fetch("/api/products/categories");
+  const cateData = await cateFetch.json();
+  const status = cateFetch.status;
+  if (status === 200) {
+    categories.value = JSON.parse(cateData.body).filter((cate) => !!cate);
+  } else {
+    toast.push({
+      title: "Error",
+      description: "Something went wrong",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+  }
 });
 
-const viewMode = ref("list");
-
-const exportCsv = async () => {
-  const req = await fetch(`${runtimeConfig.public.domain}/api/export`);
-  const status = req.status;
-  const json = await req.json();
-
-  if (status !== 200) {
-    const error = json.body;
-    toast.add({
-      title: error,
-      color: "red",
-      description: "Click here to buy more credits",
-      onClick: goToBilling,
-    });
+const categoryCount = ref(-1);
+watch(selectedCategory, async (newCate, val) => {
+  if (!newCate) {
     return;
   }
+  const countFetch = await fetch(
+    `/api/products/count?category=${newCate
+      .replace(/ /g, "%20")
+      .replace(/&/g, "%26")}`
+  );
+  const countData = await countFetch.json();
+  const status = countFetch.status;
+  if (status === 200) {
+    categoryCount.value = parseInt(countData.body);
+  } else {
+    toast.push({
+      title: "Error",
+      description: "Something went wrong",
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+  }
+});
 
-  const products = JSON.parse(json.body);
-  const csv = jsonToCSV(products);
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.setAttribute("download", "products.csv");
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
+const criterias = ["Rating", "Comment"];
+const selectedCriteria = ref(null);
 
-const goToBilling = () => {
-  const router = useRouter();
-  router.push("/settings/billing");
-};
+const scoreRange = ref({
+  min: 0,
+  max: 0,
+});
 
-const jsonToCSV = (json) => {
-  const jsonToExport = json.map((row) => ({
-    name: row.name,
-    description: row.description,
-    price: row.price,
-    url: row.url,
-    category: row.category,
-  }));
+watch(
+  [selectedCategory, selectedCriteria],
+  async ([newCategory, newCriteria]) => {
+    if (!newCriteria || !newCategory) {
+      return;
+    }
+    const escapedCategory = newCategory
+      .replace(/ /g, "%20")
+      .replace(/&/g, "%26");
+    const scoreFetch = await fetch(
+      `/api/products/score?category=${escapedCategory}&criteria=${newCriteria}`
+    );
+    const scoreData = await scoreFetch.json();
+    const status = scoreFetch.status;
+    if (status === 200) {
+      scoreRange.value = JSON.parse(scoreData.body);
+    } else {
+      toast.push({
+        title: "Error",
+        description: "Something went wrong",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }
+);
 
-  const fields = Object.keys(jsonToExport[0]);
-  const replacer = (key, value) => (value === null ? "" : value);
-  let csv = fields
-    .map((fieldName) => `"${fieldName}"`)
-    .join(",")
-    .concat("\r\n");
-
-  csv += jsonToExport
-    .map((row) =>
-      fields
-        .map((fieldName) => JSON.stringify(row[fieldName], replacer))
-        .join(",")
-    )
-    .join("\r\n");
-  // return the fields and the CSV
-  return csv;
-};
+const positions = [
+  {
+    label: "Top 10",
+    action: "export.top.1.to.10",
+  },
+  {
+    label: "Top 11 to 20",
+    action: "export.top.11.to.20",
+  },
+  {
+    label: "Top 21 to 30",
+    action: "export.top.21.to.30",
+  },
+  {
+    label: "Top 31 to 40",
+    action: "export.top.31.to.40",
+  },
+  {
+    label: "Top 41 to 50",
+    action: "export.top.41.to.50",
+  },
+];
+const posNames = positions.map((pos) => pos.label);
+const selectedPosition = ref(null);
 </script>
 
 <template>
   <NuxtLayout name="default">
     <div class="">
-      <div
-        class="flex justify-between items-center gap-5 p-5 dark:border-b border-color"
-      >
-        <p class="font-semibold text-lg">Trending products</p>
-        <UButton
-          color="gray"
-          label="Export"
-          :trailing="false"
-          icon="i-heroicons-arrow-down-tray"
-          @click="exportCsv"
+      <div class="flex flex-col min-w-0 gap-5 p-5 border-b border-color">
+        <h1 class="text-2xl font-semibold">Trending products</h1>
+      </div>
+      <div class="flex flex-col min-w-0 gap-5 p-5">
+        <p class="text-color">First, select the category...</p>
+        <USelectMenu
+          v-model="selectedCategory"
+          :options="categories"
+          size="xl"
+          class="cursor-pointer"
+          placeholder="Select category"
         />
-      </div>
-      <div class="flex mx-5 mt-5">
-        <UButton
-          color="gray"
-          :variant="viewMode === 'grid' ? 'solid' : 'ghost'"
-          :trailing="false"
-          icon="i-heroicons-squares-2x2"
-          @click="viewMode = 'grid'"
+        <p>
+          <span class="" v-if="categoryCount >= 0">
+            We have currently crawled {{ categoryCount }} products in this
+            category.
+          </span>
+        </p>
+        <p class="text-color" v-if="selectedCategory">
+          Then select the criteria...
+        </p>
+        <USelectMenu
+          v-model="selectedCriteria"
+          :options="criterias"
+          size="xl"
+          class="cursor-pointer"
+          placeholder="Select criteria"
+          v-if="selectedCategory"
         />
-        <UButton
-          color="gray"
-          :variant="viewMode === 'dense' ? 'solid' : 'ghost'"
-          :trailing="false"
-          icon="i-heroicons-view-columns"
-          @click="viewMode = 'dense'"
+        <p class="" v-if="scoreRange.min && scoreRange.max">
+          The score range is from {{ scoreRange.min.toFixed(2) }} to
+          {{ scoreRange.max.toFixed(2) }}.
+        </p>
+        <p class="text-color" v-if="selectedCriteria && selectedCategory">
+          Finally, select the position...
+        </p>
+        <USelectMenu
+          v-model="selectedPosition"
+          :options="posNames"
+          size="xl"
+          class="cursor-pointer"
+          placeholder="Select position"
+          v-if="selectedCriteria && selectedCategory"
         />
-        <UButton
-          color="gray"
-          :variant="viewMode === 'list' ? 'solid' : 'ghost'"
-          :trailing="false"
-          icon="i-heroicons-list-bullet"
-          @click="viewMode = 'list'"
-        />
-      </div>
-
-      <div
-        class="w-full h-20 text-center flex justify-center items-center"
-        v-if="products?.length === 0"
-      >
-        <UIcon name="i-heroicons-arrow-path" class="animate-spin" size="lg" />
-        <p class="text-xl ml-1">Loading...</p>
-      </div>
-
-      <div
-        class="grid grid-cols-[repeat(auto-fill,minmax(20rem,1fr))] gap-5 p-5"
-        v-if="viewMode === 'grid'"
-      >
-        <a
-          class=""
-          :href="`/product/${row.productCode}`"
-          v-for="row in products"
-        >
-          <div class="">
-            <img
-              class="w-full h-80 mr-4"
-              :src="row.images[0]?.imageUrl || '/no-image.png'"
-              loading="lazy"
-              alt="Product image"
-            />
-            <div class="break-words p-2 truncate">
-              <p class="truncate">{{ row.name }}</p>
-              <div class="text-gray-500 mt-2">
-                {{ "$" + row.price }}
-              </div>
-            </div>
-            <div class="flex gap-4 p-2">
-              <UTooltip
-                :text="`How highly rated the product is`"
-                :popper="{ arrow: true }"
-              >
-                <p class="text-green-600 dark:text-green-400">
-                  {{ Math.round(row.rating * 1000) / 1000 }}
-                </p>
-              </UTooltip>
-              <UTooltip
-                :text="`How positive the review is`"
-                :popper="{ arrow: true }"
-              >
-                <p class="text-green-600 dark:text-green-400">
-                  {{ Math.round(row.comment * 1000) / 1000 }}
-                </p>
-              </UTooltip>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div
-        class="grid grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] gap-5 p-5"
-        v-if="viewMode === 'dense'"
-      >
-        <a
-          class=""
-          :href="`/product/${row.productCode}`"
-          v-for="row in products"
-        >
-          <div class="">
-            <img
-              class="w-full h-60 mr-4"
-              :src="row.images[0]?.imageUrl || '/no-image.png'"
-              loading="lazy"
-              alt="Product image"
-            />
-            <div class="break-words p-2 truncate">
-              <p class="truncate">{{ row.name }}</p>
-              <div class="text-gray-500 mt-2">
-                {{ "$" + row.price }}
-              </div>
-            </div>
-            <div class="flex gap-4 p-2">
-              <UTooltip
-                :text="`How highly rated the product is`"
-                :popper="{ arrow: true }"
-              >
-                <p class="text-green-600 dark:text-green-400">
-                  {{ Math.round(row.rating * 1000) / 1000 }}
-                </p>
-              </UTooltip>
-              <UTooltip
-                :text="`How positive the review is`"
-                :popper="{ arrow: true }"
-              >
-                <p class="text-green-600 dark:text-green-400">
-                  {{ Math.round(row.comment * 1000) / 1000 }}
-                </p>
-              </UTooltip>
-            </div>
-          </div>
-        </a>
-      </div>
-      <div class="gap-5 p-5 space-y-5" v-if="viewMode === 'list'">
-        <a
-          class="block"
-          :href="`/product/${row.productCode}`"
-          v-for="row in products"
-        >
-          <div class="flex justify-between gap-4 items-center">
-            <div class="flex min-w-0">
-              <img
-                class="w-36 h-36 mr-4"
-                :src="row.images[0]?.imageUrl || '/no-image.png'"
-                loading="lazy"
-                alt="Product image"
-              />
-              <div class="break-words p-2 truncate">
-                <p class="truncate">{{ row.name }}</p>
-                <div class="text-gray-500 mt-2">
-                  {{ "$" + row.price }}
-                </div>
-              </div>
-            </div>
-            <div class="flex gap-12">
-              <UTooltip
-                :text="`How highly rated the product is`"
-                :popper="{ arrow: true }"
-              >
-                <p class="text-green-600 dark:text-green-400">
-                  {{ Math.round(row.rating * 1000) / 1000 }}
-                </p>
-              </UTooltip>
-              <UTooltip
-                :text="`How positive the review is`"
-                :popper="{ arrow: true }"
-              >
-                <p class="text-green-600 dark:text-green-400">
-                  {{ Math.round(row.comment * 1000) / 1000 }}
-                </p>
-              </UTooltip>
-            </div>
-          </div>
-        </a>
       </div>
     </div>
   </NuxtLayout>
