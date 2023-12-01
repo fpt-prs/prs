@@ -4,24 +4,33 @@ import { getServerSession } from "#auth";
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event);
   const user = session?.user;
-  const id = (user as any)?.id;
+  const userId = (user as any)?.id;
 
-  const fetchBalance = await fetchBackend(`/api/users/balance?id=${id}`);
-  const detail = await fetchBalance.json();
-  const balance = detail.value;
+  const body = await readBody(event);
+  const { category, criteria, action } = JSON.parse(body);
 
-  if (balance <= 0) {
-    setResponseStatus(event, 400);
+  const requestBody = {
+    userId: userId,
+    category: category,
+    criteria: criteria,
+    actions: action.split(","),
+  };
+
+  const fetchRes = await fetchBackend("/api/products/suggest", {
+    method: "POST",
+    body: JSON.stringify(requestBody),
+  });
+  const data = await fetchRes.json();
+  const status = fetchRes.status;
+  setResponseStatus(event, status);
+
+  if (status !== 200) {
     return {
-      body: "Insufficient balance",
+      body: data.error,
     };
   }
 
-  const fetchRes = await fetchBackend("/api/products/suggest");
-  const data = await fetchRes.json();
-
   return {
-    statusCode: 200,
-    body: JSON.stringify(data),
+    body: "Success",
   };
 });

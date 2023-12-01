@@ -3,25 +3,28 @@ useHead({
   title: "Hot products",
 });
 const toast = useToast();
+const router = useRouter();
+
+const newToastError = (description) => {
+  toast.add({
+    title: "Error",
+    description: description,
+    status: "error",
+    duration: 3000,
+    isClosable: true,
+  });
+};
 
 const categories = ref([]);
 const selectedCategory = ref(null);
 
 onMounted(async () => {
-  const cateFetch = await fetch("/api/products/categories");
-  const cateData = await cateFetch.json();
-  const status = cateFetch.status;
+  const { data, status } = await fetchJson("/api/products/categories");
   if (status === 200) {
-    categories.value = JSON.parse(cateData.body).filter((cate) => !!cate);
+    categories.value = JSON.parse(data.body).filter((cate) => !!cate);
     categories.value.unshift("All");
   } else {
-    toast.add({
-      title: "Error",
-      description: "Something went wrong",
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-    });
+    newToastError("Something went wrong");
   }
 });
 
@@ -30,23 +33,14 @@ watch(selectedCategory, async (newCate, val) => {
   if (!newCate) {
     return;
   }
-  const countFetch = await fetch(
-    `/api/products/count?category=${newCate
-      .replace(/ /g, "%20")
-      .replace(/&/g, "%26")}`
+  const escapedCategory = newCate.replace(/ /g, "%20").replace(/&/g, "%26");
+  const { data, status } = await fetchJson(
+    `/api/products/count?category=${escapedCategory}`
   );
-  const countData = await countFetch.json();
-  const status = countFetch.status;
   if (status === 200) {
-    categoryCount.value = parseInt(countData.body);
+    categoryCount.value = parseInt(data.body);
   } else {
-    toast.add({
-      title: "Error",
-      description: "Something went wrong",
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-    });
+    newToastError("Something went wrong");
   }
 });
 
@@ -57,7 +51,6 @@ const scoreRange = ref({
   min: 0,
   max: 0,
 });
-
 watch(
   [selectedCategory, selectedCriteria],
   async ([newCategory, newCriteria]) => {
@@ -67,46 +60,23 @@ watch(
     const escapedCategory = newCategory
       .replace(/ /g, "%20")
       .replace(/&/g, "%26");
-    const scoreFetch = await fetch(
+    const { data, status } = await fetchJson(
       `/api/products/score?category=${escapedCategory}&criteria=${newCriteria}`
     );
-    const scoreData = await scoreFetch.json();
-    const status = scoreFetch.status;
     if (status === 200) {
-      scoreRange.value = JSON.parse(scoreData.body);
+      scoreRange.value = JSON.parse(data.body);
     } else {
-      toast.add({
-        title: "Error",
-        description: "Something went wrong",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
+      newToastError("Something went wrong");
     }
   }
 );
 
 const positions = [
-  {
-    label: "Top 10",
-    action: "export.top.1.to.10",
-  },
-  {
-    label: "Top 11 to 20",
-    action: "export.top.11.to.20",
-  },
-  {
-    label: "Top 21 to 30",
-    action: "export.top.21.to.30",
-  },
-  {
-    label: "Top 31 to 40",
-    action: "export.top.31.to.40",
-  },
-  {
-    label: "Top 41 to 50",
-    action: "export.top.41.to.50",
-  },
+  { label: "Top 10", action: "export.top.1.to.10" },
+  { label: "Top 11 to 20", action: "export.top.11.to.20" },
+  { label: "Top 21 to 30", action: "export.top.21.to.30" },
+  { label: "Top 31 to 40", action: "export.top.31.to.40" },
+  { label: "Top 41 to 50", action: "export.top.41.to.50" },
 ];
 const selectedPosition = ref({
   label: null,
@@ -136,15 +106,31 @@ watch(selectedPosition, async (newPosition, val) => {
   if (status === 200) {
     price.value = data.body;
   } else {
-    toast.push({
-      title: "Error",
-      description: data.body,
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-    });
+    newToastError(data.body);
   }
 });
+
+const confirm = async () => {
+  let command = {
+    category: selectedCategory.value,
+    criteria: selectedCriteria.value,
+    action: selectedPosition.value.action,
+  };
+
+  const res = await fetch(`/api/export`, {
+    method: "POST",
+    body: JSON.stringify(command),
+  });
+
+  const data = res.json();
+  const status = res.status;
+
+  if (status === 200) {
+    router.push("/collections");
+  } else {
+    newToastError(data.body);
+  }
+};
 </script>
 
 <template>
@@ -163,8 +149,9 @@ watch(selectedPosition, async (newPosition, val) => {
           placeholder="Select category"
         />
         <p>
-          <span class="" v-if="categoryCount >= 0">
-            We have currently crawled {{ categoryCount }} products in this
+          <span class="" v-if="selectedCategory">
+            We have currently crawled
+            {{ categoryCount >= 0 ? categoryCount : "---" }} products in this
             category.
           </span>
         </p>
@@ -199,16 +186,20 @@ watch(selectedPosition, async (newPosition, val) => {
           </template>
         </USelectMenu>
         <p class="" v-if="selectedPosition.label && !currentSubDetail">
-          The price is <span class="font-semibold">{{ price }}</span> VND.
+          You are currently not subscribed to any plan. The fee will be deducted
+          from your balance.
         </p>
-        <p v-if="selectedPosition.label">
-          Do you want to continue?
+        <p class="" v-if="selectedPosition.label && !currentSubDetail">
+          The price is
+          <span class="font-semibold">{{ price }}</span> VND.
         </p>
+        <p v-if="selectedPosition.label">Do you want to continue?</p>
         <UButton
           label="Continue"
           size="xl"
           color="primary"
           v-if="selectedPosition.label"
+          @click="confirm"
         />
       </div>
     </div>
