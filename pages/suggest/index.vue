@@ -13,8 +13,9 @@ onMounted(async () => {
   const status = cateFetch.status;
   if (status === 200) {
     categories.value = JSON.parse(cateData.body).filter((cate) => !!cate);
+    categories.value.unshift("All");
   } else {
-    toast.push({
+    toast.add({
       title: "Error",
       description: "Something went wrong",
       status: "error",
@@ -39,7 +40,7 @@ watch(selectedCategory, async (newCate, val) => {
   if (status === 200) {
     categoryCount.value = parseInt(countData.body);
   } else {
-    toast.push({
+    toast.add({
       title: "Error",
       description: "Something went wrong",
       status: "error",
@@ -74,7 +75,7 @@ watch(
     if (status === 200) {
       scoreRange.value = JSON.parse(scoreData.body);
     } else {
-      toast.push({
+      toast.add({
         title: "Error",
         description: "Something went wrong",
         status: "error",
@@ -107,8 +108,43 @@ const positions = [
     action: "export.top.41.to.50",
   },
 ];
-const posNames = positions.map((pos) => pos.label);
-const selectedPosition = ref(null);
+const selectedPosition = ref({
+  label: null,
+  action: null,
+});
+
+const currentSubDetail = ref(null);
+onMounted(async () => {
+  const response = await fetch(`/api/profile/sub`);
+  const data = await response.json();
+  if (!data.value) {
+    return;
+  }
+  currentSubDetail.value = data.value;
+});
+
+const price = ref(0);
+watch(selectedPosition, async (newPosition, val) => {
+  if (!newPosition) {
+    return;
+  }
+  const response = await fetch(
+    `/api/products/actions?actions=${newPosition.action}`
+  );
+  const data = await response.json();
+  const status = response.status;
+  if (status === 200) {
+    price.value = data.body;
+  } else {
+    toast.push({
+      title: "Error",
+      description: data.body,
+      status: "error",
+      duration: 3000,
+      isClosable: true,
+    });
+  }
+});
 </script>
 
 <template>
@@ -117,13 +153,13 @@ const selectedPosition = ref(null);
       <div class="flex flex-col min-w-0 gap-5 p-5 border-b border-color">
         <h1 class="text-2xl font-semibold">Trending products</h1>
       </div>
-      <div class="flex flex-col min-w-0 gap-5 p-5">
+      <div class="flex flex-col min-w-0 items-start gap-5 p-5">
         <p class="text-color">First, select the category...</p>
         <USelectMenu
           v-model="selectedCategory"
           :options="categories"
           size="xl"
-          class="cursor-pointer"
+          class="cursor-pointer w-60"
           placeholder="Select category"
         />
         <p>
@@ -139,7 +175,7 @@ const selectedPosition = ref(null);
           v-model="selectedCriteria"
           :options="criterias"
           size="xl"
-          class="cursor-pointer"
+          class="cursor-pointer w-60"
           placeholder="Select criteria"
           v-if="selectedCategory"
         />
@@ -152,11 +188,27 @@ const selectedPosition = ref(null);
         </p>
         <USelectMenu
           v-model="selectedPosition"
-          :options="posNames"
+          :options="positions"
           size="xl"
-          class="cursor-pointer"
+          class="cursor-pointer w-60"
           placeholder="Select position"
           v-if="selectedCriteria && selectedCategory"
+        >
+          <template #label>
+            {{ selectedPosition.label || "Select position" }}
+          </template>
+        </USelectMenu>
+        <p class="" v-if="selectedPosition.label && !currentSubDetail">
+          The price is <span class="font-semibold">{{ price }}</span> VND.
+        </p>
+        <p v-if="selectedPosition.label">
+          Do you want to continue?
+        </p>
+        <UButton
+          label="Continue"
+          size="xl"
+          color="primary"
+          v-if="selectedPosition.label"
         />
       </div>
     </div>
