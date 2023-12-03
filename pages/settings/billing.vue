@@ -2,7 +2,7 @@
   <NuxtLayout name="default">
     <div class="grow">
       <p class="text-xl px-4 py-3">Billing</p>
-      <div class="px-4 py-3 flex items-center gap-4">
+      <div class="px-4 py-3 grid grid-cols-2 items-center gap-4">
         <UCard class="grow">
           <p>Current subscription</p>
           <p class="text-4xl">
@@ -15,25 +15,37 @@
         </UCard>
         <UCard class="grow">
           <p>Credits</p>
-          <p class="text-4xl">
-            {{
-              balance != null && balance !== undefined
-                ? Math.round(balance)
-                : "---"
-            }}
-          </p>
+          <div class="flex items-center gap-2">
+            <p class="text-4xl">
+              {{
+                balance != null && balance !== undefined
+                  ? Math.round(balance)
+                  : "---"
+              }}
+            </p>
+            <UButton
+              icon="i-heroicons-plus"
+              size="xl"
+              variant="ghost"
+              to="/purchase"
+            />
+          </div>
         </UCard>
-        <UButton
-          icon="i-heroicons-plus"
-          label="Buy more credits"
-          size="xl"
-          to="/purchase"
-        />
+        <UCard class="grow">
+          <p>Ends in</p>
+          <p class="text-4xl py-2">
+            {{ currentSubDetail && dateLeft > 0 ? dateLeft : "---" }} days
+          </p>
+          <div class="flex items-center gap-2">
+            <UToggle v-model="isRefreshed" v-if="currentSubDetail?.user" />
+            <p>Auto refresh</p>
+          </div>
+        </UCard>
       </div>
       <p class="border-y border-color px-4 py-3">Subscribe</p>
       <div class="px-4 py-3 flex gap-3">
         <div
-          class="px-6 py-5 border border-color rounded-lg cursor-pointer"
+          class="px-6 py-5 border border-dashed hover:border-solid border-color hover:border-blue-800 hover:dark:border-blue-400 rounded-lg cursor-pointer hover:bg-blue-200 hover:dark:bg-blue-900/40 hover:text-blue-800 hover:dark:text-blue-400"
           v-for="subscription of subscriptions"
           :key="subscription.id"
           @click="selectSubscription(subscription)"
@@ -68,11 +80,7 @@
                   color="gray"
                   @click="isConfirm = false"
                 />
-                <UButton
-                  label="Confirm"
-                  variant="ghost"
-                  @click="subscribe()"
-                />
+                <UButton label="Confirm" variant="ghost" @click="subscribe()" />
               </div>
             </template>
           </UCard>
@@ -143,7 +151,8 @@ onMounted(async () => {
 const isConfirm = ref(false);
 const selectingSubscription = ref(null);
 const selectSubscription = (subscription) => {
-  const currentSubDuration = currentSubDetail.value?.subscription?.duration || 0;
+  const currentSubDuration =
+    currentSubDetail.value?.subscription?.duration || 0;
   const currentSubPrice = currentSubDetail.value?.subscription?.price || 0;
 
   const newSubDuration = subscription.duration;
@@ -213,6 +222,47 @@ onMounted(async () => {
     return;
   }
   currentSubDetail.value = data.value;
+});
+
+const isRefreshed = computed({
+  get() {
+    if (!currentSubDetail.value) {
+      return false;
+    }
+    return currentSubDetail.value.user.autoRefresh !== 0;
+  },
+  set(value) {
+    currentSubDetail.value.user.autoRefresh = value ? 1 : 0;
+  },
+});
+
+watch(isRefreshed, async (value) => {
+  if (value === undefined || value === null) {
+    return;
+  }
+  const response = await fetch(`/api/profile/sub/auto`, {
+    method: "POST",
+    body: JSON.stringify({
+      autoRefresh: value,
+    }),
+  });
+
+  const body = await response.json();
+  if (response.status !== 200) {
+    toast.add({
+      title: "Failed to update",
+      description: body.error,
+    });
+  }
+});
+
+const dateLeft = computed(() => {
+  if (!currentSubDetail.value) {
+    return 0;
+  }
+  const nextDeduct = parseDateTime(currentSubDetail.value.nextDeduct);
+  const now = new Date();
+  return Math.round((nextDeduct - now) / (1000 * 60 * 60 * 24));
 });
 </script>
 
