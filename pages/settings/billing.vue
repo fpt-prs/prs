@@ -36,8 +36,8 @@
           <p class="text-4xl py-2">
             {{ currentSubDetail && dateLeft > 0 ? dateLeft : "---" }} days
           </p>
-          <div class="flex items-center gap-2">
-            <UToggle v-model="isRefreshed" v-if="currentSubDetail?.user" />
+          <div class="flex items-center gap-2" v-if="currentSubDetail?.user">
+            <UToggle v-model="isRefreshed" />
             <p>Auto refresh</p>
           </div>
         </UCard>

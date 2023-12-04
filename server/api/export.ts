@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     userId: userId,
     category: category,
     criteria: criteria,
-    actions: action.split(","),
+    action: action,
   };
 
   const fetchRes = await fetchBackend("/api/products/suggest", {

@@ -12,9 +12,10 @@ export default defineEventHandler(async (event) => {
 
   let fetchRes = await fetchBackend(`/api/collections/list?userId=${userId}`);
   let data = await fetchRes.json();
+  const status = fetchRes.status;
+  setResponseStatus(event, status);
 
   return {
-    statusCode: 200,
     body: JSON.stringify(data),
   };
 });

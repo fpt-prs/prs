@@ -34,101 +34,30 @@ const fetchDetail = async () => {
   collection.value = result;
   products.value = result.products;
 };
-
-const createCollection = async (name) => {
-  const postRes = await fetch("/api/collection", {
-    method: "PUT",
-    body: JSON.stringify({
-      name: name,
-    }),
-  });
-
-  const status = postRes.status;
-  const toast = useToast();
-  if (status === 200) {
-    toast.add({
-      title: "Collection created",
-    });
-    await fetchCollection();
-  } else {
-    toast.add({
-      title: "Failed to create collection",
-    });
-  }
-};
-
-const removeCollection = async () => {
-  const deleteRes = await fetch(`/api/collection?id=${currentId.value}`, {
-    method: "DELETE",
-  });
-
-  const status = deleteRes.status;
-  const toast = useToast();
-  if (status === 200) {
-    toast.add({
-      title: "Collection deleted",
-    });
-    await fetchCollection();
-    currentId.value = collections.value[0].id;
-    await fetchDetail();
-  } else {
-    toast.add({
-      title: "Failed to delete collection",
-    });
-  }
-};
-
-const removeProduct = async (id) => {
-  const productRemoveRequest = {
-    collectionId: currentId.value,
-    productId: id,
-    mode: "remove",
-  };
-
-  const deleteRes = await fetch(`/api/collection`, {
-    method: "POST",
-    body: JSON.stringify(productRemoveRequest),
-  });
-
-  const status = deleteRes.status;
-  const toast = useToast();
-  if (status === 200) {
-    toast.add({
-      title: "Product removed",
-    });
-    await fetchDetail();
-  } else {
-    toast.add({
-      title: "Failed to remove product",
-    });
-  }
-
-  await fetchDetail();
-};
 </script>
 
 <template>
   <NuxtLayout name="default">
     <div class="flex max-w-screen min-h-screen">
       <div class="p-5 border-r border-color">
-        <ul class="flex flex-col w-48 sticky top-0">
+        <ul class="flex flex-col sticky top-0">
           <UButton
             v-for="c in collections"
             :key="c.id"
             icon="i-heroicons-inbox"
             color="gray"
             variant="ghost"
-            :label="c.name"
+            :label="formatDateTime(c.created)"
             :trailing="false"
             @click="currentId = c.id"
-            class="w-full"
+            class="whitespace-nowrap"
           />
         </ul>
       </div>
       <div class="grow min-w-0">
         <div
           class="w-full flex justify-center items-center px-4 py-3 pt-12"
-          v-if="!collection.name"
+          v-if="!collection.created"
         >
           <p class="text-4xl text-center text-color">
             Select a collection or create a new one to view products
@@ -136,19 +65,40 @@ const removeProduct = async (id) => {
         </div>
 
         <div
-          class="w-full flex justify-between px-4 py-3"
-          v-if="collection.name"
+          class="w-full flex justify-between px-4 py-3 items-center"
+          v-if="collection.created"
         >
           <div class="">
-            <p class="text-xl">{{ collection.name }}</p>
+            <p class="text-xl">{{ formatDateTime(collection.created) }}</p>
           </div>
-          <ModalConfirmButton
-            icon="i-heroicons-trash"
-            color="red"
-            variant="solid"
-            label="Delete"
-            @confirm="removeCollection"
+          <UButton
+            icon="i-heroicons-arrow-down-on-square"
+            color="gray"
+            size="lg"
+            label="Export"
+            :trailing="false"
+            class="whitespace-nowrap"
           />
+        </div>
+        <div class="px-4 grid grid-cols-3 gap-4" v-if="collection.created">
+          <div class="p-4 border border-color rounded-lg">
+            <p class="">Category</p>
+            <p class="text-xl text-color">
+              {{ collection.category || "None" }}
+            </p>
+          </div>
+          <div class="p-4 border border-color rounded-lg">
+            <p class="">Order by</p>
+            <p class="text-xl text-color">
+              {{ collection.criteria || "None" }}
+            </p>
+          </div>
+          <div class="p-4 border border-color rounded-lg">
+            <p class="">Position</p>
+            <p class="text-xl text-color">
+              {{ collection.ranking || "None" }}
+            </p>
+          </div>
         </div>
         <div class="space-y-3 p-4">
           <div class="flex items-center" v-for="row in products">
@@ -169,13 +119,6 @@ const removeProduct = async (id) => {
                 </div>
               </div>
             </a>
-            <ModalConfirmButton
-              icon="i-heroicons-trash"
-              color="red"
-              variant="soft"
-              label="Remove"
-              @confirm="removeProduct(row.id)"
-            />
           </div>
         </div>
       </div>

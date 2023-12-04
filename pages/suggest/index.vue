@@ -99,7 +99,7 @@ watch(selectedPosition, async (newPosition, val) => {
     return;
   }
   const response = await fetch(
-    `/api/products/actions?actions=${newPosition.action}`
+    `/api/products/actions?action=${newPosition.action}`
   );
   const data = await response.json();
   const status = response.status;

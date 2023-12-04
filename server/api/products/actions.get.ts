@@ -1,10 +1,10 @@
 import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
-  const { actions } = getQuery(event);
+  const { action } = getQuery(event);
 
   const response = await fetchBackend(
-    `/api/products/action-price?actions=${actions?.toString()}`
+    `/api/products/action-price?action=${action?.toString()}`
   );
   const data = await response.json();
   const status = response.status;
