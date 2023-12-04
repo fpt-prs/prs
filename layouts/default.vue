@@ -7,7 +7,7 @@ useHead({
 </script>
 
 <template>
-  <div class="min-h-screen flex dark:bg-gray-900 bg-white">
+  <div class="min-h-screen flex dark:bg-gray-950 bg-white">
     <div class="">
       <Navbar />
     </div>

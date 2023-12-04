@@ -1,24 +1,36 @@
-import fetchBackend  from "~/utils/fetchBackend";
-
-export type Product = {
-  id: number;
-  price: number;
-  name: string;
-  product_code: string;
-  url: string;
-  description: string;
-  images: {
-    imageUrl: string;
-  }[];
-};
+import fetchBackend from "~/utils/fetchBackend";
+import { getServerSession } from "#auth";
 
 export default defineEventHandler(async (event) => {
-  const fetchRes = await fetchBackend("/api/products/suggest");
+  const session = await getServerSession(event);
+  const user = session?.user;
+  const userId = (user as any)?.id;
+
+  const body = await readBody(event);
+  const { category, criteria, action } = JSON.parse(body);
+
+  const requestBody = {
+    userId: userId,
+    category: category,
+    criteria: criteria,
+    action: action,
+  };
+
+  const fetchRes = await fetchBackend("/api/products/suggest", {
+    method: "POST",
+    body: JSON.stringify(requestBody),
+  });
   const data = await fetchRes.json();
   const status = fetchRes.status;
   setResponseStatus(event, status);
 
+  if (status !== 200) {
+    return {
+      body: data.error,
+    };
+  }
+
   return {
-    body: JSON.stringify(data),
+    body: "Success",
   };
 });

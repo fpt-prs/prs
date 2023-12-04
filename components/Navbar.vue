@@ -8,7 +8,7 @@ const isDark = computed(() => theme.value === "dark");
 
 <template>
   <div
-    class="fixed top-0 dark:bg-gray-900 bg-white h-full w-56 border-r border-color justify-between z-[9] p-3 flex flex-col items-start"
+    class="fixed top-0 dark:bg-gray-950 bg-white h-full w-56 border-r border-color justify-between z-[9] p-3 flex flex-col items-start"
   >
     <div class="items-center justify-between">
       <a href="/suggest">
@@ -19,7 +19,10 @@ const isDark = computed(() => theme.value === "dark");
         class="block border border-color rounded-lg p-2 w-[12.5rem] my-2 border-dashed hover:border-solid"
       >
         <div class="flex items-center gap-3 overflow-hidden">
-          <UAvatar :src="user?.image || '/blank.webp'" />
+          <UAvatar
+            :src="user?.image || '/blank.webp'"
+            onerror="this.src='/blank.webp'"
+          />
           <div class="text-ellipsis overflow-hidden">
             <p class="whitespace-nowrap overflow-hidden text-ellipsis">
               {{ user?.name || "" }}
@@ -89,13 +92,13 @@ const isDark = computed(() => theme.value === "dark");
       />
       <ClientOnly>
         <UButton
-        :icon="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'"
-        variant="ghost"
-        :label="isDark ? 'Light mode' : 'Dark mode'"
-        size="lg"
-        class="w-full"
-        @click="theme.preference = isDark ? 'light' : 'dark'"
-        :trailing="false"
+          :icon="isDark ? 'i-heroicons-sun' : 'i-heroicons-moon'"
+          variant="ghost"
+          :label="isDark ? 'Light mode' : 'Dark mode'"
+          size="lg"
+          class="w-full"
+          @click="theme.preference = isDark ? 'light' : 'dark'"
+          :trailing="false"
         />
       </ClientOnly>
       <UButton

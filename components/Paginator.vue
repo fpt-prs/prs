@@ -8,10 +8,11 @@
         :total="totalElements"
         :page-count="size"
         color="gray"
+        v-if="totalElements > 0"
       />
     </div>
     <div
-      class="grow w-full h-screen text-center flex justify-center items-center"
+      class="grow w-full h-[60vh] text-center flex justify-center items-center"
       v-if="isLoading"
     >
       <UIcon name="i-heroicons-arrow-path" class="animate-spin" size="lg" />
@@ -21,15 +22,11 @@
       class="grow w-full h-full my-20 text-center flex flex-col justify-center items-center"
       v-if="!isLoading && elements?.length === 0"
     >
-      <UIcon
-        name="i-heroicons-inbox"
-        class="text-color w-12 h-12"
-        size="xl"
-      />
+      <UIcon name="i-heroicons-inbox" class="text-color w-12 h-12" size="xl" />
       <p class="text-xl ml-1 text-color">No Item</p>
     </div>
-    <slot name="all" :data="elements" />
-    <div class="gap-5 p-5 space-y-5" v-if="type === 'item'">
+    <slot name="all" :data="elements" v-if="!isLoading" />
+    <div class="gap-5 p-5 space-y-5" v-if="!isLoading && type === 'item'">
       <slot name="item" :data="element" v-for="element in elements" />
     </div>
     <div
@@ -40,6 +37,7 @@
         :total="totalElements"
         :page-count="size"
         color="gray"
+        v-if="totalElements > 0"
       />
     </div>
   </div>
@@ -49,7 +47,7 @@
 const page = ref(1);
 const totalElements = ref(0);
 const elements = ref([]);
-const isLoading = ref(false);
+const isLoading = ref(true);
 
 onMounted(async () => {
   await fetchData();

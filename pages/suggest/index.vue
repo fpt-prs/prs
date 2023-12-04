@@ -117,7 +117,7 @@ const confirm = async () => {
     action: selectedPosition.value.action,
   };
 
-  const res = await fetch(`/api/export`, {
+  const res = await fetch(`/api/suggest`, {
     method: "POST",
     body: JSON.stringify(command),
   });

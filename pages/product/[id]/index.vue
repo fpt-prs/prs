@@ -148,29 +148,6 @@ const chartOptions = ref({
               target="_blank"
               label="View in Amazon"
             />
-            <UPopover>
-              <UButton
-                color="white"
-                size="lg"
-                trailing-icon="i-heroicons-chevron-down-20-solid"
-                label="Add to Collections"
-              />
-              <template #panel>
-                <UCard>
-                  <UCheckbox
-                    v-for="collection in collections"
-                    :name="collection.name"
-                    :label="collection.name"
-                    :key="collection.id"
-                    v-model="collection.isProductInCollection"
-                    @click="update(collection)"
-                  />
-                  <p v-if="collections.length === 0" class="text-color">
-                    No collections
-                  </p>
-                </UCard>
-              </template>
-            </UPopover>
             <UButton
               color="gray"
               icon="i-heroicons-pencil"

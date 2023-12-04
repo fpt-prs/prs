@@ -2,7 +2,7 @@
   <NuxtLayout name="default">
     <div class="flex flex-col min-h-full">
       <div
-        class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[100] bg-white dark:bg-gray-900"
+        class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[100] bg-white dark:bg-gray-950"
       >
         <p class="font-semibold text-lg">Products</p>
         <div class="flex gap-4">
@@ -34,6 +34,7 @@
       </div>
       <div
         class="flex justify-between items-center gap-5 p-5 dark:border-b border-color"
+        v-if="products.length > 0"
       >
         <UPagination
           v-model="page"
@@ -43,7 +44,7 @@
         />
       </div>
       <div
-        class="grow w-full h-screen text-center flex justify-center items-center"
+        class="grow w-full h-full text-center flex justify-center items-center"
         v-if="isLoading"
       >
         <UIcon name="i-heroicons-arrow-path" class="animate-spin" size="lg" />
@@ -101,6 +102,7 @@
       </div>
       <div
         class="flex justify-between items-center gap-5 p-5 dark:border-t border-color"
+        v-if="products.length > 0"
       >
         <UPagination
           v-model="page"

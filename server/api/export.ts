@@ -6,17 +6,14 @@ export default defineEventHandler(async (event) => {
   const user = session?.user;
   const userId = (user as any)?.id;
 
-  const body = await readBody(event);
-  const { category, criteria, action } = JSON.parse(body);
+  const collectionId = getQuery(event).collectionId;
 
   const requestBody = {
     userId: userId,
-    category: category,
-    criteria: criteria,
-    action: action,
+    collectionId: collectionId,
   };
 
-  const fetchRes = await fetchBackend("/api/products/suggest", {
+  const fetchRes = await fetchBackend("/api/products/export", {
     method: "POST",
     body: JSON.stringify(requestBody),
   });
@@ -31,6 +28,6 @@ export default defineEventHandler(async (event) => {
   }
 
   return {
-    body: "Success",
+    body: data.value,
   };
 });

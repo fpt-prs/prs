@@ -34,6 +34,20 @@ const fetchDetail = async () => {
   collection.value = result;
   products.value = result.products;
 };
+
+const exportCollection = async () => {
+  const response = await fetch(`/api/export?collectionId=${currentId.value}`);
+  const data = await response.json();
+  const result = data.body;
+  const url = window.URL.createObjectURL(
+    new Blob([result], { type: "text/csv" })
+  );
+  const link = document.createElement("a");
+  link.href = url;
+  link.setAttribute("download", "export.csv");
+  document.body.appendChild(link);
+  link.click();
+};
 </script>
 
 <template>
@@ -78,6 +92,7 @@ const fetchDetail = async () => {
             label="Export"
             :trailing="false"
             class="whitespace-nowrap"
+            @click="exportCollection"
           />
         </div>
         <div class="px-4 grid grid-cols-3 gap-4" v-if="collection.created">
