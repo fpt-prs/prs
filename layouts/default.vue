@@ -14,7 +14,7 @@ useHead({
     <div class="grow overflow-x-auto ml-56">
       <slot />
       <a
-        href="/"
+        href="https://m.me/fptprs"
         target="_blank"
         class="fixed bottom-6 right-6 bg-color rounded-full h-16 w-16 flex justify-center items-center"
       >
