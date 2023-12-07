@@ -66,8 +66,6 @@ const graphComputed = computed(() => {
     return graph;
   }
 
-  console.log(product.value);
-
   return {
     labels: product.value.scores.map((p) => p.date),
     datasets: [
@@ -84,21 +82,6 @@ const graphComputed = computed(() => {
     ],
   };
 });
-
-const collections = ref([]);
-
-const update = async (collection) => {
-  const response = await fetch("/api/collection", {
-    method: "POST",
-    body: JSON.stringify({
-      collectionId: collection.id,
-      productId: product.value.id,
-      mode: collection.isProductInCollection ? "remove" : "add",
-    }),
-  });
-
-  const data = await response.json();
-};
 
 const { getSession } = useAuth();
 const session = await getSession();
@@ -159,7 +142,10 @@ const chartOptions = ref({
           </div>
         </div>
       </div>
-      <div class="py-3 border-t border-color">
+      <div
+        class="py-3 border-t border-color"
+        v-if="product.scores && product.scores.length > 0"
+      >
         <h2 class="text-2xl py-3 font-semibold">Popularity graph</h2>
         <div class="w-full px-5 bg-white rounded-lg">
           <LineChart
