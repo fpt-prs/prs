@@ -15,7 +15,7 @@
     <UForm
       :validate="validate"
       :state="notification"
-      class="w-full flex gap-4 px-4 py-3"
+      class="w-full flex max-md:flex-col-reverse gap-4 px-4 py-3"
     >
       <div class="grow space-y-5">
         <UFormGroup label="Header" name="header">

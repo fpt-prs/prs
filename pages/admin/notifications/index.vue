@@ -1,8 +1,8 @@
 <template>
   <NuxtLayout name="admin">
     <div class="grow">
-      <div class="px-4 py-3 flex justify-between items-center">
-        <p class="text-2xl px-4 py-3">Notifications</p>
+      <div class="px-4 py-3 md:flex justify-between items-center">
+        <p class="text-2xl md:px-4 py-3">Notifications</p>
         <UButton
           icon="i-heroicons-plus"
           label="New notification"
@@ -14,7 +14,9 @@
           <table class="w-full">
             <thead class="border-b border-color">
               <tr class="text-left">
-                <th class="px-4 py-3">ID</th>
+                <th class="px-4 py-3 sticky left-0 bg-white dark:bg-gray-950">
+                  ID
+                </th>
                 <th class="px-4 py-3">Header</th>
                 <th class="px-4 py-3">Content</th>
                 <th class="px-4 py-3">Created</th>
@@ -22,7 +24,11 @@
               </tr>
             </thead>
             <tr class="" v-for="notification in notifications">
-              <td class="px-4 py-3">{{ notification.id }}</td>
+              <td
+                class="px-4 py-3 sticky left-0 bg-white dark:bg-gray-950 border-r border-color"
+              >
+                {{ notification.id }}
+              </td>
               <td class="px-4 py-3">{{ notification.header }}</td>
               <td class="px-4 py-3">
                 {{

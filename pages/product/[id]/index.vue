@@ -113,8 +113,8 @@ const chartOptions = ref({
 <template>
   <NuxtLayout name="default">
     <div class="max-w-[80rem] mx-auto px-3">
-      <div class="flex py-12">
-        <div class="mr-3" v-if="product.images">
+      <div class="md:flex py-12">
+        <div class="max-md:flex gap-4 max-md:mb-4 md:mr-3 overflow-x-auto" v-if="product.images">
           <img
             v-for="(image, index) in product.images"
             :src="image.imageUrl"
@@ -139,7 +139,7 @@ const chartOptions = ref({
           <div class="my-4">
             {{ "$" + (product.price !== undefined ? product.price : "") }}
           </div>
-          <div class="lg:flex gap-5 pt-3 max-lg:space-y-2">
+          <div class="flex max-md:flex-col gap-5 pt-3 max-lg:space-y-2">
             <UButton
               icon="i-heroicons-arrow-right"
               trailing

@@ -1,8 +1,8 @@
 <template>
   <div
-    class="w-screen h-screen flex flex-col gap-5 justify-center items-center"
+    class="w-screen h-screen flex flex-col gap-5 justify-center items-center px-5"
   >
-    <div class="text-6xl">What you ask for does not exist</div>
+    <div class="text-4xl md:text-6xl text-center">What you ask for does not exist</div>
     <UButton
       label="Go back home"
       size="xl"

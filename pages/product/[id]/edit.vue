@@ -111,7 +111,7 @@ const update = async (c) => {
       </UFormGroup>
       <UFormGroup label="Images">
         <div
-          class="flex items-center gap-5 pb-5"
+          class="flex max-md:flex-col md:items-center gap-5 pb-5 max-md:pb-10"
           v-for="image in product.images"
         >
           <UInput
@@ -130,11 +130,12 @@ const update = async (c) => {
           <img
             :src="image.imageUrl"
             onerror="this.src='https://via.placeholder.com/150'"
-            class="w-36 aspect-square"
+            class="md:w-36 w-full aspect-square rounded"
             alt=""
           />
+          <hr class="md:hidden border-color" />
         </div>
-        <div class="flex items-center gap-5 pb-5">
+        <div class="flex max-md:flex-col md:items-center gap-5 pb-5">
           <UInput
             size="lg"
             placeholder="Images"
@@ -153,7 +154,7 @@ const update = async (c) => {
 
           <img
             :src="newImage || ''"
-            class="w-36 aspect-square"
+            class="md:w-36 w-full aspect-square rounded"
             onerror="this.src='https://via.placeholder.com/150'"
             alt=""
           />

@@ -1,8 +1,7 @@
 <template>
   <NuxtLayout name="default">
-    <div class="max-w-[1000px] mx-5">
+    <div class="max-w-[1000px] md:mx-5">
       <div class="px-4 py-3 text-xl font-medium flex justify-between">
-        <!-- back -->
         <UButton
           color="black"
           label="Back"
@@ -11,11 +10,10 @@
           to="."
         />
       </div>
-      <div class="px-4 py-3 text-xl font-medium flex justify-between">
-        <div class="">Profile update</div>
+      <div class="px-4 py-3 text-xl font-medium md:flex justify-between">
+        <div class="max-md:pb-4">Profile update</div>
         <div class="flex gap-4">
           <UButton color="gray" label="Go to profile" to="." />
-
           <ModalConfirmButton
             variant="solid"
             label="Update"

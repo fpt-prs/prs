@@ -45,10 +45,10 @@ const loginWithGoogle = async () => {
   </header>
   <div class="flex flex-col items-center justify-center max-w-[1000px] mx-auto">
     <div class="flex flex-col justify-center items-center h-[calc(100vh-8rem)]">
-      <h1 class="max-w-[500px] text-7xl text-center font-bold pb-6">
+      <h1 class="max-w-[500px] text-4xl lg:text-7xl text-center font-bold pb-6">
         Supercharge your business
       </h1>
-      <p class="text-gray-700 dark:text-gray-400 text-center">
+      <p class="text-gray-700 dark:text-gray-400 px-4 md:text-center text-sm md:text-md">
         Your personal Product Scout is always on watch, leaving no stone
         unturned to uncover the next big thing. <br />
         Get real-time insights delivered daily so lucrative opportunities never
@@ -71,10 +71,10 @@ const loginWithGoogle = async () => {
     />
   </div>
   <div
-    class="flex items-center justify-between max-w-[1200px] mx-auto gap-5 px-5 py-10"
+    class="md:flex items-center justify-between max-w-[1200px] mx-auto gap-5 px-5 py-10"
   >
     <div class="">
-      <p class="text-5xl font-semibold">
+      <p class="text-4xl lg:text-5xl font-semibold">
         Unlock E-commerce Success with Winning Products
       </p>
       <p class="py-4 text-lg">

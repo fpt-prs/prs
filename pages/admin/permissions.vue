@@ -102,14 +102,14 @@ const updatePermission = async () => {
 <template>
   <NuxtLayout name="admin">
     <p class="text-2xl px-4 py-3">Permissions</p>
-    <div class="border border-color rounded-lg mx-4">
+    <div class="border border-color rounded-lg mx-4 overflow-x-auto">
       <table class="w-full">
         <thead class="border-b border-color">
           <tr>
             <th
               v-for="column in columns"
               :key="column.key"
-              class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider"
+              class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider first:sticky left-0 bg-white dark:bg-gray-950 rounded-2xl"
             >
               {{ column.label }}
             </th>
@@ -117,7 +117,7 @@ const updatePermission = async () => {
         </thead>
         <tbody>
           <tr v-for="permission of permissions" :key="permission.id">
-            <td class="px-4 py-3">{{ permission.id }}</td>
+            <td class="px-4 py-3 sticky -left-1 bg-white dark:bg-gray-950">{{ permission.id }}</td>
             <td class="px-4 py-3">{{ permission.name }}</td>
             <td class="px-4 py-3">
               <UDropdown

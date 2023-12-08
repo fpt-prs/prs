@@ -45,11 +45,11 @@ const loginWithGoogle = async () => {
       />
     </div>
   </header>
-  <div class="flex flex-col items-center justify-start mx-auto h-screen overflow-hidden w-full">
-    <p class="text-6xl py-6 font-semibold text-center">
-      About us
-    </p>
-    <div class="flex items-start mt-[5vw] justify-center gap-5">
+  <div
+    class="flex flex-col items-center justify-start mx-auto min-h-screen overflow-hidden w-full"
+  >
+    <p class="text-6xl py-6 font-semibold text-center">About us</p>
+    <div class="md:flex items-start mt-[5vw] justify-center gap-5">
       <div class="flex flex-col items-center">
         <img src="/hoangnh.jpg" alt="" class="img shrink rounded-lg" />
         <p class="text-lg font-semibold py-2">Nguyễn Huy Hoàng</p>
@@ -88,5 +88,15 @@ const loginWithGoogle = async () => {
 .img:hover {
   width: 25vmax;
   box-shadow: 0 20px 20px rgba(0, 0, 0, 0.5);
+}
+
+@media screen and (max-width: 768px) {
+  .img {
+    width: 70vw;
+  }
+  .img:hover {
+    width: 80vw;
+    box-shadow: 0 20px 20px rgba(0, 0, 0, 0.5);
+  }
 }
 </style>

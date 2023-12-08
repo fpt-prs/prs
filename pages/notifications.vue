@@ -7,7 +7,7 @@
         <template #item="{ data: notification }">
           <div class="">
             <div
-              class="border border-color p-4 rounded-xl flex justify-between items-center"
+              class="border border-color p-4 rounded-xl md:flex justify-between items-center"
             >
               <div class="">
                 <p class="text-xl text-medium">

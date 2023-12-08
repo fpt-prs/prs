@@ -16,7 +16,7 @@ onMounted(async () => {
 
 <template>
   <NuxtLayout name="default">
-    <div class="grow flex">
+    <div class="grow md:flex">
       <div class="p-5">
         <img :src="sessionUser.image" class="rounded-full w-52 h-52" alt="" />
         <p class="text-2xl font-semibold py-5">{{ sessionUser.name }}</p>
@@ -27,13 +27,13 @@ onMounted(async () => {
           block
         />
       </div>
-      <div class="p-5 m-5 rounded-xl border border-color lg:grow">
+      <div class="md:p-5 m-5 rounded-xl border border-color lg:grow">
         <p class="text-xl px-4 py-3">Profile</p>
         <hr class="border-color" />
         <div class="space-y-3 p-4 max-w-[50ch]">
           <div>
             <span>Email:</span>
-            <span class="text-color pl-3">{{ dbUser.email }}</span>
+            <span class="text-color pl-3 break-all">{{ dbUser.email }}</span>
           </div>
           <div>
             <span>Name:</span>

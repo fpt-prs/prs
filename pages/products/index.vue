@@ -2,34 +2,37 @@
   <NuxtLayout name="default">
     <div class="flex flex-col min-h-full">
       <div
-        class="sticky top-0 flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[100] bg-white dark:bg-gray-950"
+        class="sticky top-0 md:flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[48] bg-white dark:bg-gray-950"
       >
-        <p class="font-semibold text-lg">Products</p>
-        <div class="flex gap-4">
-          <UButton
-            color="gray"
-            icon="i-heroicons-plus"
-            label="New"
-            to="/products/new"
-            v-if="isAdmin"
-          />
+        <p class="font-semibold text-lg py-2">Products</p>
+        <div class="flex max-md:flex-col gap-4 items-start">
           <UInput
             v-model="search"
             @keyup.enter="searchByName"
             placeholder="Press enter to search..."
             color="gray"
             icon="i-heroicons-magnifying-glass"
+            class="max-md:w-full"
           />
-          <USelectMenu
-            v-model="sortCriteria"
-            :options="sortCriterias"
-            option-attribute="name"
-            color="gray"
-          >
-            <template #option="{ option: criteria }">
-              <span class="">{{ criteria.name }}</span>
-            </template>
-          </USelectMenu>
+          <div class="flex gap-4">
+            <UButton
+              color="gray"
+              icon="i-heroicons-plus"
+              label="New"
+              to="/products/new"
+              v-if="isAdmin"
+            />
+            <USelectMenu
+              v-model="sortCriteria"
+              :options="sortCriterias"
+              option-attribute="name"
+              color="gray"
+            >
+              <template #option="{ option: criteria }">
+                <span class="">{{ criteria.name }}</span>
+              </template>
+            </USelectMenu>
+          </div>
         </div>
       </div>
       <div
@@ -40,7 +43,9 @@
           v-model="page"
           :total="totalElements"
           :per-page="10"
+          :max="isSmallScreen ? 3 : 5"
           color="gray"
+          size="sm"
         />
       </div>
       <div
@@ -57,11 +62,14 @@
         <UIcon name="i-heroicons-circle-stack-solid" size="xl" />
         <p class="text-xl ml-1 text-color">No Item</p>
       </div>
-      <div class="gap-5 p-5 space-y-5">
-        <div class="flex items-center" v-for="row in products">
-          <a class="flex min-w-0 grow" :href="`/product/${row.productCode}`">
+      <div
+        class="gap-5 p-5 md:space-y-5 space-y-16"
+        v-if="!isLoading && products?.length !== 0"
+      >
+        <div class="md:flex items-center" v-for="row in products">
+          <a class="md:flex min-w-0 grow" :href="`/product/${row.productCode}`">
             <img
-              class="w-28 h-28 mr-4 rounded"
+              class="md:w-28 md:h-28 w-full h-full mr-4 rounded"
               :src="
                 row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
               "
@@ -74,7 +82,10 @@
               </div>
             </div>
           </a>
-          <div class="space-y-4 flex flex-col" v-if="isAdmin">
+          <div
+            class="gap-4 flex md:flex-col md:items-stretch items-center"
+            v-if="isAdmin"
+          >
             <UButton
               label="Edit"
               icon="i-heroicons-pencil-square"
@@ -108,6 +119,7 @@
           v-model="page"
           :total="totalElements"
           :per-page="10"
+          :max="isSmallScreen ? 3 : 5"
           color="gray"
         />
       </div>
@@ -234,4 +246,5 @@ const toggleActiveData = async (product) => {
 const { getSession } = useAuth();
 const session = await getSession();
 const isAdmin = await isAuthorized(session, "product.write.all");
+const isSmallScreen = useMedia("(max-width: 768px)");
 </script>

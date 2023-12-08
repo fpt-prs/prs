@@ -2,7 +2,7 @@
   <NuxtLayout name="default">
     <div class="grow">
       <p class="text-xl px-4 py-3">Billing</p>
-      <div class="px-4 py-3 grid grid-cols-2 items-center gap-4">
+      <div class="px-4 py-3 grid md:grid-cols-2 items-center gap-4">
         <UCard class="grow">
           <p>Current subscription</p>
           <p class="text-4xl">
@@ -15,7 +15,7 @@
         </UCard>
         <UCard class="grow">
           <p>Credits</p>
-          <div class="flex items-center gap-2">
+          <div class="flex max-md:flex-col md:items-center gap-2">
             <p class="text-4xl">
               {{
                 balance != null && balance !== undefined
@@ -43,7 +43,7 @@
         </UCard>
       </div>
       <p class="border-y border-color px-4 py-3">Subscribe</p>
-      <div class="px-4 py-3 flex gap-3">
+      <div class="px-4 py-3 flex gap-3 overflow-x-auto">
         <div
           class="px-6 py-5 border border-dashed hover:border-solid border-color hover:border-blue-800 hover:dark:border-blue-400 rounded-lg cursor-pointer hover:bg-blue-200 hover:dark:bg-blue-900/40 hover:text-blue-800 hover:dark:text-blue-400"
           v-for="subscription of subscriptions"

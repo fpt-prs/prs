@@ -147,14 +147,14 @@ onMounted(() => {
 <template>
   <NuxtLayout name="admin">
     <p class="text-2xl px-4 py-3">Roles</p>
-    <div class="border border-color rounded-lg mx-4">
+    <div class="border border-color rounded-lg mx-4 overflow-x-auto">
       <table class="w-full">
         <thead class="border-b border-color">
           <tr>
             <th
               v-for="column in columns"
               :key="column.key"
-              class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider"
+              class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider first:sticky left-0 bg-white dark:bg-gray-950 rounded-lg"
             >
               {{ column.label }}
             </th>
@@ -163,7 +163,9 @@ onMounted(() => {
         <tbody>
           <template v-for="role of roles" :key="role.id">
             <tr class="">
-              <td class="px-4 py-3">{{ role.id }}</td>
+              <td class="px-4 py-3 sticky left-0 bg-white dark:bg-gray-950">
+                {{ role.id }}
+              </td>
               <td class="px-4 py-3">{{ role.name }}</td>
               <td class="px-4 py-3">
                 <UDropdown
@@ -181,7 +183,9 @@ onMounted(() => {
             </tr>
           </template>
           <tr>
-            <td></td>
+            <td
+              class="px-4 py-3 sticky left-0 bg-white dark:bg-gray-950 z-10"
+            ></td>
             <td class="px-4 py-3">
               <UInput
                 placeholder="New role name"

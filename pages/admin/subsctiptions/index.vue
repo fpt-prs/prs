@@ -10,9 +10,7 @@ const isPaymentWritable = await isAuthorized(session, "payment.write.all");
 const newOption = ref({});
 const validate = computed(() => {
   return (
-    newOption.value.name &&
-    newOption.value.price &&
-    newOption.value.duration
+    newOption.value.name && newOption.value.price && newOption.value.duration
   );
 });
 
@@ -103,13 +101,10 @@ const updateOption = async () => {
     duration: parseInt(editingOpt.value.duration),
   };
 
-  const updateRes = await fetch(
-    `/api/pricing-options/${editingOpt.value.id}`,
-    {
-      method: "POST",
-      body: JSON.stringify(updateOptionReq),
-    }
-  );
+  const updateRes = await fetch(`/api/pricing-options/${editingOpt.value.id}`, {
+    method: "POST",
+    body: JSON.stringify(updateOptionReq),
+  });
 
   const status = updateRes.status;
   const toast = useToast();
@@ -128,14 +123,14 @@ const updateOption = async () => {
 <template>
   <NuxtLayout name="admin">
     <p class="text-2xl px-4 py-3">Subscription</p>
-    <div class="border border-color rounded-lg mx-4">
+    <div class="border border-color rounded-lg overflow-x-auto mx-4">
       <table class="w-full">
         <thead class="border-b border-color">
           <tr>
             <th
               v-for="column in columns"
               :key="column.key"
-              class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider"
+              class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider first:sticky left-0 bg-white dark:bg-gray-950 rounded-lg"
             >
               {{ column.label }}
             </th>
@@ -143,7 +138,9 @@ const updateOption = async () => {
         </thead>
         <tbody>
           <tr v-for="option of options" :key="option.id">
-            <td class="px-4 py-3">{{ option.id }}</td>
+            <td class="px-4 py-3 sticky left-0 bg-white dark:bg-gray-950">
+              {{ option.id }}
+            </td>
             <td class="px-4 py-3">{{ option.name }}</td>
             <td class="px-4 py-3">{{ option.price }}</td>
             <td class="px-4 py-3">{{ option.duration }}</td>
@@ -162,7 +159,9 @@ const updateOption = async () => {
             </td>
           </tr>
           <tr v-if="isPaymentWritable">
-            <td></td>
+            <td
+              class="sticky left-0 bg-white dark:bg-gray-950 z-10 px-4 py-3"
+            ></td>
             <td class="px-4 py-3">
               <UInput
                 placeholder="Enter name"

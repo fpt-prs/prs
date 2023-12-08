@@ -170,14 +170,14 @@ const fetchCurrentQR = async (id) => {
 <template>
   <NuxtLayout name="admin">
     <p class="text-2xl px-4 py-3">Bank accounts</p>
-    <div class="border border-color rounded-lg mx-4">
+    <div class="border border-color rounded-lg overflow-x-auto mx-4">
       <table class="w-full">
         <thead class="border-b border-color">
           <tr>
             <th
               v-for="column in columns"
               :key="column.key"
-              class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider"
+              class="px-4 py-3 text-left text-sm font-medium uppercase tracking-wider first:sticky left-0 bg-white dark:bg-gray-950 rounded-lg"
             >
               {{ column.label }}
             </th>
@@ -185,7 +185,9 @@ const fetchCurrentQR = async (id) => {
         </thead>
         <tbody>
           <tr v-for="account of accounts" :key="account.id">
-            <td class="px-4 py-3">{{ account.id }}</td>
+            <td class="px-4 py-3 sticky left-0 bg-white dark:bg-gray-950">
+              {{ account.id }}
+            </td>
             <td class="px-4 py-3">{{ account.name }}</td>
             <td class="px-4 py-3">{{ account.accountNumber }}</td>
             <td class="px-4 py-3">{{ account.bankName }}</td>
@@ -207,7 +209,9 @@ const fetchCurrentQR = async (id) => {
             </td>
           </tr>
           <tr v-if="isPaymentWritable">
-            <td></td>
+            <td
+              class="px-4 py-3 sticky left-0 bg-white dark:bg-gray-950 z-10"
+            ></td>
             <td class="px-4 py-3">
               <UInput
                 placeholder="Enter name"

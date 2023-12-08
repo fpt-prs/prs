@@ -9,6 +9,7 @@
         :page-count="size"
         color="gray"
         v-if="totalElements > 0"
+        :max="isSmallScreen ? 3 : 5"
       />
     </div>
     <div
@@ -25,7 +26,9 @@
       <UIcon name="i-heroicons-inbox" class="text-color w-12 h-12" size="xl" />
       <p class="text-xl ml-1 text-color">No Item</p>
     </div>
-    <slot name="all" :data="elements" v-if="!isLoading" />
+    <div class="overflow-x-auto">
+      <slot name="all" :data="elements" v-if="!isLoading" />
+    </div>
     <div class="gap-5 p-5 space-y-5" v-if="!isLoading && type === 'item'">
       <slot name="item" :data="element" v-for="element in elements" />
     </div>
@@ -38,6 +41,7 @@
         :page-count="size"
         color="gray"
         v-if="totalElements > 0"
+        :max="isSmallScreen ? 3 : 5"
       />
     </div>
   </div>
@@ -89,6 +93,7 @@ const props = defineProps({
     default: "item",
   },
 });
+const isSmallScreen = useMedia("(max-width: 768px)");
 </script>
 
 <style></style>
