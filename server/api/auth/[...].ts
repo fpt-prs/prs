@@ -40,7 +40,7 @@ export default NuxtAuthHandler({
         }
 
         token.id = profile.id;
-        token.jwt = account?.id_token || "";
+        // token.jwt = account?.id_token || "";
         token.roles = profile.roles;
         token.isActive = profile.isActive;
       }
@@ -50,7 +50,7 @@ export default NuxtAuthHandler({
     // Callback whenever session is checked, see https://next-auth.js.org/configuration/callbacks#session-callback
     session: async ({ session, token }) => {
       (session as any).user.sub = token.sub;
-      (session as any).user.jwt = token.jwt;
+      // (session as any).user.jwt = token.jwt;
       (session as any).user.id = token.id;
       (session as any).user.country = token.country;
       (session as any).user.roles = token.roles;
