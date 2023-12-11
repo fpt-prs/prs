@@ -47,10 +47,6 @@
 useHead({
   title: "New notification",
 });
-const router = useRouter();
-const { getSession } = useAuth();
-const session = await getSession();
-
 const route = useRoute();
 const id = route.params.id;
 

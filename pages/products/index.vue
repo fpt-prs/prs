@@ -24,7 +24,7 @@
             <USelectMenu
               v-model="selectedCategory"
               :options="categories"
-              class="cursor-pointer"
+              class="cursor-pointer min-w-[10rem]"
               placeholder="Select category"
               color="gray"
             />

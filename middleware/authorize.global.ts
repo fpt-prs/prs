@@ -9,7 +9,7 @@ const routeAction = {
   "/admin/subscriptions": "payment.read.all",
   "/product/new": "product.write.all",
   "/product/.*/edit": "product.write.all",
-  "user/.*": "user.read.all",
+  "/user/.*": "user.read.all",
 };
 
 export default defineNuxtRouteMiddleware(async (to) => {
