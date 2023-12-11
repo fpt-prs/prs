@@ -67,17 +67,17 @@ const graphComputed = computed(() => {
   }
 
   return {
-    labels: product.value.scores.map((p) => p.date),
+    labels: product.value.scores.map((p) => p.date).reverse(),
     datasets: [
       {
         label: "Popularity",
         backgroundColor: "#3B82F6",
-        data: product.value.scores.map((p) => p.rating),
+        data: product.value.scores.map((p) => p.rating).reverse(),
       },
       {
         label: "Comment score",
         backgroundColor: "#fff000",
-        data: product.value.scores.map((p) => p.comment),
+        data: product.value.scores.map((p) => p.comment).reverse(),
       },
     ],
   };

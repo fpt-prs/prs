@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
   const backendUrl = process.env.BACKEND_URL || "http://localhost:8080";
-  const { field, order, page, search } = getQuery(event);
+  const { field, order, page, search, category } = getQuery(event);
 
   if (!field || !order) {
     return {
@@ -20,6 +20,7 @@ export default defineEventHandler(async (event) => {
 
   let params = new URLSearchParams();
   params.append("name", search as string);
+  params.append("category", category as string);
   params.append("page", page as string);
   params.append("size", pageSize.toString());
   params.append("sortBy", field as string);

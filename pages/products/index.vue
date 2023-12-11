@@ -2,10 +2,10 @@
   <NuxtLayout name="default">
     <div class="flex flex-col min-h-full">
       <div
-        class="sticky top-0 md:flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[48] bg-white dark:bg-gray-950"
+        class="sticky top-0 lg:flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[48] bg-white dark:bg-gray-950"
       >
         <p class="font-semibold text-lg py-2">Products</p>
-        <div class="flex max-md:flex-col gap-4 items-start">
+        <div class="flex max-lg:flex-col gap-4 items-start">
           <UInput
             v-model="search"
             @keyup.enter="searchByName"
@@ -21,6 +21,12 @@
               label="New"
               to="/products/new"
               v-if="isAdmin"
+            />
+            <USelectMenu
+              v-model="selectedCategory"
+              :options="categories"
+              class="cursor-pointer"
+              placeholder="Select category"
             />
             <USelectMenu
               v-model="sortCriteria"
@@ -134,7 +140,13 @@ useHead({
 
 const router = useRouter();
 const route = useRoute();
-const { field, order, page: pageStr, search: searchStr } = route.query;
+const {
+  field,
+  order,
+  page: pageStr,
+  search: searchStr,
+  category: categoryStr,
+} = route.query;
 
 const sortCriterias = [
   { name: "Price: Low to High", field: "price", order: "asc" },
@@ -147,6 +159,19 @@ const sortCriteria = ref(
     sortCriterias[0]
 );
 
+const categories = ref([]);
+const selectedCategory = ref(categoryStr || "");
+
+onMounted(async () => {
+  const { data, status } = await fetchJson("/api/products/categories");
+  if (status === 200) {
+    categories.value = JSON.parse(data.body).filter((cate) => !!cate);
+    categories.value.unshift("All");
+  } else {
+    newToastError("Something went wrong");
+  }
+});
+
 const products = ref([]);
 const totalElements = ref(0);
 const page = ref(parseInt(pageStr || "1"));
@@ -158,6 +183,7 @@ watch(sortCriteria, async (newCriteria) => {
     query: {
       field: newCriteria.field,
       order: newCriteria.order,
+      category: selectedCategory.value,
       page: "1",
     },
   });
@@ -171,10 +197,25 @@ watch(page, async (newPage) => {
     query: {
       field: sortCriteria.value.field,
       order: sortCriteria.value.order,
+      category: selectedCategory.value,
       page: newPage.toString(),
     },
   });
   page.value = newPage;
+  await fetchData();
+});
+
+watch(selectedCategory, async (newCategory) => {
+  router.push({
+    query: {
+      field: sortCriteria.value.field,
+      order: sortCriteria.value.order,
+      category: newCategory,
+      page: "1",
+    },
+  });
+  page.value = 1;
+  selectedCategory.value = newCategory;
   await fetchData();
 });
 
@@ -185,6 +226,7 @@ const searchByName = async () => {
       order: sortCriteria.order,
       page: "1",
       search: search.value,
+      category: selectedCategory.value,
     },
   });
   page.value = 1;
@@ -198,6 +240,7 @@ const fetchData = async () => {
   params.append("field", sortCriteria.value.field);
   params.append("order", sortCriteria.value.order);
   params.append("page", page.value.toString());
+  params.append("category", selectedCategory.value);
   params.append("search", search.value);
 
   const res = await fetch(`/api/products?${params.toString()}`);
