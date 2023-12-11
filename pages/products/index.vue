@@ -236,11 +236,14 @@ const searchByName = async () => {
 const fetchData = async () => {
   isLoading.value = true;
 
+  const categoryMatcher =
+    selectedCategory.value === "All" ? "" : selectedCategory.value;
+
   const params = new URLSearchParams();
   params.append("field", sortCriteria.value.field);
   params.append("order", sortCriteria.value.order);
   params.append("page", page.value.toString());
-  params.append("category", selectedCategory.value);
+  params.append("category", categoryMatcher);
   params.append("search", search.value);
 
   const res = await fetch(`/api/products?${params.toString()}`);
