@@ -2,11 +2,11 @@
 
 <template>
   <NuxtLayout name="default">
-    <div class="flex max-md:flex-col h-full">
+    <div class="flex max-lg:flex-col h-full">
       <div
-        class="p-5 md:border-r border-color overflow-x-auto lg:min-w-[20ch] md:min-h-screen max-md:hidden"
+        class="p-5 lg:border-r border-color overflow-x-auto lg:min-w-[20ch] lg:min-h-screen max-lg:hidden"
       >
-        <ul class="flex md:flex-col">
+        <ul class="flex lg:flex-col">
           <UButton
             icon="i-heroicons-user-circle"
             variant="ghost"
@@ -74,7 +74,7 @@
         </ul>
       </div>
       <div
-        class="p-5 border-b border-color overflow-x-auto lg:min-w-[20ch] md:hidden"
+        class="p-5 border-b border-color overflow-x-auto lg:min-w-[20ch] lg:hidden"
       >
         <ul class="flex gap-5">
           <UButton
@@ -135,7 +135,7 @@
           />
         </ul>
       </div>
-      <div class="w-screen overflow-y-auto">
+      <div class="w-full overflow-y-auto pb-24">
         <slot />
       </div>
     </div>

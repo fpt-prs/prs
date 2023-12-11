@@ -1,8 +1,8 @@
 <template>
   <NuxtLayout name="admin">
     <div class="grow">
-      <div class="px-4 py-3 md:flex justify-between items-center">
-        <p class="text-2xl md:px-4 py-3">Notifications</p>
+      <div class="px-4 py-3 lg:flex justify-between items-center">
+        <p class="text-2xl lg:px-4 py-3">Notifications</p>
         <UButton
           icon="i-heroicons-plus"
           label="New notification"

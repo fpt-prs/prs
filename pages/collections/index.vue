@@ -52,8 +52,8 @@ const exportCollection = async () => {
 
 <template>
   <NuxtLayout name="default">
-    <div class="flex max-md:flex-col max-w-screen min-h-screen">
-      <div class="p-5 border-r border-color max-md:hidden">
+    <div class="flex max-lg:flex-col max-w-screen min-h-screen">
+      <div class="p-5 border-r border-color max-lg:hidden">
         <ul class="flex flex-col sticky top-0">
           <UButton
             v-for="c in collections"
@@ -68,7 +68,9 @@ const exportCollection = async () => {
           />
         </ul>
       </div>
-      <div class="p-5 border-b border-color md:hidden flex gap-4 overflow-x-auto">
+      <div
+        class="p-5 border-b border-color lg:hidden flex gap-4 overflow-x-auto"
+      >
         <UButton
           v-for="c in collections"
           :key="c.id"
@@ -107,7 +109,7 @@ const exportCollection = async () => {
             @click="exportCollection"
           />
         </div>
-        <div class="px-4 grid md:grid-cols-3 gap-4" v-if="collection.created">
+        <div class="px-4 grid lg:grid-cols-3 gap-4" v-if="collection.created">
           <div class="p-4 border border-color rounded-lg">
             <p class="">Category</p>
             <p class="text-xl text-color">
@@ -127,12 +129,12 @@ const exportCollection = async () => {
             </p>
           </div>
         </div>
-        <div class="space-y-3 p-4">
+        <div class="space-y-3 p-4 pb-24">
           <div class="flex items-center" v-for="row in products">
             <a class="min-w-0 grow block" :href="`/product/${row.productCode}`">
-              <div class="md:flex">
+              <div class="lg:flex">
                 <img
-                  class="w-full h-full md:w-36 md:h-36 mr-4"
+                  class="w-full h-full lg:w-36 lg:h-36 mr-4"
                   :src="
                     row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
                   "

@@ -5,18 +5,17 @@
         class="sticky top-0 lg:flex justify-between items-center gap-5 p-5 dark:border-b border-color z-[48] bg-white dark:bg-gray-950"
       >
         <p class="font-semibold text-lg py-2">Products</p>
-        <div class="flex max-lg:flex-col gap-4 items-start">
+        <div class="flex max-lg:flex-col gap-4 lg:items-center">
           <UInput
             v-model="search"
             @keyup.enter="searchByName"
             placeholder="Press enter to search..."
             color="gray"
             icon="i-heroicons-magnifying-glass"
-            class="max-md:w-full"
+            class="max-lg:w-full"
           />
-          <div class="flex gap-4">
+          <div class="flex max-md:flex-wrap max-lg:items-start gap-4">
             <UButton
-              color="gray"
               icon="i-heroicons-plus"
               label="New"
               to="/products/new"
@@ -27,6 +26,7 @@
               :options="categories"
               class="cursor-pointer"
               placeholder="Select category"
+              color="gray"
             />
             <USelectMenu
               v-model="sortCriteria"
@@ -69,7 +69,7 @@
         <p class="text-xl ml-1 text-color">No Item</p>
       </div>
       <div
-        class="gap-5 p-5 md:space-y-5 space-y-16"
+        class="gap-5 p-5 lg:space-y-5 space-y-16"
         v-if="!isLoading && products?.length !== 0"
       >
         <div class="md:flex items-center" v-for="row in products">
@@ -89,7 +89,7 @@
             </div>
           </a>
           <div
-            class="gap-4 flex md:flex-col md:items-stretch items-center"
+            class="gap-4 flex md:flex-col lg:items-stretch items-center"
             v-if="isAdmin"
           >
             <UButton

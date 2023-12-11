@@ -1,12 +1,12 @@
 <template>
   <NuxtLayout name="admin">
-    <div class="flex max-md:flex-col-reverse min-h-full">
+    <div class="flex max-lg:flex-col-reverse min-h-full">
       <div class="grow border-r border-color">
         <p class="text-2xl px-4 py-3">Billing history</p>
         <Paginator :loader="loadBills" :size="5">
           <template #item="{ data }">
             <div
-              class="px-4 py-3 bg-color rounded-xl border border-color md:flex justify-between items-center"
+              class="px-4 py-3 bg-color rounded-xl border border-color lg:flex justify-between items-center"
             >
               <p class="text-3xl">
                 {{ `${numberWithSep(data.balanceChange)} VND` }}
@@ -18,7 +18,10 @@
           </template>
         </Paginator>
       </div>
-      <div class="md:min-w-[24em] max-md:border-b border-color" v-if="isPaymentWritable">
+      <div
+        class="lg:min-w-[24em] max-lg:border-b border-color"
+        v-if="isPaymentWritable"
+      >
         <p class="text-2xl px-4 py-3">Verify payment</p>
         <UForm
           :validate="validate"

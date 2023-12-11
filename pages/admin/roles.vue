@@ -100,11 +100,11 @@ const updateRole = async () => {
 const isConfirmRemove = ref(false);
 const removingRole = ref({});
 const removeRole = async () => {
+  isConfirmRemove.value = false;
   // push to server
   const updateRes = await fetch(`/api/roles?id=${removingRole.value.id}`, {
     method: "DELETE",
   });
-  isConfirmRemove.value = false;
 
   const status = updateRes.status;
   if (status === 200) {

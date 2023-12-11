@@ -21,10 +21,12 @@ const loginWithGoogle = async () => {
     <a href="">
       <img src="/logo.svg" class="h-8 w-8" alt="" />
     </a>
-    <div class="">
-    </div>
+    <div class=""></div>
     <div class="flex items-center gap-4">
-      <a href="/about" class="text-color hover:text-black dark:hover:text-white">
+      <a
+        href="/about"
+        class="text-color hover:text-black dark:hover:text-white"
+      >
         About us
       </a>
       <UButton
@@ -48,7 +50,9 @@ const loginWithGoogle = async () => {
       <h1 class="max-w-[500px] text-4xl lg:text-7xl text-center font-bold pb-6">
         Supercharge your business
       </h1>
-      <p class="text-gray-700 dark:text-gray-400 px-4 md:text-center text-sm md:text-md">
+      <p
+        class="text-gray-700 dark:text-gray-400 px-4 lg:text-center text-sm lg:text-md"
+      >
         Your personal Product Scout is always on watch, leaving no stone
         unturned to uncover the next big thing. <br />
         Get real-time insights delivered daily so lucrative opportunities never
@@ -71,7 +75,7 @@ const loginWithGoogle = async () => {
     />
   </div>
   <div
-    class="md:flex items-center justify-between max-w-[1200px] mx-auto gap-5 px-5 py-10"
+    class="lg:flex items-center justify-between max-w-[1200px] mx-auto gap-5 px-5 py-10"
   >
     <div class="">
       <p class="text-4xl lg:text-5xl font-semibold">

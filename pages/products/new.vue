@@ -151,7 +151,7 @@ const validate = () => {
       </UForm>
       <UFormGroup label="Images">
         <div
-          class="flex max-md:flex-col md:items-center gap-5 pb-5 max-md:pb-10"
+          class="flex max-lg:flex-col lg:items-center gap-5 pb-5 max-lg:pb-10"
           v-for="image in product.images"
         >
           <UInput
@@ -170,12 +170,12 @@ const validate = () => {
           <img
             :src="image.imageUrl"
             onerror="this.src='https://via.placeholder.com/150'"
-            class="md:w-36 w-full aspect-square rounded"
+            class="lg:w-36 w-full aspect-square rounded"
             alt=""
           />
-          <hr class="md:hidden border-color" />
+          <hr class="lg:hidden border-color" />
         </div>
-        <div class="flex max-md:flex-col md:items-center gap-5 pb-5">
+        <div class="flex max-lg:flex-col lg:items-center gap-5 pb-5">
           <UInput
             size="lg"
             placeholder="Images"
@@ -194,7 +194,7 @@ const validate = () => {
 
           <img
             :src="newImage || ''"
-            class="md:w-36 w-full aspect-square rounded"
+            class="lg:w-36 w-full aspect-square rounded"
             onerror="this.src='https://via.placeholder.com/150'"
             alt=""
           />

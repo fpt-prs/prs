@@ -49,7 +49,7 @@ const loginWithGoogle = async () => {
     class="flex flex-col items-center justify-start mx-auto min-h-screen overflow-hidden w-full"
   >
     <p class="text-6xl py-6 font-semibold text-center">About us</p>
-    <div class="md:flex items-start mt-[5vw] justify-center gap-5">
+    <div class="lg:flex items-start mt-[5vw] justify-center gap-5">
       <div class="flex flex-col items-center">
         <img src="/hoangnh.jpg" alt="" class="img shrink rounded-lg" />
         <p class="text-lg font-semibold py-2">Nguyễn Huy Hoàng</p>

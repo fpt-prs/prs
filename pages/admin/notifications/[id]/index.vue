@@ -12,8 +12,8 @@
     <div class="px-4 py-3">
       <p class="text-2xl font-semibold">View notification</p>
     </div>
-    <div class="w-full md:flex gap-4 px-4 py-3 max-w-[60rem]">
-      <div class="grow space-y-5 pb-5 max-md:border-b border-color">
+    <div class="w-full lg:flex gap-4 px-4 py-3 max-w-[60rem]">
+      <div class="grow space-y-5 pb-5 max-lg:border-b border-color">
         <p class="text-xl font-medium">Header</p>
         <p class="">
           {{ notification.header }}
@@ -21,7 +21,7 @@
         <hr class="border-color" />
         <p class="text-xl font-medium">Content</p>
         <p>
-          {{ notification.content || "---"}}
+          {{ notification.content || "---" }}
         </p>
         <hr class="border-color" />
         <p class="text-xl font-medium">Created</p>

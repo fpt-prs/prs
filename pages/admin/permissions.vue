@@ -6,6 +6,7 @@ useHead({
 const newPermissionName = ref("");
 const isEditing = ref(false);
 const editingPermission = ref({});
+const toast = useToast();
 
 const permissions = ref([]);
 const fetchPer = async () => {
@@ -36,7 +37,8 @@ const actions = (permission) => [
       label: "Delete",
       icon: "i-heroicons-trash-20-solid",
       click: () => {
-        removePermission(permission);
+        removingPermission.value = permission;
+        isConfirmRemove.value = true;
       },
     },
   ],
@@ -65,13 +67,25 @@ const addPermission = async () => {
   newPermissionName.value = "";
 };
 
-const removePermission = async (permission) => {
-  permissions.value = permissions.value.filter((r) => r.id !== permission.id);
-
+const isConfirmRemove = ref(false);
+const removingPermission = ref({});
+const removePermission = async () => {
+  isConfirmRemove.value = false;
   // push to server
-  const updateRes = await fetch(`/api/permissions?id=${permission.id}`, {
-    method: "DELETE",
-  });
+  const updateRes = await fetch(
+    `/api/permissions?id=${removingPermission.value.id}`,
+    {
+      method: "DELETE",
+    }
+  );
+
+  const status = updateRes.status;
+  if (status === 200) {
+    toast.add({ title: "Role deleted successfully" });
+    await fetchPer();
+  } else {
+    toast.add({ title: "Error deleting role" });
+  }
 };
 
 const updatePermission = async () => {
@@ -117,7 +131,9 @@ const updatePermission = async () => {
         </thead>
         <tbody>
           <tr v-for="permission of permissions" :key="permission.id">
-            <td class="px-4 py-3 sticky -left-1 bg-white dark:bg-gray-950">{{ permission.id }}</td>
+            <td class="px-4 py-3 sticky -left-1 bg-white dark:bg-gray-950">
+              {{ permission.id }}
+            </td>
             <td class="px-4 py-3">{{ permission.name }}</td>
             <td class="px-4 py-3">
               <UDropdown
@@ -187,6 +203,37 @@ const updatePermission = async () => {
                 variant="soft"
                 @click="updatePermission"
                 color="green"
+              />
+            </div>
+          </template>
+        </UCard>
+      </UModal>
+      <UModal v-model="isConfirmRemove">
+        <UCard>
+          <template #header>
+            <div class="flex justify-between">
+              <p>Confirm</p>
+              <UButton
+                icon="i-heroicons-x-mark"
+                color="gray"
+                variant="ghost"
+                @click="isConfirmRemove = false"
+              />
+            </div>
+          </template>
+          <div>Confirm delete ?</div>
+          <template #footer>
+            <div class="space-x-4">
+              <UButton
+                label="Cancel"
+                color="gray"
+                @click="isConfirmRemove = false"
+              />
+              <UButton
+                label="Confirm"
+                variant="ghost"
+                color="red"
+                @click="removePermission"
               />
             </div>
           </template>

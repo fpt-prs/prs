@@ -2,7 +2,7 @@
   <NuxtLayout name="default">
     <div class="grow">
       <p class="text-xl px-4 py-3">Billing</p>
-      <div class="px-4 py-3 grid md:grid-cols-2 items-center gap-4">
+      <div class="px-4 py-3 grid lg:grid-cols-2 items-center gap-4">
         <UCard class="grow">
           <p>Current subscription</p>
           <p class="text-4xl">
@@ -15,7 +15,7 @@
         </UCard>
         <UCard class="grow">
           <p>Credits</p>
-          <div class="flex max-md:flex-col md:items-center gap-2">
+          <div class="flex max-lg:flex-col lg:items-center gap-2">
             <p class="text-4xl">
               {{
                 balance != null && balance !== undefined
