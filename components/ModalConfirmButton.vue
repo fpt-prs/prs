@@ -2,7 +2,10 @@
   <UButton
     :label="label"
     :color="color"
-    @click="confirm = true"
+    @click="
+      confirm = true;
+      emit('start');
+    "
     :variant="variant"
     :icon="icon"
     :class="class"
@@ -12,12 +15,7 @@
       <template #header>
         <div class="flex justify-between">
           <p>Confirm</p>
-          <UButton
-            icon="i-heroicons-x-mark"
-            color="gray"
-            variant="ghost"
-            @click="confirm = false"
-          />
+          <UButton icon="i-heroicons-x-mark" color="gray" variant="ghost" />
         </div>
       </template>
       <div>Confirm {{ label }} ?</div>
@@ -65,7 +63,7 @@ const props = defineProps({
 const confirm = ref(false);
 
 // confirm event
-const emit = defineEmits(["confirm"]);
+const emit = defineEmits(["confirm", "start"]);
 const confirmEvent = () => {
   emit("confirm");
   confirm.value = false;

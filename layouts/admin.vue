@@ -4,7 +4,7 @@
   <NuxtLayout name="default">
     <div class="flex max-lg:flex-col h-full">
       <div
-        class="p-5 lg:border-r border-color overflow-x-auto lg:min-w-[20ch] lg:min-h-screen max-lg:hidden"
+        class="p-2 lg:border-r border-color overflow-x-auto lg:min-h-screen max-lg:hidden fixed w-44"
       >
         <ul class="flex lg:flex-col">
           <UButton
@@ -64,7 +64,7 @@
             to="/admin/subsctiptions"
           />
           <UButton
-            icon="i-heroicons-banknotes"
+            icon="i-heroicons-qr-code"
             size="lg"
             variant="ghost"
             label="Bank accounts"
@@ -135,7 +135,7 @@
           />
         </ul>
       </div>
-      <div class="w-full overflow-y-auto pb-24">
+      <div class="w-full overflow-y-auto pb-24 lg:ml-44">
         <slot />
       </div>
     </div>

@@ -33,6 +33,13 @@ useHead({
 });
 
 const product = ref({});
+const description = computed(
+  () =>
+    product.value.description
+      ?.trim()
+      .replaceAll("     ", "\n")
+      .replaceAll(/\n+\s\n+/g, "\n") || "No description"
+);
 let graph = {
   labels: [],
   datasets: [
@@ -53,12 +60,6 @@ onMounted(async () => {
   const data = await response.json();
   const body = JSON.parse(data.body);
   product.value = body;
-  const collectionResponse = await fetch(
-    "/api/collection/all?productId=" + body.id
-  );
-  const collectionData = await collectionResponse.json();
-  const collectionBody = JSON.parse(collectionData.body);
-  collections.value = collectionBody;
 });
 
 const graphComputed = computed(() => {
@@ -104,7 +105,7 @@ const chartOptions = ref({
           <img
             v-for="(image, index) in product.images"
             :src="image.imageUrl"
-            class="w-36 aspect-square cursor-pointer my-1"
+            class="w-24 aspect-square cursor-pointer my-1"
             :class="
               index === currentImage
                 ? 'border-2 border-blue-500'
@@ -161,9 +162,9 @@ const chartOptions = ref({
       </div>
       <div class="py-3 border-t border-color mb-10">
         <h2 class="text-2xl py-3 font-semibold">Description</h2>
-        <pre class="whitespace-pre-line">
-          {{ product.description || "No description" }}
-        </pre>
+        <div class="whitespace-pre-wrap">
+          {{ description }}
+        </div>
       </div>
     </div>
   </NuxtLayout>

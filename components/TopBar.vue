@@ -35,7 +35,7 @@
       :trailing="false"
       class="m-5"
     />
-    <div class="p-5 flex flex-col gap-2 justify-between grow">
+    <div class="p-5 flex flex-col gap-2 justify-between md:grow overflow-y-auto">
       <div class="">
         <UButton
           icon="i-heroicons-arrow-trending-up"

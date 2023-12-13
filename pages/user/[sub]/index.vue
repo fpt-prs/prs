@@ -47,6 +47,12 @@
           </span>
         </div>
         <div class="user-active">
+          Hash:
+          <span class="text-color">
+            {{ user.hash }}
+          </span>
+        </div>
+        <div class="user-active">
           Role:
           <span class="text-color">
             {{ user.roles ? user.roles[0].name : "---" }}
@@ -57,32 +63,25 @@
     <div class="px-4 py-3 text-xl font-medium border-b border-color">
       Billing history
     </div>
-    <div class="px-4 py-3 space-y-4">
-      <div
-        class="px-4 py-3 bg-color rounded-xl border border-color flex justify-between"
-        v-for="bill in bills"
-      >
-        <div class="space-y-9">
-          <p class="text-3xl">
-            {{ `${numberWithSep(bill.pricingOption?.price)} VND` }}
-          </p>
+    <Paginator :loader="fetchBillHistory" :size="3" v-if="user.id">
+      <template #item="{ data: bill }">
+        <div class="px-4 py-3 flex justify-between items-center">
           <div class="">
-            <p class="">
-              Client: <span class="text-color">{{ bill.client?.name }}</span>
+            <p class="text-3xl">
+              {{ `${numberWithSep(bill.balanceChange)} VND` }}
+            </p>
+            <p class="text-color">
+              {{ bill.reason }}
+            </p>
+          </div>
+          <div class="flex flex-col justify-between">
+            <p class="text-color">
+              {{ formatDateTime(parseDateTime(bill.timestamp)) }}
             </p>
           </div>
         </div>
-        <div class="flex flex-col justify-between">
-          <p>{{ bill.created?.toLocaleString() }}</p>
-          <div class="">
-            <p class="">
-              Verified by:
-              <span class="text-color">{{ bill.verifier?.name }}</span>
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
+      </template>
+    </Paginator>
   </NuxtLayout>
 </template>
 
@@ -106,7 +105,6 @@ onMounted(async () => {
   const response = await fetch("/api/users/" + sub);
   const data = await response.json();
   const body = JSON.parse(data.body);
-  console.log(body);
   user.value = body;
 });
 
@@ -129,14 +127,14 @@ const toggleActive = async () => {
   }
 };
 
-// bills
-const bills = ref([]);
-onMounted(async () => {
-  const response = await fetch(`/api/bills/user`);
-  const data = await response.json();
-  const body = JSON.parse(data.body);
-  bills.value = body.content;
-});
+const fetchBillHistory = async (page, size) => {
+  const params = new URLSearchParams();
+  params.append("userId", user.value.id.toString());
+  params.append("page", page.toString());
+  params.append("size", size.toString());
+
+  return await fetch(`/api/bills/user?${params.toString()}`);
+};
 </script>
 
 <style></style>

@@ -138,7 +138,7 @@ const fetchBillHistory = async (page, size) => {
   params.append("page", page.toString());
   params.append("size", size.toString());
 
-  return await fetch(`/api/bills/user?${params.toString()}`);
+  return await fetch(`/api/bills/self?${params.toString()}`);
 };
 
 const subscriptions = ref([]);

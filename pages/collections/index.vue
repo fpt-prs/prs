@@ -12,7 +12,6 @@ const collections = ref([]);
 onMounted(async () => {
   await fetchCollection();
   currentId.value = collections.value[0].id;
-  await fetchDetail();
 });
 
 const fetchCollection = async () => {
@@ -33,6 +32,18 @@ const fetchDetail = async () => {
   const result = JSON.parse(dataProducts.body);
   collection.value = result;
   products.value = result.products;
+};
+
+const deletingId = ref(0);
+const deleteCollection = async () => {
+  const response = await fetch(`/api/collection?id=${deletingId.value}`, {
+    method: "DELETE",
+  });
+  const status = response.status;
+  if (status === 200) {
+    await fetchCollection();
+    currentId.value = collections.value[0].id;
+  }
 };
 
 const exportCollection = async () => {
@@ -99,15 +110,26 @@ const exportCollection = async () => {
           <div class="">
             <p class="text-xl">{{ formatDateTime(collection.created) }}</p>
           </div>
-          <UButton
-            icon="i-heroicons-arrow-down-on-square"
-            color="gray"
-            size="lg"
-            label="Export"
-            :trailing="false"
-            class="whitespace-nowrap"
-            @click="exportCollection"
-          />
+          <div class="flex gap-4">
+            <ModalConfirmButton
+              icon="i-heroicons-trash"
+              color="red"
+              variant="outline"
+              label="Delete"
+              class="whitespace-nowrap"
+              @start="deletingId = collection.id"
+              @confirm="deleteCollection"
+            />
+            <UButton
+              icon="i-heroicons-arrow-down-on-square"
+              color="gray"
+              size="lg"
+              label="Export"
+              :trailing="false"
+              class="whitespace-nowrap"
+              @click="exportCollection"
+            />
+          </div>
         </div>
         <div class="px-4 grid lg:grid-cols-3 gap-4" v-if="collection.created">
           <div class="p-4 border border-color rounded-lg">
@@ -124,7 +146,7 @@ const exportCollection = async () => {
           </div>
           <div class="p-4 border border-color rounded-lg">
             <p class="">Position</p>
-            <p class="text-xl text-color">
+            <p class="text-xl text-color break-words">
               {{ collection.ranking || "None" }}
             </p>
           </div>
