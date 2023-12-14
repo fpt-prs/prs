@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
 
   const fetchRes = await fetchBackend(`/api/users/update/admin`, {
     method: "POST",
-    body: JSON.stringify(reqBodyRaw),
+    body: reqBodyRaw,
   });
 
   const status = fetchRes.status;

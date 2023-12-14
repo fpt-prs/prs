@@ -15,7 +15,12 @@
       <template #header>
         <div class="flex justify-between">
           <p>Confirm</p>
-          <UButton icon="i-heroicons-x-mark" color="gray" variant="ghost" />
+          <UButton
+            icon="i-heroicons-x-mark"
+            color="gray"
+            variant="ghost"
+            @click="confirm = false"
+          />
         </div>
       </template>
       <div>Confirm {{ label }} ?</div>

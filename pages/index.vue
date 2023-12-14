@@ -65,6 +65,20 @@ const loginWithGoogle = async () => {
         <img src="/google.svg" class="w-5 h-5" alt="" />
         Continue with Google
       </a> -->
+      <UButton
+        color="black"
+        label="Login"
+        to="/login"
+        :trailing="false"
+        v-if="status !== 'authenticated'"
+      />
+      <UButton
+        color="black"
+        label="Open app"
+        to="/suggest"
+        :trailing="false"
+        v-else
+      />
     </div>
   </div>
   <div class="m-10 mx-auto px-5 max-w-[1200px]">

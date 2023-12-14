@@ -18,7 +18,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const user = session?.user;
   const router = useRouter();
 
-  const publicPaths = ["/login", "/404", "/"];
+  const publicPaths = ["/login", "/404", "/", "/about"];
   if (publicPaths.includes(to.path)) {
     return;
   }

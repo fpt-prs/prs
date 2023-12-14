@@ -20,14 +20,14 @@
                         variant="ghost"
                         color="red"
                         label="Deactive user..."
-                        @confirm="disableUser(row.id)"
+                        @confirm="disableUser(row)"
                       />
                       <ModalConfirmButton
                         v-else
                         variant="ghost"
                         color="green"
                         label="Active user..."
-                        @confirm="enableUser(row.id)"
+                        @confirm="enableUser(row)"
                       />
                       <UButton
                         variant="ghost"
@@ -89,6 +89,7 @@
 useHead({
   title: "User Management",
 });
+const toast = useToast();
 
 const fetchUser = async (page, size) => {
   return await fetch(`/api/users?page=${page}&size=${size}`);
@@ -103,41 +104,41 @@ const colums = [
 ];
 
 // actions
-const disableUser = async (id) => {
-  users.value = users.value.map((user) => {
-    if (user.id === id) {
-      user.isActive = 0;
-    }
-    return user;
-  });
+const disableUser = async (user) => {
 
-  const status = await fetch(`/api/users/status`, {
+  const res = await fetch(`/api/users/status`, {
     method: "POST",
     body: JSON.stringify({
-      id: id,
+      id: user.id,
       isActive: 0,
+      roleIds: user.roles.map((role) => role.id),
     }),
   });
+
+  const status = res.status;
+  if (status === 200) {
+    toast.add({ title: "User disabled successfully" });
+  } else {
+    toast.add({ title: "Error disabling user", color: "red" });
+  }
 };
 
-const enableUser = async (id) => {
-  users.value = users.value.map((user) => {
-    if (user.id === id) {
-      user.isActive = 1;
-    }
-    return user;
-  });
-
-  const currentUser = users.value.find((user) => user.id === id);
-
-  const status = await fetch(`/api/users/status`, {
+const enableUser = async (user) => {
+  const res = await fetch(`/api/users/status`, {
     method: "POST",
     body: JSON.stringify({
-      id: id,
+      id: user.id,
       isActive: 1,
-      roleIds: currentUser.roles.map((role) => role.id),
+      roleIds: user.roles.map((role) => role.id),
     }),
   });
+
+  const status = res.status;
+  if (status === 200) {
+    toast.add({ title: "User disabled successfully" });
+  } else {
+    toast.add({ title: "Error disabling user", color: "red" });
+  }
 };
 
 const isChangingRole = ref(false);
