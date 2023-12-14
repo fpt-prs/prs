@@ -7,7 +7,7 @@ const router = useRouter();
 
 const newToastError = (description) => {
   toast.add({
-    title: "Error",
+    title: "Something went wrong",
     description: description,
     status: "error",
     duration: 3000,
@@ -122,7 +122,7 @@ const confirm = async () => {
     body: JSON.stringify(command),
   });
 
-  const data = res.json();
+  const data = await res.json();
   const status = res.status;
 
   if (status === 200) {

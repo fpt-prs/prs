@@ -19,11 +19,11 @@ export default defineEventHandler(async (event) => {
   });
 
   setResponseStatus(event, fetchRes.status);
+  const maybe = await fetchRes.json();
 
   if (fetchRes.status !== 200) {
     return {
-      statusCode: fetchRes.status,
-      body: "Something went wrong. Please check your input.",
+      body: maybe.error,
     };
   }
 
