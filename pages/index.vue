@@ -24,6 +24,13 @@ const loginWithGoogle = async () => {
     <div class=""></div>
     <div class="flex items-center gap-4">
       <a
+        href="https://m.me/fptprs"
+        target="_blank"
+        class="text-color hover:text-black dark:hover:text-white"
+      >
+        Support
+      </a>
+      <a
         href="/about"
         class="text-color hover:text-black dark:hover:text-white"
       >
@@ -58,26 +65,25 @@ const loginWithGoogle = async () => {
         Get real-time insights delivered daily so lucrative opportunities never
         pass you by.
       </p>
-      <!-- <a
-        href="/login"
-        class="bg-gray-200 dark:bg-gray-800 border border-color px-4 py-3 mt-5 rounded-3xl font-semibold text-sm flex items-center gap-2"
-      >
-        <img src="/google.svg" class="w-5 h-5" alt="" />
-        Continue with Google
-      </a> -->
       <UButton
-        color="black"
-        label="Login"
+        color="gray"
+        label="Login with Google"
         to="/login"
+        size="lg"
+        :ui="{ rounded: 'rounded-full' }"
         :trailing="false"
         v-if="status !== 'authenticated'"
+        class="mt-3"
       />
       <UButton
-        color="black"
+        color="gray"
         label="Open app"
         to="/suggest"
+        size="lg"
+        :ui="{ rounded: 'rounded-full' }"
         :trailing="false"
         v-else
+        class="mt-3"
       />
     </div>
   </div>
