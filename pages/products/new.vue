@@ -103,7 +103,7 @@ const validate = () => {
         class="space-y-4"
         @submit="create"
       >
-        <UFormGroup label="Product ID" name="productCode">
+        <UFormGroup label="Product Code" name="productCode">
           <UInput
             autoresize
             v-model="product.productCode"

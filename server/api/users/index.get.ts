@@ -1,11 +1,12 @@
 import fetchBackend from "~/utils/fetchBackend";
 
 export default defineEventHandler(async (event) => {
-  const { page, size } = getQuery(event);
+  const { page, size, search } = getQuery(event);
 
   const params = new URLSearchParams();
   params.append("page", page as string);
   params.append("pageSize", size as string);
+  params.append("search", search as string);
 
   // get all users
   const fetchRes = await fetchBackend(`/api/users/all?${params.toString()}`);

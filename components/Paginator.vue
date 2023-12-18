@@ -1,7 +1,15 @@
 <template>
   <div>
+    <div class="px-4 py-3 dark:border-b border-color" v-if="searchable">
+      <UInput
+        v-model="search"
+        placeholder="Search"
+        class="w-full"
+        @keyup.enter="fetchData"
+      />
+    </div>
     <div
-      class="flex justify-between items-center gap-5 p-5 dark:border-b border-color"
+      class="lg:flex justify-between items-center gap-5 p-5 dark:border-b border-color"
     >
       <UPagination
         v-model="page"
@@ -49,6 +57,7 @@
 
 <script lang="ts" setup>
 const page = ref(1);
+const search = ref("");
 const totalElements = ref(0);
 const elements = ref([]);
 const isLoading = ref(true);
@@ -64,7 +73,7 @@ const fetchData = async () => {
     return;
   }
 
-  const res = await props.loader(page.value - 1, props.size);
+  const res = await props.loader(page.value - 1, props.size, search.value);
   const response = await res.json();
   let body = "{}";
   if (response) {
@@ -82,7 +91,9 @@ watch(page, fetchData);
 
 const props = defineProps({
   loader: {
-    type: Function as PropType<(page: number, size: number) => Promise<any>>,
+    type: Function as PropType<
+      (page: number, size: number, search?: string) => Promise<any>
+    >,
   },
   size: {
     type: Number,
@@ -91,6 +102,10 @@ const props = defineProps({
   type: {
     type: String,
     default: "item",
+  },
+  searchable: {
+    type: Boolean,
+    default: false,
   },
 });
 const isSmallScreen = useMedia("(max-width: 768px)");

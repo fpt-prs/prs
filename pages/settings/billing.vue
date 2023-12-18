@@ -14,7 +14,7 @@
           </p>
         </UCard>
         <UCard class="grow">
-          <p>Credits</p>
+          <p>Balance</p>
           <div class="flex max-lg:flex-col lg:items-center gap-2">
             <p class="text-4xl break-all">
               {{
@@ -97,7 +97,7 @@
           :disabled="!currentSubDetail"
         />
       </div>
-      <p class="border-y border-color px-4 py-3">Credit history</p>
+      <p class="border-y border-color px-4 py-3">Balance updates</p>
       <Paginator :loader="fetchBillHistory" :size="3">
         <template #item="{ data: bill }">
           <div class="px-4 py-3 md:flex justify-between items-center">

@@ -2,7 +2,7 @@
   <NuxtLayout name="admin">
     <div class="grow">
       <p class="text-xl px-4 py-3 border-b border-color">Users</p>
-      <Paginator :loader="fetchUser" :size="5" type="all">
+      <Paginator :loader="fetchUser" :size="5" type="all" :searchable="true">
         <template #all="{ data }">
           <UTable :rows="data" :columns="colums">
             <template #actions-data="{ row }">
@@ -10,7 +10,9 @@
                 <UButton :to="`/user/${row.userCode}`" label="Detail" />
                 <UPopover
                   :popper="{ placement: 'bottom-end' }"
-                  v-if="row.roles[0].name.toLowerCase() !== 'admin' && isUpdatable"
+                  v-if="
+                    row.roles[0].name.toLowerCase() !== 'admin' && isUpdatable
+                  "
                 >
                   <UButton
                     color="gray"
@@ -97,8 +99,8 @@ const { getSession } = useAuth();
 const session = getSession();
 const isUpdatable = isAuthorized(session, "user.write.all");
 
-const fetchUser = async (page, size) => {
-  return await fetch(`/api/users?page=${page}&size=${size}`);
+const fetchUser = async (page, size, search) => {
+  return await fetch(`/api/users?page=${page}&size=${size}&search=${search}`);
 };
 
 // table
