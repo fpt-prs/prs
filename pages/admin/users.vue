@@ -10,7 +10,7 @@
                 <UButton :to="`/user/${row.userCode}`" label="Detail" />
                 <UPopover
                   :popper="{ placement: 'bottom-end' }"
-                  v-if="row.roles[0].name.toLowerCase() !== 'admin'"
+                  v-if="row.roles[0].name.toLowerCase() !== 'admin' && isUpdatable"
                 >
                   <UButton
                     color="gray"
@@ -93,6 +93,9 @@ useHead({
   title: "User Management",
 });
 const toast = useToast();
+const { getSession } = useAuth();
+const session = getSession();
+const isUpdatable = isAuthorized(session, "user.write.all");
 
 const fetchUser = async (page, size) => {
   return await fetch(`/api/users?page=${page}&size=${size}`);

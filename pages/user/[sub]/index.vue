@@ -11,7 +11,7 @@
             variant="solid"
             :label="user.isActive === 1 ? 'Deactive' : 'Active'"
             @confirm="toggleActive"
-            v-if="isWritable"
+            v-if="isWritable && isActiveUpdatable"
           />
         </div>
       </div>
@@ -86,15 +86,14 @@
 </template>
 
 <script setup>
-const router = useRouter();
-const { getSession } = useAuth();
-const session = await getSession();
-const isWritable = await isAuthorized(session, "user.write.all");
-
 // meta
 useHead({
   title: "User Detail",
 });
+
+const { getSession } = useAuth();
+const session = await getSession();
+const isWritable = await isAuthorized(session, "user.write.all");
 
 const route = useRoute();
 const sub = route.params.sub;
@@ -106,6 +105,10 @@ onMounted(async () => {
   const data = await response.json();
   const body = JSON.parse(data.body);
   user.value = body;
+});
+const isActiveUpdatable = computed(() => {
+  if (!user.value.roles) return false;
+  return user.value.roles[0].name.toLowerCase() !== "admin";
 });
 
 const toggleActive = async () => {
