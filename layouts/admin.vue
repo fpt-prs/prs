@@ -69,7 +69,7 @@ const isAuthorized = (permission) => {
             label="Subscriptions"
             :trailing="false"
             to="/admin/subsctiptions"
-            v-if="isAuthorized('subscription.read.all')"
+            v-if="isAuthorized('payment.read.all')"
           />
           <UButton
             icon="i-heroicons-qr-code"
