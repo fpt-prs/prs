@@ -8,9 +8,20 @@
             <div
               class="px-4 py-3 bg-color rounded-xl border border-color lg:flex justify-between items-center"
             >
-              <p class="text-3xl">
-                {{ `${numberWithSep(data.balanceChange)} VND` }}
-              </p>
+              <div class="">
+                <p class="text-3xl">
+                  {{ `${numberWithSep(data.balanceChange)} VND` }}
+                </p>
+                <p>
+                  Client:
+                  <a
+                    :href="`/user/${data.user.userCode}`"
+                    class="text-color underline"
+                  >
+                    {{ data.user.name }}
+                  </a>
+                </p>
+              </div>
               <div class="">
                 <p class="text-color">{{ formatDateTime(data.timestamp) }}</p>
               </div>

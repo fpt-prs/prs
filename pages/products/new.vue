@@ -200,7 +200,9 @@ const validate = () => {
           />
         </div>
       </UFormGroup>
-      <UButton size="lg" @click="create"> Create </UButton>
+      <UButton size="lg" @click="create" :disabled="validate().length > 0">
+        Create
+      </UButton>
     </div>
   </NuxtLayout>
 </template>

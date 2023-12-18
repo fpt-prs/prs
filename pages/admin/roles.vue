@@ -102,7 +102,7 @@ const removingRole = ref({});
 const removeRole = async () => {
   isConfirmRemove.value = false;
   // check if admin
-  if (removingRole.value.name.toLowercase() === "admin") {
+  if (removingRole.value.name.toLowerCase() === "admin") {
     toast.add({ title: "Cannot delete admin role" });
     return;
   }
@@ -194,7 +194,7 @@ onMounted(() => {
             ></td>
             <td class="px-4 py-3">
               <UInput
-                placeholder="New role name"
+                placeholder="Enter new role name"
                 size="lg"
                 class="w-full"
                 v-model="newRoleName"

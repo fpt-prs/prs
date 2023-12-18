@@ -45,7 +45,7 @@
 
 <script setup>
 useHead({
-  title: "New notification",
+  title: "Notification",
 });
 const route = useRoute();
 const id = route.params.id;
