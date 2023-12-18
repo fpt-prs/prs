@@ -1,4 +1,14 @@
-<script setup></script>
+<script setup>
+const { getSession, signOut } = useAuth();
+const session = await getSession();
+const user = session?.user;
+
+const isAuthorized = (permission) => {
+  return user?.roles[0].permissions
+    .map((permission) => permission.name)
+    .includes(permission);
+};
+</script>
 
 <template>
   <NuxtLayout name="default">
@@ -14,6 +24,7 @@
             label="Users"
             :trailing="false"
             to="/admin/users"
+            v-if="isAuthorized('user.read.all')"
           />
           <UButton
             icon="i-heroicons-user-group"
@@ -22,6 +33,7 @@
             label="Roles"
             :trailing="false"
             to="/admin/roles"
+            v-if="isAuthorized('role.read.all')"
           />
           <UButton
             icon="i-heroicons-shield-check"
@@ -30,14 +42,7 @@
             label="Permissions"
             :trailing="false"
             to="/admin/permissions"
-          />
-          <UButton
-            icon="i-heroicons-globe-alt"
-            variant="ghost"
-            size="lg"
-            label="Crawl"
-            :trailing="false"
-            to="/admin/crawl"
+            v-if="isAuthorized('permission.read.all')"
           />
           <UButton
             icon="i-heroicons-bell"
@@ -46,6 +51,7 @@
             label="Notifications"
             :trailing="false"
             to="/admin/notifications"
+            v-if="isAuthorized('notification.read.all')"
           />
           <UButton
             icon="i-heroicons-currency-dollar"
@@ -54,6 +60,7 @@
             label="Payment"
             :trailing="false"
             to="/admin/payment"
+            v-if="isAuthorized('payment.read.all')"
           />
           <UButton
             icon="i-heroicons-banknotes"
@@ -62,6 +69,7 @@
             label="Subscriptions"
             :trailing="false"
             to="/admin/subsctiptions"
+            v-if="isAuthorized('subscription.read.all')"
           />
           <UButton
             icon="i-heroicons-qr-code"
@@ -70,6 +78,7 @@
             label="Bank accounts"
             :trailing="false"
             to="/admin/accounts"
+            v-if="isAuthorized('payment.read.all')"
           />
         </ul>
       </div>

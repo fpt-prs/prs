@@ -140,7 +140,7 @@ const confirm = async () => {
         <h1 class="text-2xl font-semibold">Trending products</h1>
       </div>
       <div class="flex flex-col min-w-0 items-start gap-5 p-5">
-        <p class="text-color">First, select the category...</p>
+        <p class="text-color">First, select the category you want to rank...</p>
         <USelectMenu
           v-model="selectedCategory"
           :options="categories"
@@ -156,7 +156,7 @@ const confirm = async () => {
           </span>
         </p>
         <p class="text-color" v-if="selectedCategory">
-          Then select the criteria...
+          Then select the criteria to sort ...
         </p>
         <USelectMenu
           v-model="selectedCriteria"
@@ -171,7 +171,7 @@ const confirm = async () => {
           {{ scoreRange.max.toFixed(2) }}.
         </p>
         <p class="text-color" v-if="selectedCriteria && selectedCategory">
-          Finally, select the position...
+          Finally, select the rank position...
         </p>
         <USelectMenu
           v-model="selectedPosition"

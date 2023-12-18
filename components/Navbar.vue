@@ -77,11 +77,14 @@ const isDark = computed(() => theme.value === "dark");
         icon="i-heroicons-user-group"
         variant="ghost"
         label="Admin"
-        to="/admin/users"
+        to="/admin"
         size="lg"
         class="w-full"
         :trailing="false"
-        v-if="user?.roles.map((role) => role.name).includes('Admin')"
+        v-if="
+          user?.roles.map((role) => role.name).includes('Admin') ||
+          user?.roles.map((role) => role.name).includes('Collaborator')
+        "
       />
     </div>
     <div class="w-full">

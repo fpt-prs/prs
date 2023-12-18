@@ -29,6 +29,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }, []);
 
   const userPermissions = permissions.map((p: any) => p.name);
+  const isAdmin = userRoles?.some(
+    (role: any) => role.name.toLowerCase() === "admin"
+  );
 
   for (const matcher in routeAction) {
     if (to.path.match(matcher)) {
@@ -36,7 +39,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
       const hasPermission =
         !routePermission || userPermissions.includes(routePermission);
 
-      if (!hasPermission) {
+      if (!hasPermission && !isAdmin) {
         return router.push("/404");
       }
     }

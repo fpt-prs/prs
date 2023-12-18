@@ -7,6 +7,7 @@
           icon="i-heroicons-plus"
           label="New notification"
           to="/admin/notifications/new"
+          v-if="isAuthorized('notification.write.all')"
         />
       </div>
       <Paginator :loader="loadNotification" type="all">
@@ -42,6 +43,7 @@
               </td>
               <td class="px-4 py-3">
                 <UDropdown
+                  v-if="isAuthorized('notification.read.all')"
                   :items="actions(notification)"
                   :popper="{ placement: 'bottom-end' }"
                 >
@@ -68,16 +70,13 @@ useHead({
 const router = useRouter();
 const { getSession } = useAuth();
 const session = await getSession();
+const user = session?.user;
 
-const notifications = ref([]);
-
-// table display
-const columns = [
-  { key: "id", label: "ID" },
-  { key: "header", label: "Header" },
-  { key: "content", label: "Content" },
-  { key: "created", label: "Created" },
-];
+const isAuthorized = (permission) => {
+  return user?.roles[0].permissions
+    .map((permission) => permission.name)
+    .includes(permission);
+};
 
 const actions = (notification) => [
   [

@@ -16,7 +16,7 @@
         <UCard class="grow">
           <p>Credits</p>
           <div class="flex max-lg:flex-col lg:items-center gap-2">
-            <p class="text-4xl">
+            <p class="text-4xl break-all">
               {{
                 balance != null && balance !== undefined
                   ? Math.round(balance)
@@ -31,7 +31,7 @@
             />
           </div>
         </UCard>
-        <UCard class="grow">
+        <UCard class="grow" v-if="currentSubDetail">
           <p>Ends in</p>
           <p class="text-4xl py-2">
             {{ currentSubDetail && dateLeft > 0 ? dateLeft : "---" }} days
@@ -53,9 +53,9 @@
           <p class="text-2xl font-semibold">
             {{ subscription.name }}
           </p>
-          <p>
+          <p class="whitespace-pre">
             {{
-              subscription.price + " VND / " + subscription.duration + " days"
+              subscription.price + " VND / " + subscription.duration + " day(s)"
             }}
           </p>
         </div>
@@ -86,10 +86,21 @@
           </UCard>
         </UModal>
       </div>
+      <p class="border-y border-color px-4 py-3">Unsubscribe</p>
+      <div class="px-4 py-3 flex gap-3">
+        <ModalConfirmButton
+          icon="i-heroicons-trash"
+          label="Unsubscribe"
+          color="red"
+          variant="outline"
+          @confirm="cancelSubscription"
+          :disabled="!currentSubDetail"
+        />
+      </div>
       <p class="border-y border-color px-4 py-3">Credit history</p>
       <Paginator :loader="fetchBillHistory" :size="3">
         <template #item="{ data: bill }">
-          <div class="px-4 py-3 flex justify-between items-center">
+          <div class="px-4 py-3 md:flex justify-between items-center">
             <div class="">
               <p class="text-3xl">
                 {{ `${numberWithSep(bill.balanceChange)} VND` }}
@@ -106,16 +117,6 @@
           </div>
         </template>
       </Paginator>
-    </div>
-    <p class="border-y border-color px-4 py-3">Unsubscribe</p>
-    <div class="px-4 py-3 flex gap-3">
-      <ModalConfirmButton
-        icon="i-heroicons-trash"
-        label="Unsubscribe"
-        color="red"
-        variant="outline"
-        @confirm="cancelSubscription"
-      />
     </div>
   </NuxtLayout>
 </template>

@@ -40,7 +40,7 @@
         </UFormGroup>
 
         <!-- dob -->
-        <UFormGroup label="Date of birth">
+        <UFormGroup label="Date of birth (MM/dd/yyyy)">
           <UInput type="date" color="gray" v-model="user.dob" />
         </UFormGroup>
 
@@ -69,6 +69,7 @@ onMounted(async () => {
   const response = await fetch("/api/profile");
   const data = await response.json();
   const body = JSON.parse(data.body);
+  body.dob = body.dob.split("T")[0];
   user.value = body;
 });
 

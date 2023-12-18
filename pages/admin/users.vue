@@ -8,7 +8,10 @@
             <template #actions-data="{ row }">
               <div class="flex gap-4">
                 <UButton :to="`/user/${row.userCode}`" label="Detail" />
-                <UPopover :popper="{ placement: 'bottom-end' }">
+                <UPopover
+                  :popper="{ placement: 'bottom-end' }"
+                  v-if="row.roles[0].name.toLowerCase() !== 'admin'"
+                >
                   <UButton
                     color="gray"
                     trailing-icon="i-heroicons-ellipsis-horizontal"
@@ -105,7 +108,6 @@ const colums = [
 
 // actions
 const disableUser = async (user) => {
-
   const res = await fetch(`/api/users/status`, {
     method: "POST",
     body: JSON.stringify({

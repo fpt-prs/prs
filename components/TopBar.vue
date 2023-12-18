@@ -35,7 +35,9 @@
       :trailing="false"
       class="m-5"
     />
-    <div class="p-5 flex flex-col gap-2 justify-between md:grow overflow-y-auto">
+    <div
+      class="p-5 flex flex-col gap-2 justify-between md:grow overflow-y-auto"
+    >
       <div class="">
         <UButton
           icon="i-heroicons-arrow-trending-up"
@@ -68,11 +70,14 @@
           icon="i-heroicons-user-group"
           variant="ghost"
           label="Admin"
-          to="/admin/users"
+          to="/admin"
           size="lg"
           class="w-full"
           :trailing="false"
-          v-if="user?.roles.map((role) => role.name).includes('Admin')"
+          v-if="
+            user?.roles.map((role) => role.name).includes('Admin') ||
+            user?.roles.map((role) => role.name).includes('Collaborator')
+          "
         />
       </div>
       <div class="">

@@ -1,6 +1,6 @@
 <template>
   <NuxtLayout name="admin">
-    <div class="flex max-lg:flex-col-reverse min-h-full">
+    <div class="flex max-lg:flex-col-reverse min-h-full border-b border-color">
       <div class="grow border-r border-color">
         <p class="text-2xl px-4 py-3">Billing history</p>
         <Paginator :loader="loadBills" :size="5">

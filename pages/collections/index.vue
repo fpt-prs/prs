@@ -23,15 +23,18 @@ const fetchCollection = async () => {
 
 const collection = ref({});
 const products = ref([]);
+const isLoading = ref(false);
 watch(currentId, async () => {
   await fetchDetail();
 });
 const fetchDetail = async () => {
+  isLoading.value = true;
   const responseProducts = await fetch(`/api/collection?id=${currentId.value}`);
   const dataProducts = await responseProducts.json();
   const result = JSON.parse(dataProducts.body);
   collection.value = result;
   products.value = result.products;
+  isLoading.value = false;
 };
 
 const deletingId = ref(0);
@@ -46,7 +49,9 @@ const deleteCollection = async () => {
   }
 };
 
+const isExporting = ref(false);
 const exportCollection = async () => {
+  isExporting.value = true;
   const response = await fetch(`/api/export?collectionId=${currentId.value}`);
   const data = await response.json();
   const result = data.body;
@@ -55,9 +60,12 @@ const exportCollection = async () => {
   );
   const link = document.createElement("a");
   link.href = url;
-  link.setAttribute("download", "export.csv");
+  const today = formatDateTime(new Date()).replace(" ", "_");
+  link.setAttribute("download", today + ".csv");
   document.body.appendChild(link);
   link.click();
+  link.remove();
+  isExporting.value = false;
 };
 </script>
 
@@ -71,7 +79,7 @@ const exportCollection = async () => {
             :key="c.id"
             icon="i-heroicons-inbox"
             color="gray"
-            variant="ghost"
+            :variant="currentId === c.id ? 'solid' : 'ghost'"
             :label="formatDateTime(c.created)"
             :trailing="false"
             @click="currentId = c.id"
@@ -86,7 +94,7 @@ const exportCollection = async () => {
           v-for="c in collections"
           :key="c.id"
           color="gray"
-          variant="solid"
+          :variant="currentId === c.id ? 'solid' : 'ghost'"
           :label="formatDateTime(c.created)"
           :trailing="false"
           @click="currentId = c.id"
@@ -96,7 +104,7 @@ const exportCollection = async () => {
       <div class="grow min-w-0">
         <div
           class="w-full flex justify-center items-center px-4 py-3 pt-12"
-          v-if="!collection.created"
+          v-if="!collection.created && !isLoading"
         >
           <p class="text-4xl text-center text-color">
             Select a collection or create a new one to view products
@@ -104,11 +112,22 @@ const exportCollection = async () => {
         </div>
 
         <div
-          class="w-full flex justify-between px-4 py-3 items-center"
-          v-if="collection.created"
+          class="w-full h-full flex justify-center items-center px-4 py-3"
+          v-if="isLoading"
+        >
+          <UIcon
+            name="i-heroicons-arrow-path"
+            class="animate-spin text-4xl text-color mr-2"
+          />
+          <p class="text-3xl text-center text-color">Loading...</p>
+        </div>
+
+        <div
+          class="w-full md:flex justify-between px-4 py-3 items-center"
+          v-if="collection.created && !isLoading"
         >
           <div class="">
-            <p class="text-xl">{{ formatDateTime(collection.created) }}</p>
+            <p class="text-xl py-2">{{ formatDateTime(collection.created) }}</p>
           </div>
           <div class="flex gap-4">
             <ModalConfirmButton
@@ -122,6 +141,7 @@ const exportCollection = async () => {
             />
             <UButton
               icon="i-heroicons-arrow-down-on-square"
+              :loading="isExporting"
               color="gray"
               size="lg"
               label="Export"
@@ -131,7 +151,10 @@ const exportCollection = async () => {
             />
           </div>
         </div>
-        <div class="px-4 grid lg:grid-cols-3 gap-4" v-if="collection.created">
+        <div
+          class="px-4 grid lg:grid-cols-3 gap-4"
+          v-if="collection.created && !isLoading"
+        >
           <div class="p-4 border border-color rounded-lg">
             <p class="">Category</p>
             <p class="text-xl text-color">
@@ -151,12 +174,15 @@ const exportCollection = async () => {
             </p>
           </div>
         </div>
-        <div class="space-y-3 p-4 pb-24">
+        <div
+          class="space-y-3 p-4 pb-24"
+          v-if="collection.created && !isLoading"
+        >
           <div class="flex items-center" v-for="row in products">
             <a class="min-w-0 grow block" :href="`/product/${row.productCode}`">
               <div class="lg:flex">
                 <img
-                  class="w-full h-full lg:w-36 lg:h-36 mr-4"
+                  class="w-full h-full lg:w-36 lg:h-36 mr-4 rounded"
                   :src="
                     row.images[0]?.imageUrl || 'https://via.placeholder.com/150'
                   "

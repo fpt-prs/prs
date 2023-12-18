@@ -101,6 +101,11 @@ const isConfirmRemove = ref(false);
 const removingRole = ref({});
 const removeRole = async () => {
   isConfirmRemove.value = false;
+  // check if admin
+  if (removingRole.value.name.toLowercase() === "admin") {
+    toast.add({ title: "Cannot delete admin role" });
+    return;
+  }
   // push to server
   const updateRes = await fetch(`/api/roles?id=${removingRole.value.id}`, {
     method: "DELETE",
@@ -171,6 +176,7 @@ onMounted(() => {
                 <UDropdown
                   :items="actions(role)"
                   :popper="{ placement: 'bottom-end' }"
+                  v-if="role.name.toLowerCase() !== 'admin'"
                 >
                   <UButton
                     color="white"
