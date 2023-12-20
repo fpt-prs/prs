@@ -145,7 +145,7 @@ const validate = () => {
         </UFormGroup>
 
         <!-- price -->
-        <UFormGroup label="Price" name="price">
+        <UFormGroup label="Price (USD)" name="price">
           <UInput v-model="product.price" placeholder="Price" type="number" />
         </UFormGroup>
       </UForm>

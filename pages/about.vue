@@ -56,24 +56,24 @@ const loginWithGoogle = async () => {
         <p class="text-color">Tech lead</p>
       </div>
       <div class="flex flex-col items-center">
-        <img src="/hoangnh.jpg" alt="" class="img shrink rounded-lg" />
-        <p class="text-lg font-semibold py-2">Nguyễn Huy Hoàng</p>
-        <p class="text-color">Tech lead</p>
+        <img src="/phuongnh.png" alt="" class="img shrink rounded-lg" />
+        <p class="text-lg font-semibold py-2">Nguyễn Hồng Phương</p>
+        <p class="text-color">Developer</p>
       </div>
       <div class="flex flex-col items-center">
-        <img src="/hoangnh.jpg" alt="" class="img shrink rounded-lg" />
-        <p class="text-lg font-semibold py-2">Nguyễn Huy Hoàng</p>
-        <p class="text-color">Tech lead</p>
+        <img src="/namhv.png" alt="" class="img shrink rounded-lg" />
+        <p class="text-lg font-semibold py-2">Hoàng Văn Nam</p>
+        <p class="text-color">Data Engineer</p>
       </div>
       <div class="flex flex-col items-center">
-        <img src="/hoangnh.jpg" alt="" class="img shrink rounded-lg" />
-        <p class="text-lg font-semibold py-2">Nguyễn Huy Hoàng</p>
-        <p class="text-color">Tech lead</p>
+        <img src="/vuntd.jpg" alt="" class="img shrink rounded-lg" />
+        <p class="text-lg font-semibold py-2">Nguyễn Trần Duy Vũ</p>
+        <p class="text-color">DevOps</p>
       </div>
       <div class="flex flex-col items-center">
-        <img src="/hoangnh.jpg" alt="" class="img shrink rounded-lg" />
-        <p class="text-lg font-semibold py-2">Nguyễn Huy Hoàng</p>
-        <p class="text-color">Tech lead</p>
+        <img src="/minhdn.png" alt="" class="img shrink rounded-lg" />
+        <p class="text-lg font-semibold py-2">Đỗ Nhật Minh</p>
+        <p class="text-color">Tester</p>
       </div>
     </div>
   </div>
