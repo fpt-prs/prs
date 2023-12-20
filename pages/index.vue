@@ -24,13 +24,6 @@ const loginWithGoogle = async () => {
     <div class=""></div>
     <div class="flex items-center gap-4">
       <a
-        href="https://m.me/fptprs"
-        target="_blank"
-        class="text-color hover:text-black dark:hover:text-white"
-      >
-        Support
-      </a>
-      <a
         href="/about"
         class="text-color hover:text-black dark:hover:text-white"
       >
@@ -110,4 +103,15 @@ const loginWithGoogle = async () => {
       <img src="/hero.png" class="w-96 h-96" alt="" />
     </div>
   </div>
+  <a
+    href="https://m.me/fptprs"
+    target="_blank"
+    class="fixed bottom-6 right-6 bg-gray-100 dark:bg-gray-700 rounded-full lg:h-16 lg:w-16 h-10 w-10 flex justify-center items-center"
+  >
+    <UIcon
+      name="i-heroicons-chat-bubble-left-right-solid"
+      color="blue"
+      class="lg:h-8 lg:w-8"
+    />
+  </a>
 </template>
