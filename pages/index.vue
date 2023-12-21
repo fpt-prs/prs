@@ -7,6 +7,8 @@ const { status, signIn } = useAuth();
 const loginWithGoogle = async () => {
   await signIn("google", { callbackUrl: "/settings/profile" });
 };
+const slideIndex = ref(0);
+const images = ["/sc_products", "/sc_col", "/sc_detail"];
 </script>
 
 <template>
@@ -82,13 +84,18 @@ const loginWithGoogle = async () => {
   </div>
   <div class="m-10 mx-auto px-5 max-w-[1200px]">
     <img
-      src="/screenshot.png"
+      src="/sc_products.png"
       alt="hero"
-      class="object-cover border border-color rounded-xl w-full"
+      class="object-cover dark:hidden border border-color rounded-xl w-full"
+    />
+    <img
+      src="/sc_products_dark.png"
+      alt="hero"
+      class="object-cover hidden dark:block border border-color rounded-xl w-full"
     />
   </div>
   <div
-    class="lg:flex items-center justify-between max-w-[1200px] mx-auto gap-5 px-5 py-10"
+    class="items-center justify-between max-w-[1200px] mx-auto gap-5 px-5 py-10"
   >
     <div class="">
       <p class="text-4xl lg:text-5xl font-semibold">
@@ -100,7 +107,53 @@ const loginWithGoogle = async () => {
       </p>
     </div>
     <div class="">
-      <img src="/hero.png" class="w-96 h-96" alt="" />
+      <div class="grow flex overflow-x-auto gap-4">
+        <UButton
+          :color="slideIndex === 0 ? 'blue' : 'gray'"
+          label="Huge product list"
+          @click="slideIndex = 0"
+          size="xl"
+          class="grow"
+        />
+        <UButton
+          :color="slideIndex === 1 ? 'blue' : 'gray'"
+          label="Hot product collection"
+          @click="slideIndex = 1"
+          size="xl"
+          class="grow"
+        />
+        <UButton
+          :color="slideIndex === 2 ? 'blue' : 'gray'"
+          label="Detailed product analysis"
+          @click="slideIndex = 2"
+          size="xl"
+          class="grow"
+        />
+      </div>
+      <div class="p-5">
+        <img
+          :src="images[slideIndex] + '.png'"
+          alt=""
+          class="rounded-xl dark:hidden border border-color"
+        />
+        <img
+          :src="images[slideIndex] + '_dark.png'"
+          alt=""
+          class="rounded-xl hidden dark:block border border-color"
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    class="items-center justify-between max-w-[1200px] mx-auto gap-5 px-5 py-10 lg:flex mb-24"
+  >
+    <a href="/" class="font-bold text-4xl flex gap-2">
+      <img src="/logo.svg" class="h-8 w-8" alt="" />
+      <div class="-mt-1">PRS</div>
+    </a>
+    <div class="flex gap-5">
+      <a href="/about">About us</a>
+      <a href="https://m.me/fptprs" target="_blank">Support</a>
     </div>
   </div>
   <a

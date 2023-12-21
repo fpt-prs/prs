@@ -24,6 +24,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
   }
 
   const userRoles = (user as any)?.roles;
+  if (!user || !userRoles) {
+    return router.push("/login");
+  }
+
   const permissions = userRoles?.reduce((acc: any, role: any) => {
     return [...acc, ...role.permissions];
   }, []);
