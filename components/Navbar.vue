@@ -96,6 +96,10 @@ const isDark = computed(() => theme.value === "dark");
         class="w-full"
         to="/settings/billing"
         :trailing="false"
+        v-if="
+          !user?.roles.map((role) => role.name).includes('Admin') &&
+          !user?.roles.map((role) => role.name).includes('Collaborator')
+        "
       />
       <UButton
         icon="i-heroicons-bell"

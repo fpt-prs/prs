@@ -48,7 +48,6 @@ const create = async (c) => {
 
   const status = response.status;
   const body = await response.json();
-  console.log(body);
 
   const toast = useToast();
   if (status === 200) {
@@ -86,8 +85,11 @@ const validate = () => {
     <div class="text-3xl p-3 dark:border-b border-color">
       <BackButton />
     </div>
-    <div class="text-3xl p-3 dark:border-b border-color">
-      <p class="text-xl px-4 py-3">Create Product</p>
+    <div class="text-3xl sm:flex justify-between items-center p-3 dark:border-b border-color">
+      <p class="text-xl py-3">Create Product</p>
+      <UButton @click="create" :disabled="validate().length > 0">
+        Create
+      </UButton>
     </div>
     <div class="max-w-[80rem] mx-auto px-4 py-3 space-y-4 pb-32">
       <UCheckbox

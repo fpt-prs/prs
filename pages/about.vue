@@ -24,10 +24,11 @@ const loginWithGoogle = async () => {
     <div class=""></div>
     <div class="flex items-center gap-4">
       <a
-        href="/about"
-        class="text-color hover:text-black dark:hover:text-white"
+        href="https://drive.google.com/file/d/167VRhC5fJnIjrZnMzSvwh4M6iPS8aQVK/view?usp=sharing"
+        target="_blank"
+        class="text-color hover:text-black dark:hover:text-white hidden md:block"
       >
-        About us
+        Guideline
       </a>
       <UButton
         color="black"

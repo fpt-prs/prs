@@ -12,10 +12,16 @@ export default defineEventHandler(async (event) => {
   params.set("size", size as string);
 
   const fetchRes = await fetchBackend(`/api/payment/user?${params.toString()}`);
+  const status = fetchRes.status;
+  setResponseStatus(event, status);
+  if (status !== 200) {
+    return {
+      body: await fetchRes.text(),
+    };
+  }
 
   const data = await fetchRes.json();
   return {
-    statusCode: fetchRes.status,
     body: JSON.stringify(data),
   };
 });

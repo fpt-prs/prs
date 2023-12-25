@@ -191,7 +191,7 @@ const confirm = async () => {
         </p>
         <p class="" v-if="selectedPosition.label && !currentSubDetail">
           The price is
-          <span class="font-semibold">{{ price }}</span> VND.
+          <span class="font-semibold">{{ numberWithSep(price) }}</span> VND.
         </p>
         <p v-if="selectedPosition.label">Do you want to continue?</p>
         <UButton

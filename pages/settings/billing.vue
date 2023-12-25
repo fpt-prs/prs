@@ -19,7 +19,7 @@
             <p class="text-4xl break-all">
               {{
                 balance != null && balance !== undefined
-                  ? Math.round(balance)
+                  ? numberWithSep(Math.round(balance))
                   : "---"
               }}
             </p>
@@ -55,7 +55,7 @@
           </p>
           <p class="whitespace-pre">
             {{
-              subscription.price + " VND / " + subscription.duration + " day(s)"
+              numberWithSep(subscription.price) + " VND / " + subscription.duration + " day(s)"
             }}
           </p>
         </div>
@@ -86,7 +86,9 @@
           </UCard>
         </UModal>
       </div>
-      <p class="border-y border-color px-4 py-3">Unsubscribe</p>
+      <p class="border-y border-color px-4 py-3" v-if="currentSubDetail">
+        Unsubscribe
+      </p>
       <div class="px-4 py-3 flex gap-3">
         <ModalConfirmButton
           icon="i-heroicons-trash"
@@ -94,7 +96,7 @@
           color="red"
           variant="outline"
           @confirm="cancelSubscription"
-          :disabled="!currentSubDetail"
+          v-if="currentSubDetail"
         />
       </div>
       <p class="border-y border-color px-4 py-3">Balance updates</p>
@@ -194,6 +196,7 @@ const subscribe = async () => {
   if (response.status === 200) {
     toast.add({ title: "Subscribed" });
     isConfirm.value = false;
+    await fetchSubDetail();
   } else {
     toast.add({ title: "Failed to subscribe", description: body.error });
   }
@@ -207,6 +210,7 @@ const cancelSubscription = async () => {
   const body = await response.json();
   if (response.status === 200) {
     toast.add({ title: "Canceled subscription" });
+    await fetchSubDetail();
   } else {
     toast.add({
       title: "Failed to cancel subscription",
@@ -216,14 +220,15 @@ const cancelSubscription = async () => {
 };
 
 const currentSubDetail = ref(null);
-onMounted(async () => {
+const fetchSubDetail = async () => {
   const response = await fetch(`/api/profile/sub`);
   const data = await response.json();
   if (!data.value) {
     return;
   }
   currentSubDetail.value = data.value;
-});
+}
+onMounted(fetchSubDetail);
 
 const isRefreshed = computed({
   get() {

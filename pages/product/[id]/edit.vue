@@ -31,6 +31,26 @@ onMounted(async () => {
   };
 });
 
+const validate = () => {
+  const errors = [];
+  if (!product.value.productCode) {
+    errors.push({ path: "productCode", message: "Required" });
+  }
+  if (!product.value.name) {
+    errors.push({ path: "name", message: "Required" });
+  }
+  if (!product.value.price) {
+    errors.push({ path: "price", message: "Required" });
+  }
+  if (!product.value.url) {
+    errors.push({ path: "url", message: "Required" });
+  }
+  if (!product.value.category) {
+    errors.push({ path: "category", message: "Required" });
+  }
+  return errors;
+};
+
 const removeImage = (imageUrl) => {
   if (!product.value.imageUrls) {
     return;
@@ -40,7 +60,9 @@ const removeImage = (imageUrl) => {
   );
 };
 
+const isUpdating = ref(false);
 const update = async (c) => {
+  isUpdating.value = true;
   const productUpdateRequest = {
     id: product.value.id,
     name: product.value.name,
@@ -58,8 +80,11 @@ const update = async (c) => {
 
   const status = response.status;
   const toast = useToast();
+  isUpdating.value = false;
   if (status === 200) {
     toast.add({ title: "Product updated successfully" });
+    const router = useRouter();
+    router.push("/product/" + product.value.productCode);
   } else {
     toast.add({ title: "Error updating product" });
   }
@@ -71,8 +96,13 @@ const update = async (c) => {
     <div class="text-3xl p-3 dark:border-b border-color">
       <BackButton />
     </div>
-    <div class="text-3xl p-3 dark:border-b border-color">
-      <p class="text-xl px-4 py-3">Edit Product</p>
+    <div
+      class="text-3xl sm:flex items-center justify-between p-3 dark:border-b border-color"
+    >
+      <p class="text-xl">Edit Product</p>
+      <UButton @click="update" color="green" :loading="isUpdating">
+        Update
+      </UButton>
     </div>
     <div class="max-w-[80rem] mx-auto px-4 py-3 space-y-4 pb-32">
       <UCheckbox
@@ -82,85 +112,105 @@ const update = async (c) => {
         type="checkbox"
         name="active"
       />
-      <UFormGroup label="Name">
-        <UTextarea
-          autoresize
-          v-model="product.name"
-          placeholder="Name"
-          type="text"
-          name="name"
-        />
-      </UFormGroup>
-      <UFormGroup label="Description">
-        <UTextarea
-          autoresize
-          v-model="product.description"
-          placeholder="Description"
-          type="text"
-          name="description"
-        />
-      </UFormGroup>
-      <!-- price -->
-      <UFormGroup label="Price">
-        <UInput
-          v-model="product.price"
-          placeholder="Price"
-          type="number"
-          name="price"
-        />
-      </UFormGroup>
-      <UFormGroup label="Images">
-        <div
-          class="flex max-lg:flex-col lg:items-center gap-5 pb-5 max-lg:pb-10"
-          v-for="image in product.images"
-        >
-          <UInput
-            v-model="image.imageUrl"
-            placeholder="Images"
+      <UForm :validate="validate" :state="product" class="space-y-4">
+        <UFormGroup label="URL" name="url">
+          <UTextarea
+            autoresize
+            v-model="product.url"
+            placeholder="Product URL"
             type="text"
-            size="lg"
-            class="grow"
-            name="images"
           />
-          <UButton
-            label="Remove"
-            color="red"
-            @click="removeImage(image.imageUrl)"
-          />
-          <img
-            :src="image.imageUrl"
-            onerror="this.src='https://via.placeholder.com/150'"
-            class="lg:w-36 w-full aspect-square rounded"
-            alt=""
-          />
-          <hr class="lg:hidden border-color" />
-        </div>
-        <div class="flex max-lg:flex-col lg:items-center gap-5 pb-5">
-          <UInput
-            size="lg"
-            placeholder="Images"
+        </UFormGroup>
+        <UFormGroup label="Name" name="name">
+          <UTextarea
+            autoresize
+            v-model="product.name"
+            placeholder="Name"
             type="text"
-            class="grow"
-            name="images"
-            v-model="newImage"
+            name="name"
           />
-          <UButton
-            label="Add image URL"
-            size="lg"
-            color="green"
-            :disabled="!newImage"
-            @click="addImage"
+        </UFormGroup>
+        <UFormGroup label="Description" name="description">
+          <UTextarea
+            autoresize
+            v-model="product.description"
+            placeholder="Description"
+            type="text"
+            name="description"
           />
+        </UFormGroup>
+        <!-- price -->
+        <UFormGroup label="Price (USD)" name="price">
+          <UInput
+            v-model="product.price"
+            placeholder="Price"
+            type="number"
+            name="price"
+          />
+        </UFormGroup>
+        <UFormGroup label="Category" name="category">
+          <UInput
+            v-model="product.category"
+            placeholder="Category"
+            type="text"
+            name="category"
+          />
+        </UFormGroup>
+        <UFormGroup label="Images">
+          <div
+            class="flex max-lg:flex-col lg:items-center gap-5 pb-5 max-lg:pb-10"
+            v-for="image in product.images"
+          >
+            <UInput
+              v-model="image.imageUrl"
+              placeholder="Images"
+              type="text"
+              size="lg"
+              class="grow"
+              name="images"
+            />
+            <UButton
+              label="Remove"
+              color="red"
+              @click="removeImage(image.imageUrl)"
+            />
+            <img
+              :src="image.imageUrl"
+              onerror="this.src='https://via.placeholder.com/150'"
+              class="lg:w-36 w-full aspect-square rounded"
+              alt=""
+            />
+            <hr class="lg:hidden border-color" />
+          </div>
+          <div class="flex max-lg:flex-col lg:items-center gap-5 pb-5">
+            <UInput
+              size="lg"
+              placeholder="Images"
+              type="text"
+              class="grow"
+              name="images"
+              v-model="newImage"
+            />
+            <UButton
+              label="Add image URL"
+              size="lg"
+              color="green"
+              :disabled="!newImage"
+              @click="addImage"
+            />
 
-          <img
-            :src="newImage || ''"
-            class="lg:w-36 w-full aspect-square rounded"
-            onerror="this.src='https://via.placeholder.com/150'"
-            alt=""
-          />
-        </div>
-      </UFormGroup>
-      <UButton size="lg" @click="update"> Update </UButton>
+            <img
+              :src="newImage || ''"
+              class="lg:w-36 w-full aspect-square rounded"
+              onerror="this.src='https://via.placeholder.com/150'"
+              alt=""
+            />
+          </div>
+        </UFormGroup>
+      </UForm>
+      <UButton size="lg" color="green" @click="update" :loading="isUpdating">
+        Update
+      </UButton>
     </div>
   </NuxtLayout>
 </template>

@@ -99,8 +99,8 @@
               :to="`/product/${row.productCode}/edit`"
             />
             <ModalConfirmButton
-              label="Delete"
-              icon="i-heroicons-trash"
+              label="Deactive"
+              icon="i-heroicons-archive-box"
               color="red"
               class="w-28"
               v-if="row.isActive"
@@ -118,7 +118,7 @@
         </div>
       </div>
       <div
-        class="flex justify-between items-center gap-5 p-5 dark:border-t border-color"
+        class="flex justify-between items-center gap-5 p-5 dark:border-t border-color mb-20"
         v-if="products.length > 0"
       >
         <UPagination
@@ -156,7 +156,7 @@ const sortCriterias = [
 ];
 const sortCriteria = ref(
   sortCriterias.find((c) => c.field === field && c.order === order) ||
-    sortCriterias[0]
+    sortCriterias[2]
 );
 
 const categories = ref([]);

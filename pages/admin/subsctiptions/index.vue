@@ -142,7 +142,7 @@ const updateOption = async () => {
               {{ option.id }}
             </td>
             <td class="px-4 py-3">{{ option.name }}</td>
-            <td class="px-4 py-3">{{ option.price }}</td>
+            <td class="px-4 py-3">{{ numberWithSep(option.price) }}</td>
             <td class="px-4 py-3">{{ option.duration }}</td>
             <td class="px-4 py-3">
               <UDropdown

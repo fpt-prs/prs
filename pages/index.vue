@@ -9,6 +9,7 @@ const loginWithGoogle = async () => {
 };
 const slideIndex = ref(0);
 const images = ["/sc_products", "/sc_col", "/sc_detail"];
+const isOpen = ref(false);
 </script>
 
 <template>
@@ -23,13 +24,27 @@ const images = ["/sc_products", "/sc_col", "/sc_detail"];
     <a href="">
       <img src="/logo.svg" class="h-8 w-8" alt="" />
     </a>
-    <div class=""></div>
     <div class="flex items-center gap-4">
+      <UButton
+        label=""
+        @click="isOpen = true"
+        color="gray"
+        variant="ghost"
+        icon="i-heroicons-bars-3"
+        class="md:hidden"
+      />
       <a
         href="/about"
-        class="text-color hover:text-black dark:hover:text-white"
+        class="text-color hover:text-black dark:hover:text-white hidden md:block"
       >
         About us
+      </a>
+      <a
+        href="https://drive.google.com/file/d/167VRhC5fJnIjrZnMzSvwh4M6iPS8aQVK/view?usp=sharing"
+        target="_blank"
+        class="text-color hover:text-black dark:hover:text-white hidden md:block"
+      >
+        Guideline
       </a>
       <UButton
         color="black"
@@ -37,6 +52,7 @@ const images = ["/sc_products", "/sc_col", "/sc_detail"];
         to="/login"
         :trailing="false"
         v-if="status !== 'authenticated'"
+        class="hidden md:block"
       />
       <UButton
         color="black"
@@ -44,8 +60,49 @@ const images = ["/sc_products", "/sc_col", "/sc_detail"];
         to="/suggest"
         :trailing="false"
         v-else
+        class="hidden md:block"
       />
     </div>
+    <USlideover v-model="isOpen">
+      <UButton
+        color="gray"
+        variant="ghost"
+        icon="i-heroicons-x-mark"
+        label=""
+        @click="isOpen = false"
+        :trailing="false"
+        class="self-end"
+      />
+      <div class="flex flex-col md:justify-start justify-end h-full gap-4 p-4">
+        <a
+          href="/about"
+          class="text-color hover:text-black dark:hover:text-white"
+        >
+          About us
+        </a>
+        <a
+          href="https://drive.google.com/file/d/167VRhC5fJnIjrZnMzSvwh4M6iPS8aQVK/view?usp=sharing"
+          target="_blank"
+          class="text-color hover:text-black dark:hover:text-white"
+        >
+          Guideline
+        </a>
+        <UButton
+          color="black"
+          label="Login"
+          to="/login"
+          :trailing="false"
+          v-if="status !== 'authenticated'"
+        />
+        <UButton
+          color="black"
+          label="Open app"
+          to="/suggest"
+          :trailing="false"
+          v-else
+        />
+      </div>
+    </USlideover>
   </header>
   <div class="flex flex-col items-center justify-center max-w-[1000px] mx-auto">
     <div class="flex flex-col justify-center items-center h-[calc(100vh-8rem)]">
@@ -145,7 +202,7 @@ const images = ["/sc_products", "/sc_col", "/sc_detail"];
     </div>
   </div>
   <div
-    class="items-center justify-between max-w-[1200px] mx-auto gap-5 px-5 py-10 lg:flex mb-24"
+    class="items-center justify-between max-w-[1200px] mx-auto gap-5 px-5 py-10 sm:flex mb-24"
   >
     <a href="/" class="font-bold text-4xl flex gap-2">
       <img src="/logo.svg" class="h-8 w-8" alt="" />
